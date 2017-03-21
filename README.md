@@ -13,27 +13,6 @@ License:
 ##API
 
 ```json
-{
-  "id":"getApi",
-  "result":{
-    "firmware":["SleepAssayController"],
-    "functions":[
-      "flipEnabled"
-    ],
-    "parameters":[],
-    "properties":[
-      "flipperDelay",
-      "flipperPeriod",
-      "flipperOnDuration",
-      "rungUpCountLower",
-      "rungUpCountUpper",
-      "rungDownCount"
-    ],
-    "callbacks":[
-      "flip"
-    ]
-  }
-}
 ```
 
 ##More Detailed Modular Device Information

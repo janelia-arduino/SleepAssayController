@@ -35,6 +35,17 @@ void SleepAssayController::setup()
                               callbacks_);
 
   // Properties
+  modular_server::Property & indicator_channel_property = modular_server_.createProperty(constants::indicator_channel_property_name,constants::indicator_channel_default);
+  indicator_channel_property.setRange(constants::channel_min,constants::channel_max);
+
+  modular_server::Property & camera_trigger_channel_property = modular_server_.createProperty(constants::camera_trigger_channel_property_name,constants::camera_trigger_channel_default);
+  camera_trigger_channel_property.setRange(constants::channel_min,constants::channel_max);
+
+  modular_server::Property & white_light_channel_property = modular_server_.createProperty(constants::white_light_channel_property_name,constants::white_light_channel_default);
+  white_light_channel_property.setRange(constants::channel_min,constants::channel_max);
+
+  modular_server::Property & red_light_channel_property = modular_server_.createProperty(constants::red_light_channel_property_name,constants::red_light_channel_default);
+  red_light_channel_property.setRange(constants::channel_min,constants::channel_max);
 
   // Parameters
 

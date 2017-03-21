@@ -8,7 +8,7 @@
 #include "5x3.h"
 
 
-#if defined(__AVR_ATmega2560__)
+#if defined(__MK64FX512__)
 
 namespace sleep_assay_controller
 {
@@ -20,6 +20,13 @@ namespace constants
 // Units
 
 // Properties
+const long indicator_channel_default = 0;
+
+const long camera_trigger_channel_default = 1;
+
+const long white_light_channel_default = 2;
+
+const long red_light_channel_default = 3;
 
 // Parameters
 

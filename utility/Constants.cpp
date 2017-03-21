@@ -24,11 +24,28 @@ const modular_server::FirmwareInfo firmware_info =
     .version_patch=0,
   };
 
+const long channel_min = 0;
+const long channel_max = high_power_switch_controller::constants::CHANNEL_COUNT;
+
+const long milliseconds_per_second = 1000;
+const long seconds_per_minute = 60;
+const long minutes_per_hour = 60;
+const long hours_per_day = 24;
+const long milliseconds_per_hour = milliseconds_per_second*seconds_per_minute*minutes_per_hour;
+const long milliseconds_per_day = milliseconds_per_second*hours_per_day;
+
 // Interrupts
 
 // Units
 
 // Properties
+CONSTANT_STRING(indicator_channel_property_name,"indicatorChannel");
+
+CONSTANT_STRING(camera_trigger_channel_property_name,"cameraTriggerChannel");
+
+CONSTANT_STRING(white_light_channel_property_name,"whiteLightChannel");
+
+CONSTANT_STRING(red_light_channel_property_name,"redLightChannel");
 
 // Parameters
 
