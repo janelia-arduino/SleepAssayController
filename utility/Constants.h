@@ -39,12 +39,12 @@ extern const long milliseconds_per_day;
 // Interrupts
 
 // Units
+extern ConstantString hz_unit;
+extern ConstantString hours_unit;
+extern ConstantString days_unit;
 
 // Properties
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
-extern ConstantString indicator_channel_property_name;
-extern const long indicator_channel_default;
-
 extern ConstantString camera_trigger_channel_property_name;
 extern const long camera_trigger_channel_default;
 
@@ -54,9 +54,18 @@ extern const long white_light_channel_default;
 extern ConstantString red_light_channel_property_name;
 extern const long red_light_channel_default;
 
+extern ConstantString camera_trigger_frequency_property_name;
+extern const double camera_trigger_frequency_min;
+extern const double camera_trigger_frequency_max;
+extern const double camera_trigger_frequency_default;
+
 // Parameters
+extern ConstantString hours_since_sunrise_parameter_name;
+extern const double hours_since_sunrise_min;
+extern const double hours_since_sunrise_max;
 
 // Functions
+extern ConstantString run_sleep_assay_function_name;
 
 // Callbacks
 

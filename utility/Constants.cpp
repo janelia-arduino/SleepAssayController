@@ -37,19 +37,29 @@ const long milliseconds_per_day = milliseconds_per_second*hours_per_day;
 // Interrupts
 
 // Units
+CONSTANT_STRING(hz_unit,"Hz");
+CONSTANT_STRING(hours_unit,"hours");
+CONSTANT_STRING(days_unit,"days");
 
 // Properties
-CONSTANT_STRING(indicator_channel_property_name,"indicatorChannel");
-
 CONSTANT_STRING(camera_trigger_channel_property_name,"cameraTriggerChannel");
 
 CONSTANT_STRING(white_light_channel_property_name,"whiteLightChannel");
 
 CONSTANT_STRING(red_light_channel_property_name,"redLightChannel");
 
+CONSTANT_STRING(camera_trigger_frequency_property_name,"cameraTriggerFrequency");
+const double camera_trigger_frequency_min = 0.01;
+const double camera_trigger_frequency_max = 100;
+const double camera_trigger_frequency_default = 0.5;
+
 // Parameters
+CONSTANT_STRING(hours_since_sunrise_parameter_name,"hours_since_sunrise");
+const double hours_since_sunrise_min = 0.0;
+const double hours_since_sunrise_max = 24.0;
 
 // Functions
+CONSTANT_STRING(run_sleep_assay_function_name,"runSleepAssay");
 
 // Callbacks
 
