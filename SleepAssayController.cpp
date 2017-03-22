@@ -50,6 +50,8 @@ void SleepAssayController::setup()
   // Parameters
 
   // Functions
+  modular_server::Function & run_experiment_function = modular_server_.createFunction(constants::run_experiment_function_name);
+  run_experiment_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::runExperimentHandler));
 
 }
 

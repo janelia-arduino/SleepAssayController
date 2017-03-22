@@ -54,12 +54,9 @@ const double camera_trigger_frequency_max = 100;
 const double camera_trigger_frequency_default = 0.5;
 
 // Parameters
-CONSTANT_STRING(hours_since_sunrise_parameter_name,"hours_since_sunrise");
-const double hours_since_sunrise_min = 0.0;
-const double hours_since_sunrise_max = 24.0;
 
 // Functions
-CONSTANT_STRING(run_sleep_assay_function_name,"runSleepAssay");
+CONSTANT_STRING(run_experiment_function_name,"runExperiment");
 
 // Callbacks
 

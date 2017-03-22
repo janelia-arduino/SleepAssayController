@@ -60,12 +60,9 @@ extern const double camera_trigger_frequency_max;
 extern const double camera_trigger_frequency_default;
 
 // Parameters
-extern ConstantString hours_since_sunrise_parameter_name;
-extern const double hours_since_sunrise_min;
-extern const double hours_since_sunrise_max;
 
 // Functions
-extern ConstantString run_sleep_assay_function_name;
+extern ConstantString run_experiment_function_name;
 
 // Callbacks
 
