@@ -23,6 +23,7 @@
 #include "FunctorCallbacks.h"
 
 #include "EventController.h"
+#include "Time.h"
 
 #include "ModularServer.h"
 #include "ModularDeviceBase.h"
@@ -37,6 +38,10 @@ public:
   SleepAssayController();
   virtual void setup();
 
+  void setEpochTime(const time_t epoch_time);
+  time_t getEpochTime();
+  bool timeIsSet();
+
 private:
   modular_server::Property properties_[sleep_assay_controller::constants::PROPERTY_COUNT_MAX];
   modular_server::Parameter parameters_[sleep_assay_controller::constants::PARAMETER_COUNT_MAX];
@@ -44,6 +49,10 @@ private:
   modular_server::Callback callbacks_[sleep_assay_controller::constants::CALLBACK_COUNT_MAX];
 
   // Handlers
+  void setEpochTimeHandler();
+  void getEpochTimeHandler();
+  void getDateTimeHandler();
+  void runExperimentHandler();
 
 };
 

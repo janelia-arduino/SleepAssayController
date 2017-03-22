@@ -14,6 +14,7 @@
 #include "FunctorCallbacks.h"
 
 #include "EventController.h"
+#include "Time.h"
 
 #include "ModularServer.h"
 #include "ModularDeviceBase.h"

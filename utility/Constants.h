@@ -16,9 +16,9 @@ namespace sleep_assay_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=4};
+enum{PROPERTY_COUNT_MAX=5};
 enum{PARAMETER_COUNT_MAX=1};
-enum{FUNCTION_COUNT_MAX=1};
+enum{FUNCTION_COUNT_MAX=4};
 enum{CALLBACK_COUNT_MAX=1};
 
 extern ConstantString device_name;
@@ -36,10 +36,18 @@ extern const long hours_per_day;
 extern const long milliseconds_per_hour;
 extern const long milliseconds_per_day;
 
+extern ConstantString year_string;
+extern ConstantString month_string;
+extern ConstantString day_string;
+extern ConstantString hour_string;
+extern ConstantString minute_string;
+extern ConstantString second_string;
+
 // Interrupts
 
 // Units
 extern ConstantString hz_unit;
+extern ConstantString seconds_unit;
 extern ConstantString hours_unit;
 extern ConstantString days_unit;
 
@@ -59,14 +67,24 @@ extern const double camera_trigger_frequency_min;
 extern const double camera_trigger_frequency_max;
 extern const double camera_trigger_frequency_default;
 
+extern ConstantString time_zone_offset_property_name;
+extern const double time_zone_offset_min;
+extern const double time_zone_offset_max;
+extern const double time_zone_offset_default;
+
 // Parameters
+extern ConstantString epoch_time_parameter_name;
 
 // Functions
+extern ConstantString set_epoch_time_function_name;
+extern ConstantString get_epoch_time_function_name;
+extern ConstantString get_date_time_function_name;
 extern ConstantString run_experiment_function_name;
 
 // Callbacks
 
 // Errors
+extern ConstantString time_not_set_error;
 }
 }
 #include "5x3.h"

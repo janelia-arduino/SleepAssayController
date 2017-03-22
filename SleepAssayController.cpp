@@ -48,11 +48,42 @@ void SleepAssayController::setup()
   camera_trigger_frequency_property.setRange(constants::camera_trigger_frequency_min,constants::camera_trigger_frequency_max);
 
   // Parameters
+  modular_server::Parameter & epoch_time_parameter = modular_server_.createParameter(constants::epoch_time_parameter_name);
+  epoch_time_parameter.setTypeLong();
+  epoch_time_parameter.setUnits(constants::seconds_unit);
 
   // Functions
+  modular_server::Function & set_epoch_time_function = modular_server_.createFunction(constants::set_epoch_time_function_name);
+  set_epoch_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setEpochTimeHandler));
+  set_epoch_time_function.addParameter(epoch_time_parameter);
+
+  modular_server::Function & get_epoch_time_function = modular_server_.createFunction(constants::get_epoch_time_function_name);
+  get_epoch_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getEpochTimeHandler));
+  get_epoch_time_function.setReturnTypeLong();
+
+  modular_server::Function & get_date_time_function = modular_server_.createFunction(constants::get_date_time_function_name);
+  get_date_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getDateTimeHandler));
+  get_date_time_function.setReturnTypeObject();
+
   modular_server::Function & run_experiment_function = modular_server_.createFunction(constants::run_experiment_function_name);
   run_experiment_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::runExperimentHandler));
 
+}
+
+void SleepAssayController::setEpochTime(const time_t epoch_time)
+{
+  setTime(epoch_time);
+}
+
+time_t SleepAssayController::getEpochTime()
+{
+  return now();
+}
+
+bool SleepAssayController::timeIsSet()
+{
+  timeStatus_t time_status = timeStatus();
+  return (time_status != timeNotSet);
 }
 
 // Handlers must be non-blocking (avoid 'delay')
@@ -72,3 +103,47 @@ void SleepAssayController::setup()
 // modular_server_.property(property_name).getElementValue(value) value type must match the property array element default type
 // modular_server_.property(property_name).setElementValue(value) value type must match the property array element default type
 
+void SleepAssayController::setEpochTimeHandler()
+{
+  long epoch_time;
+  modular_server_.parameter(constants::epoch_time_parameter_name).getValue(epoch_time);
+  setEpochTime(epoch_time);
+}
+
+void SleepAssayController::getEpochTimeHandler()
+{
+  if (!timeIsSet())
+  {
+    modular_server_.response().returnError(constants::time_not_set_error);
+    return;
+  }
+  time_t epoch_time = getEpochTime();
+  modular_server_.response().returnResult(epoch_time);
+}
+
+void SleepAssayController::getDateTimeHandler()
+{
+  if (!timeIsSet())
+  {
+    modular_server_.response().returnError(constants::time_not_set_error);
+    return;
+  }
+  time_t epoch_time = getEpochTime();
+
+  modular_server_.response().writeResultKey();
+
+  modular_server_.response().beginObject();
+
+  modular_server_.response().write(constants::year_string,year(epoch_time));
+  modular_server_.response().write(constants::month_string,month(epoch_time));
+  modular_server_.response().write(constants::day_string,day(epoch_time));
+  modular_server_.response().write(constants::hour_string,hour(epoch_time));
+  modular_server_.response().write(constants::minute_string,minute(epoch_time));
+  modular_server_.response().write(constants::second_string,second(epoch_time));
+
+  modular_server_.response().endObject();
+}
+
+void SleepAssayController::runExperimentHandler()
+{
+}
