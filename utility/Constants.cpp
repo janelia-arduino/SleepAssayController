@@ -63,7 +63,7 @@ const double camera_trigger_frequency_default = 0.5;
 
 CONSTANT_STRING(time_zone_offset_property_name,"timeZoneOffset");
 const long time_zone_offset_min = -12;
-const long time_zone_offset_max = 12;
+const long time_zone_offset_max = 14;
 const long time_zone_offset_default = -4;
 
 // Parameters
