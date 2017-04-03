@@ -1,4 +1,4 @@
-#SleepAssayController
+# SleepAssayController
 
 Authors:
 
@@ -10,15 +10,15 @@ License:
 
 [Examples](./examples)
 
-##API
+## API
 
 ```json
 ```
 
-##More Detailed Modular Device Information
+## More Detailed Modular Device Information
 
 [modular-devices](https://github.com/janelia-modular-devices/modular-devices)
 
-##Install Library Dependencies
+## Install Library Dependencies
 
 [arduino-libraries](https://github.com/janelia-arduino/arduino-libraries)

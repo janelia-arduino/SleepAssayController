@@ -41,6 +41,9 @@ CONSTANT_STRING(hour_string,"hour");
 CONSTANT_STRING(minute_string,"minute");
 CONSTANT_STRING(second_string,"second");
 
+const long camera_trigger_duty_cycle = 50;
+const long camera_trigger_duty_cycle_max = 100;
+
 // Interrupts
 
 // Units
@@ -48,23 +51,86 @@ CONSTANT_STRING(hz_unit,"Hz");
 CONSTANT_STRING(seconds_unit,"s");
 CONSTANT_STRING(hours_unit,"hours");
 CONSTANT_STRING(days_unit,"days");
+CONSTANT_STRING(military_time_hours_unit,"military_time_hours");
 
 // Properties
 CONSTANT_STRING(camera_trigger_channel_property_name,"cameraTriggerChannel");
-
-CONSTANT_STRING(white_light_channel_property_name,"whiteLightChannel");
-
-CONSTANT_STRING(red_light_channel_property_name,"redLightChannel");
 
 CONSTANT_STRING(camera_trigger_frequency_property_name,"cameraTriggerFrequency");
 const double camera_trigger_frequency_min = 0.01;
 const double camera_trigger_frequency_max = 100;
 const double camera_trigger_frequency_default = 0.5;
 
+CONSTANT_STRING(white_light_channel_property_name,"whiteLightChannel");
+
+CONSTANT_STRING(white_light_power_property_name,"whiteLightPower");
+const long white_light_power_min = 10;
+const long white_light_power_max = 100;
+const long white_light_power_default = 50;
+
+CONSTANT_STRING(white_light_start_time_property_name,"whiteLightStartTime");
+const long white_light_start_time_min = 4;
+const long white_light_start_time_max = 12;
+const long white_light_start_time_default = 9;
+
+CONSTANT_STRING(white_light_on_duration_property_name,"whiteLightOnDuration");
+const long white_light_on_duration_min = 1;
+const long white_light_on_duration_max = 23;
+const long white_light_on_duration_default = 12;
+
+CONSTANT_STRING(red_light_channel_property_name,"redLightChannel");
+
+CONSTANT_STRING(red_light_power_property_name,"redLightPower");
+const long red_light_power_min = 10;
+const long red_light_power_max = 100;
+const long red_light_power_default = 50;
+
+CONSTANT_STRING(red_light_frequency_property_name,"redLightFrequency");
+const long red_light_frequency_min = 1;
+const long red_light_frequency_max = 100;
+const long red_light_frequency_default = 10;
+
+CONSTANT_STRING(red_light_duty_cycle_property_name,"redLightDutyCycle");
+const long red_light_duty_cycle_min = 0;
+const long red_light_duty_cycle_max = 100;
+const long red_light_duty_cycle_default = 50;
+
+CONSTANT_STRING(buzzer_channel_property_name,"buzzerChannel");
+
+CONSTANT_STRING(buzzer_power_property_name,"buzzerPower");
+const long buzzer_power_min = 10;
+const long buzzer_power_max = 100;
+const long buzzer_power_default = 50;
+
+CONSTANT_STRING(buzzer_on_duration_property_name,"buzzerOnDuration");
+const long buzzer_on_duration_min = 1;
+const long buzzer_on_duration_max = 10;
+const long buzzer_on_duration_default = 1;
+
+CONSTANT_STRING(buzzer_wait_min_property_name,"buzzerWaitMin");
+const long buzzer_wait_min_min = 1;
+const long buzzer_wait_min_max = 60;
+const long buzzer_wait_min_default = 1;
+
+CONSTANT_STRING(buzzer_wait_max_property_name,"buzzerWaitMax");
+const long buzzer_wait_max_min = 1;
+const long buzzer_wait_max_max = 3600;
+const long buzzer_wait_max_default = 10;
+
 CONSTANT_STRING(time_zone_offset_property_name,"timeZoneOffset");
 const long time_zone_offset_min = -12;
 const long time_zone_offset_max = 14;
 const long time_zone_offset_default = -4;
+
+CONSTANT_STRING(entrainment_duration_property_name,"entrainmentDuration");
+const long entrainment_duration_min = 0;
+const long entrainment_duration_max = 10;
+const long entrainment_duration_default = 2;
+
+CONSTANT_STRING(recovery_duration_property_name,"recoveryDuration");
+const long recovery_duration_min = 0;
+const long recovery_duration_max = 10;
+const long recovery_duration_default = 2;
 
 // Parameters
 CONSTANT_STRING(epoch_time_parameter_name,"epoch_time");
@@ -72,8 +138,8 @@ CONSTANT_STRING(epoch_time_parameter_name,"epoch_time");
 // Functions
 CONSTANT_STRING(set_epoch_time_function_name,"setEpochTime");
 CONSTANT_STRING(get_epoch_time_function_name,"getEpochTime");
-CONSTANT_STRING(get_date_time_function_name,"getDateTime");
-CONSTANT_STRING(run_experiment_function_name,"runExperiment");
+CONSTANT_STRING(get_local_date_time_function_name,"getLocalDateTime");
+CONSTANT_STRING(run_assay_function_name,"runAssay");
 
 // Callbacks
 

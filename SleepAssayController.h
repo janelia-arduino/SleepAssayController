@@ -40,7 +40,11 @@ public:
 
   void setEpochTime(const time_t epoch_time);
   time_t getEpochTime();
+  time_t getLocalTime();
   bool timeIsSet();
+
+  void runAssay();
+  void testAssay();
 
 private:
   modular_server::Property properties_[sleep_assay_controller::constants::PROPERTY_COUNT_MAX];
@@ -48,11 +52,17 @@ private:
   modular_server::Function functions_[sleep_assay_controller::constants::FUNCTION_COUNT_MAX];
   modular_server::Callback callbacks_[sleep_assay_controller::constants::CALLBACK_COUNT_MAX];
 
+  bool testing_;
+
+  void startEntrainment();
+  void startCameraTrigger();
+
   // Handlers
+  void updatePowersHandler();
   void setEpochTimeHandler();
   void getEpochTimeHandler();
-  void getDateTimeHandler();
-  void runExperimentHandler();
+  void getLocalDateTimeHandler();
+  void runAssayHandler();
 
 };
 
