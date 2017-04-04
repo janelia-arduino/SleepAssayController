@@ -33,7 +33,7 @@ const long hours_per_day = 24;
 const long milliseconds_per_second = 1000;
 const long milliseconds_per_minute = milliseconds_per_second*seconds_per_minute;
 const long milliseconds_per_hour = milliseconds_per_second*seconds_per_minute*minutes_per_hour;
-const long milliseconds_per_day = milliseconds_per_second*hours_per_day;
+const long milliseconds_per_day = milliseconds_per_hour*hours_per_day;
 const long seconds_per_day = seconds_per_minute*minutes_per_hour*hours_per_day;
 
 CONSTANT_STRING(year_string,"year");
@@ -154,7 +154,7 @@ CONSTANT_STRING(run_assay_callback_name,"runAssay");
 CONSTANT_STRING(test_assay_callback_name,"testAssay");
 
 // Errors
-CONSTANT_STRING(time_not_set_error,"Time is not set! Must use setEpochTime method. To get epoch time, visit https://www.epochconverter.com/ or use bash: date +%s");
+CONSTANT_STRING(time_not_set_error,"Time is not set! Must use setEpochTime method. To get epoch time manually, you can visit https://www.epochconverter.com/ or use bash: date +%s");
 CONSTANT_STRING(assay_not_started_error,"Assay not started!");
 
 }

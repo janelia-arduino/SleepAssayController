@@ -45,6 +45,8 @@ public:
   void runAssay();
   void testAssay();
   bool assayStarted();
+  bool testing();
+  long scaleDuration(const long duration);
 
   time_t getDateTimeNow();
   time_t getDateTimeAssayStart();
@@ -59,17 +61,18 @@ private:
   bool testing_;
 
   time_t date_time_assay_start_;
+  long entrainment_duration_;
+  time_t date_time_experiment_start_;
 
-  void getCameraTriggerInfo(uint32_t & channels,
+  void getCameraTriggerPwmInfo(uint32_t & channels,
+                               long & period,
+                               long & on_duration);
+  void getWhiteLightPwmInfo(uint32_t & channels,
                             long & period,
                             long & on_duration);
-  void getWhiteLightInfo(uint32_t & channels,
-                         long & period,
-                         long & on_duration,
-                         long & start_time);
 
   void startCameraTrigger();
-  void setupAssay();
+  void startAssay();
   void startEntrainment();
 
   void writeDateTimeToResponse(const time_t date_time);

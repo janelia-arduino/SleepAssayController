@@ -175,7 +175,7 @@ void SleepAssayController::runAssay()
     return;
   }
   testing_ = false;
-  setupAssay();
+  startAssay();
 }
 
 void SleepAssayController::testAssay()
@@ -185,13 +185,30 @@ void SleepAssayController::testAssay()
     return;
   }
   testing_ = true;
-  setupAssay();
+  startAssay();
 }
 
 bool SleepAssayController::assayStarted()
 {
   time_t date_time_assay_start = getDateTimeAssayStart();
   return (date_time_assay_start != 0);
+}
+
+bool SleepAssayController::testing()
+{
+  return testing_;
+}
+
+long SleepAssayController::scaleDuration(const long duration)
+{
+  if (testing())
+  {
+    long testing_day_duration;
+    modular_server_.property(constants::testing_day_duration_property_name).getValue(testing_day_duration);
+    double scale_factor = (double)testing_day_duration/(double)constants::seconds_per_day;
+    return (double)duration*scale_factor;
+  }
+  return duration;
 }
 
 time_t SleepAssayController::getDateTimeNow()
@@ -220,9 +237,9 @@ time_t SleepAssayController::getDateTimeAssayEnd()
   return date_time_assay_end;
 }
 
-void SleepAssayController::getCameraTriggerInfo(uint32_t & channels,
-                                                long & period,
-                                                long & on_duration)
+void SleepAssayController::getCameraTriggerPwmInfo(uint32_t & channels,
+                                                   long & period,
+                                                   long & on_duration)
 {
   long channel;
   modular_server_.property(constants::camera_trigger_channel_property_name).getValue(channel);
@@ -235,10 +252,9 @@ void SleepAssayController::getCameraTriggerInfo(uint32_t & channels,
   on_duration = period*constants::camera_trigger_duty_cycle/constants::camera_trigger_duty_cycle_max;
 }
 
-void SleepAssayController::getWhiteLightInfo(uint32_t & channels,
-                                             long & period,
-                                             long & on_duration,
-                                             long & start_time)
+void SleepAssayController::getWhiteLightPwmInfo(uint32_t & channels,
+                                                long & period,
+                                                long & on_duration)
 {
   long channel;
   modular_server_.property(constants::white_light_channel_property_name).getValue(channel);
@@ -250,8 +266,6 @@ void SleepAssayController::getWhiteLightInfo(uint32_t & channels,
   long on_duration_hours;
   modular_server_.property(constants::white_light_on_duration_property_name).getValue(on_duration_hours);
   on_duration = on_duration_hours*constants::milliseconds_per_hour;
-
-  modular_server_.property(constants::white_light_start_time_property_name).getValue(start_time);
 }
 
 void SleepAssayController::startCameraTrigger()
@@ -259,13 +273,15 @@ void SleepAssayController::startCameraTrigger()
   uint32_t channels;
   long period;
   long on_duration;
-  getCameraTriggerInfo(channels,period,on_duration);
+  getCameraTriggerPwmInfo(channels,period,on_duration);
 
   startPwm(channels,0,period,on_duration);
 }
 
-void SleepAssayController::setupAssay()
+void SleepAssayController::startAssay()
 {
+  Serial << "assay started\n";
+  stopAllPwm();
   enableAll();
   startCameraTrigger();
 
@@ -280,8 +296,10 @@ void SleepAssayController::setupAssay()
     uint32_t channels;
     long period;
     long on_duration;
+    getWhiteLightPwmInfo(channels,period,on_duration);
+
     long start_time;
-    getWhiteLightInfo(channels,period,on_duration,start_time);
+    modular_server_.property(constants::white_light_start_time_property_name).getValue(start_time);
 
     long offset = (hour(date_time_now) - start_time)*constants::milliseconds_per_hour;
     offset += minute(date_time_now)*constants::milliseconds_per_minute;
@@ -289,9 +307,12 @@ void SleepAssayController::setupAssay()
 
     if ((offset > 0) && (offset < on_duration))
     {
+      entrainment_duration_ = entrainment_duration - 1;
       period -= offset;
       on_duration -= offset;
-      addPwm(channels,0,period,on_duration,1);
+      int pwm_index = addPwm(channels,0,scaleDuration(period),scaleDuration(on_duration),1);
+      addCountCompletedFunctor(pwm_index,
+                               makeFunctor((Functor0 *)0,*this,&SleepAssayController::startEntrainment));
     }
 
   }
@@ -299,6 +320,18 @@ void SleepAssayController::setupAssay()
 
 void SleepAssayController::startEntrainment()
 {
+  Serial << "entrainment started\n";
+  if (entrainment_duration_ > 0)
+  {
+    uint32_t channels;
+    long period;
+    long on_duration;
+    getWhiteLightPwmInfo(channels,period,on_duration);
+
+    int pwm_index = addPwm(channels,0,scaleDuration(period),scaleDuration(on_duration),entrainment_duration_);
+    // addCountCompletedFunctor(pwm_index,
+    //                          makeFunctor((Functor0 *)0,*this,&SleepAssayController::startEntrainment));
+  }
 }
 
 void SleepAssayController::writeDateTimeToResponse(const time_t date_time)
