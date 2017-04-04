@@ -36,6 +36,7 @@ extern const long milliseconds_per_second;
 extern const long milliseconds_per_minute;
 extern const long milliseconds_per_hour;
 extern const long milliseconds_per_day;
+extern const long seconds_per_day;
 
 extern ConstantString year_string;
 extern ConstantString month_string;

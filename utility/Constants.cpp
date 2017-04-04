@@ -34,6 +34,7 @@ const long milliseconds_per_second = 1000;
 const long milliseconds_per_minute = milliseconds_per_second*seconds_per_minute;
 const long milliseconds_per_hour = milliseconds_per_second*seconds_per_minute*minutes_per_hour;
 const long milliseconds_per_day = milliseconds_per_second*hours_per_day;
+const long seconds_per_day = seconds_per_minute*minutes_per_hour*hours_per_day;
 
 CONSTANT_STRING(year_string,"year");
 CONSTANT_STRING(month_string,"month");

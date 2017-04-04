@@ -44,6 +44,7 @@ public:
 
   void runAssay();
   void testAssay();
+  bool assayStarted();
 
   time_t getDateTimeNow();
   time_t getDateTimeAssayStart();
