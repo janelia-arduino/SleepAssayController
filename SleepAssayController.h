@@ -40,11 +40,14 @@ public:
 
   void setEpochTime(const time_t epoch_time);
   time_t getEpochTime();
-  time_t getLocalTime();
   bool timeIsSet();
 
   void runAssay();
   void testAssay();
+
+  time_t getDateTimeNow();
+  time_t getDateTimeAssayStart();
+  time_t getDateTimeAssayEnd();
 
 private:
   modular_server::Property properties_[sleep_assay_controller::constants::PROPERTY_COUNT_MAX];
@@ -54,15 +57,31 @@ private:
 
   bool testing_;
 
-  void startEntrainment();
+  time_t date_time_assay_start_;
+
+  void getCameraTriggerInfo(uint32_t & channels,
+                            long & period,
+                            long & on_duration);
+  void getWhiteLightInfo(uint32_t & channels,
+                         long & period,
+                         long & on_duration,
+                         long & start_time);
+
   void startCameraTrigger();
+  void setupAssay();
+  void startEntrainment();
+
+  void writeDateTimeToResponse(const time_t date_time);
 
   // Handlers
   void updatePowersHandler();
   void setEpochTimeHandler();
   void getEpochTimeHandler();
-  void getLocalDateTimeHandler();
-  void runAssayHandler();
+  void getDateTimeNowHandler();
+  void getDateTimeAssayStartHandler();
+  void getDateTimeAssayEndHandler();
+  void runAssayHandler(modular_server::Interrupt * interrupt_ptr);
+  void testAssayHandler(modular_server::Interrupt * interrupt_ptr);
 
 };
 

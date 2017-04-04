@@ -21,6 +21,7 @@ void SleepAssayController::setup()
 
   // Variable Setup
   testing_ = false;
+  date_time_assay_start_ = 0;
 
   // Set Device ID
   modular_server_.setDeviceName(constants::device_name);
@@ -110,6 +111,10 @@ void SleepAssayController::setup()
   recovery_duration_property.setRange(constants::recovery_duration_min,constants::recovery_duration_max);
   recovery_duration_property.setUnits(constants::days_unit);
 
+  modular_server::Property & testing_day_duration_property = modular_server_.createProperty(constants::testing_day_duration_property_name,constants::testing_day_duration_default);
+  testing_day_duration_property.setRange(constants::testing_day_duration_min,constants::testing_day_duration_max);
+  testing_day_duration_property.setUnits(constants::seconds_unit);
+
   updatePowersHandler();
 
   // Parameters
@@ -126,12 +131,24 @@ void SleepAssayController::setup()
   get_epoch_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getEpochTimeHandler));
   get_epoch_time_function.setReturnTypeLong();
 
-  modular_server::Function & get_local_date_time_function = modular_server_.createFunction(constants::get_local_date_time_function_name);
-  get_local_date_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getLocalDateTimeHandler));
-  get_local_date_time_function.setReturnTypeObject();
+  modular_server::Function & get_date_time_now_function = modular_server_.createFunction(constants::get_date_time_now_function_name);
+  get_date_time_now_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getDateTimeNowHandler));
+  get_date_time_now_function.setReturnTypeObject();
 
-  modular_server::Function & run_assay_function = modular_server_.createFunction(constants::run_assay_function_name);
-  run_assay_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::runAssayHandler));
+  modular_server::Function & get_date_time_assay_start_function = modular_server_.createFunction(constants::get_date_time_assay_start_function_name);
+  get_date_time_assay_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getDateTimeAssayStartHandler));
+  get_date_time_assay_start_function.setReturnTypeObject();
+
+  modular_server::Function & get_date_time_assay_end_function = modular_server_.createFunction(constants::get_date_time_assay_end_function_name);
+  get_date_time_assay_end_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getDateTimeAssayEndHandler));
+  get_date_time_assay_end_function.setReturnTypeObject();
+
+  // Callbacks
+  modular_server::Callback & run_assay_callback = modular_server_.createCallback(constants::run_assay_callback_name);
+  run_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&SleepAssayController::runAssayHandler));
+
+  modular_server::Callback & test_assay_callback = modular_server_.createCallback(constants::test_assay_callback_name);
+  test_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&SleepAssayController::testAssayHandler));
 
 }
 
@@ -145,11 +162,30 @@ time_t SleepAssayController::getEpochTime()
   return now();
 }
 
-time_t SleepAssayController::getLocalTime()
+time_t SleepAssayController::getDateTimeNow()
 {
   long time_zone_offset;
   modular_server_.property(constants::time_zone_offset_property_name).getValue(time_zone_offset);
   return now() + time_zone_offset*constants::minutes_per_hour*constants::seconds_per_minute;
+}
+
+time_t SleepAssayController::getDateTimeAssayStart()
+{
+  return date_time_assay_start_;
+}
+
+time_t SleepAssayController::getDateTimeAssayEnd()
+{
+  long entrainment_duration;
+  modular_server_.property(constants::entrainment_duration_property_name).getValue(entrainment_duration);
+
+  long recovery_duration;
+  modular_server_.property(constants::recovery_duration_property_name).getValue(recovery_duration);
+
+  long date_time_assay_end = getDateTimeAssayStart();
+  date_time_assay_end += entrainment_duration*constants::milliseconds_per_day;
+  date_time_assay_end += recovery_duration*constants::milliseconds_per_day;
+  return date_time_assay_end;
 }
 
 bool SleepAssayController::timeIsSet()
@@ -160,42 +196,119 @@ bool SleepAssayController::timeIsSet()
 
 void SleepAssayController::runAssay()
 {
+  if (!timeIsSet())
+  {
+    return;
+  }
   testing_ = false;
-  startEntrainment();
+  setupAssay();
 }
 
 void SleepAssayController::testAssay()
 {
+  if (!timeIsSet())
+  {
+    return;
+  }
   testing_ = true;
-  startEntrainment();
+  setupAssay();
 }
 
-void SleepAssayController::startEntrainment()
+void SleepAssayController::getCameraTriggerInfo(uint32_t & channels,
+                                                long & period,
+                                                long & on_duration)
 {
+  long channel;
+  modular_server_.property(constants::camera_trigger_channel_property_name).getValue(channel);
+  uint32_t bit = 1;
+  channels = bit << channel;
+
+  double frequency;
+  modular_server_.property(constants::camera_trigger_frequency_property_name).getValue(frequency);
+  period = (1.0/frequency)*constants::milliseconds_per_second;
+  on_duration = period*constants::camera_trigger_duty_cycle/constants::camera_trigger_duty_cycle_max;
+}
+
+void SleepAssayController::getWhiteLightInfo(uint32_t & channels,
+                                             long & period,
+                                             long & on_duration,
+                                             long & start_time)
+{
+  long channel;
+  modular_server_.property(constants::white_light_channel_property_name).getValue(channel);
+  uint32_t bit = 1;
+  channels = bit << channel;
+
+  period = constants::milliseconds_per_day;
+
+  long on_duration_hours;
+  modular_server_.property(constants::white_light_on_duration_property_name).getValue(on_duration_hours);
+  on_duration = on_duration_hours*constants::milliseconds_per_hour;
+
+  modular_server_.property(constants::white_light_start_time_property_name).getValue(start_time);
+}
+
+void SleepAssayController::startCameraTrigger()
+{
+  uint32_t channels;
+  long period;
+  long on_duration;
+  getCameraTriggerInfo(channels,period,on_duration);
+
+  startPwm(channels,0,period,on_duration);
+}
+
+void SleepAssayController::setupAssay()
+{
+  enableAll();
   startCameraTrigger();
+
+  time_t date_time_now = getDateTimeNow();
+  date_time_assay_start_ = date_time_now;
 
   long entrainment_duration;
   modular_server_.property(constants::entrainment_duration_property_name).getValue(entrainment_duration);
 
   if (entrainment_duration > 0)
   {
-    
+    uint32_t channels;
+    long period;
+    long on_duration;
+    long start_time;
+    getWhiteLightInfo(channels,period,on_duration,start_time);
+
+    long offset = (hour(date_time_now) - start_time)*constants::milliseconds_per_hour;
+    offset += minute(date_time_now)*constants::milliseconds_per_minute;
+    offset += second(date_time_now)*constants::milliseconds_per_second;
+
+    if ((offset > 0) && (offset < on_duration))
+    {
+      period -= offset;
+      on_duration -= offset;
+      addPwm(channels,0,period,on_duration,1);
+    }
+
   }
 }
 
-void SleepAssayController::startCameraTrigger()
+void SleepAssayController::startEntrainment()
 {
-  long channel;
-  modular_server_.property(constants::camera_trigger_channel_property_name).getValue(channel);
-  uint32_t bit = 1;
-  uint32_t channels = bit << channel;
+}
 
-  double frequency;
-  modular_server_.property(constants::camera_trigger_frequency_property_name).getValue(frequency);
-  long period = 1/frequency;
-  long on_duration = period*constants::camera_trigger_duty_cycle/constants::camera_trigger_duty_cycle_max;
+void SleepAssayController::writeDateTimeToResponse(const time_t date_time)
+{
+  modular_server_.response().writeResultKey();
 
-  startPwm(channels,0,period,on_duration);
+  modular_server_.response().beginObject();
+
+  modular_server_.response().write(constants::year_string,year(date_time));
+  modular_server_.response().write(constants::month_string,month(date_time));
+  modular_server_.response().write(constants::day_string,day(date_time));
+  modular_server_.response().write(constants::hour_string,hour(date_time));
+  modular_server_.response().write(constants::minute_string,minute(date_time));
+  modular_server_.response().write(constants::second_string,second(date_time));
+
+  modular_server_.response().endObject();
 }
 
 // Handlers must be non-blocking (avoid 'delay')
@@ -252,29 +365,67 @@ void SleepAssayController::getEpochTimeHandler()
   modular_server_.response().returnResult(epoch_time);
 }
 
-void SleepAssayController::getLocalDateTimeHandler()
+void SleepAssayController::getDateTimeNowHandler()
 {
   if (!timeIsSet())
   {
     modular_server_.response().returnError(constants::time_not_set_error);
     return;
   }
-  time_t local_time = getLocalTime();
-
-  modular_server_.response().writeResultKey();
-
-  modular_server_.response().beginObject();
-
-  modular_server_.response().write(constants::year_string,year(local_time));
-  modular_server_.response().write(constants::month_string,month(local_time));
-  modular_server_.response().write(constants::day_string,day(local_time));
-  modular_server_.response().write(constants::hour_string,hour(local_time));
-  modular_server_.response().write(constants::minute_string,minute(local_time));
-  modular_server_.response().write(constants::second_string,second(local_time));
-
-  modular_server_.response().endObject();
+  time_t date_time_now = getDateTimeNow();
+  writeDateTimeToResponse(date_time_now);
 }
 
-void SleepAssayController::runAssayHandler()
+void SleepAssayController::getDateTimeAssayStartHandler()
 {
+  if (!timeIsSet())
+  {
+    modular_server_.response().returnError(constants::time_not_set_error);
+    return;
+  }
+  time_t date_time_assay_start = getDateTimeAssayStart();
+  if (date_time_assay_start == 0)
+  {
+    modular_server_.response().returnError(constants::assay_not_started_error);
+    return;
+  }
+  writeDateTimeToResponse(date_time_assay_start);
+}
+
+void SleepAssayController::getDateTimeAssayEndHandler()
+{
+  if (!timeIsSet())
+  {
+    modular_server_.response().returnError(constants::time_not_set_error);
+    return;
+  }
+  time_t date_time_assay_start = getDateTimeAssayStart();
+  if (date_time_assay_start == 0)
+  {
+    modular_server_.response().returnError(constants::assay_not_started_error);
+    return;
+  }
+
+  time_t date_time_assay_end = getDateTimeAssayEnd();
+  writeDateTimeToResponse(date_time_assay_end);
+}
+
+void SleepAssayController::runAssayHandler(modular_server::Interrupt * interrupt_ptr)
+{
+  if (!timeIsSet())
+  {
+    modular_server_.response().returnError(constants::time_not_set_error);
+    return;
+  }
+  runAssay();
+}
+
+void SleepAssayController::testAssayHandler(modular_server::Interrupt * interrupt_ptr)
+{
+  if (!timeIsSet())
+  {
+    modular_server_.response().returnError(constants::time_not_set_error);
+    return;
+  }
+  testAssay();
 }

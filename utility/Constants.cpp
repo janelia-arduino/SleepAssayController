@@ -27,10 +27,11 @@ const modular_server::FirmwareInfo firmware_info =
 const long channel_min = 0;
 const long channel_max = high_power_switch_controller::constants::CHANNEL_COUNT;
 
-const long milliseconds_per_second = 1000;
 const long seconds_per_minute = 60;
 const long minutes_per_hour = 60;
 const long hours_per_day = 24;
+const long milliseconds_per_second = 1000;
+const long milliseconds_per_minute = milliseconds_per_second*seconds_per_minute;
 const long milliseconds_per_hour = milliseconds_per_second*seconds_per_minute*minutes_per_hour;
 const long milliseconds_per_day = milliseconds_per_second*hours_per_day;
 
@@ -41,8 +42,8 @@ CONSTANT_STRING(hour_string,"hour");
 CONSTANT_STRING(minute_string,"minute");
 CONSTANT_STRING(second_string,"second");
 
-const long camera_trigger_duty_cycle = 50;
-const long camera_trigger_duty_cycle_max = 100;
+const double camera_trigger_duty_cycle = 50.0;
+const double camera_trigger_duty_cycle_max = 100.0;
 
 // Interrupts
 
@@ -132,19 +133,28 @@ const long recovery_duration_min = 0;
 const long recovery_duration_max = 10;
 const long recovery_duration_default = 2;
 
+CONSTANT_STRING(testing_day_duration_property_name,"testingDayDuration");
+const long testing_day_duration_min = 1;
+const long testing_day_duration_max = 240;
+const long testing_day_duration_default = 6;
+
 // Parameters
 CONSTANT_STRING(epoch_time_parameter_name,"epoch_time");
 
 // Functions
 CONSTANT_STRING(set_epoch_time_function_name,"setEpochTime");
 CONSTANT_STRING(get_epoch_time_function_name,"getEpochTime");
-CONSTANT_STRING(get_local_date_time_function_name,"getLocalDateTime");
-CONSTANT_STRING(run_assay_function_name,"runAssay");
+CONSTANT_STRING(get_date_time_now_function_name,"getDateTimeNow");
+CONSTANT_STRING(get_date_time_assay_start_function_name,"getDateTimeAssayStart");
+CONSTANT_STRING(get_date_time_assay_end_function_name,"getDateTimeAssayEnd");
 
 // Callbacks
+CONSTANT_STRING(run_assay_callback_name,"runAssay");
+CONSTANT_STRING(test_assay_callback_name,"testAssay");
 
 // Errors
-CONSTANT_STRING(time_not_set_error,"Time is not set! Must use setEpochTime method. To get epoch time using bash: date +%s");
+CONSTANT_STRING(time_not_set_error,"Time is not set! Must use setEpochTime method. To get epoch time, visit https://www.epochconverter.com/ or use bash: date +%s");
+CONSTANT_STRING(assay_not_started_error,"Assay not started!");
 
 }
 }
