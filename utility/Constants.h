@@ -18,8 +18,8 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=19};
 enum{PARAMETER_COUNT_MAX=1};
-enum{FUNCTION_COUNT_MAX=5};
-enum{CALLBACK_COUNT_MAX=2};
+enum{FUNCTION_COUNT_MAX=7};
+enum{CALLBACK_COUNT_MAX=3};
 
 extern ConstantString device_name;
 
@@ -155,10 +155,13 @@ extern ConstantString get_epoch_time_function_name;
 extern ConstantString get_date_time_now_function_name;
 extern ConstantString get_date_time_assay_start_function_name;
 extern ConstantString get_date_time_assay_end_function_name;
+extern ConstantString get_date_time_experiment_start_function_name;
+extern ConstantString get_date_time_experiment_end_function_name;
 
 // Callbacks
 extern ConstantString run_assay_callback_name;
 extern ConstantString test_assay_callback_name;
+extern ConstantString stop_assay_callback_name;
 
 // Errors
 extern ConstantString time_not_set_error;

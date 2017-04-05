@@ -44,6 +44,7 @@ public:
 
   void runAssay();
   void testAssay();
+  void stopAssay();
   bool assayStarted();
   bool testing();
   long scaleDuration(const long duration);
@@ -61,7 +62,6 @@ private:
   bool testing_;
 
   time_t date_time_assay_start_;
-  long entrainment_duration_;
   time_t date_time_experiment_start_;
 
   void getCameraTriggerPwmInfo(uint32_t & channels,
@@ -73,7 +73,7 @@ private:
 
   void startCameraTrigger();
   void startAssay();
-  void startEntrainment();
+  void startEntrainment(const int entrainment_duration);
 
   void writeDateTimeToResponse(const time_t date_time);
 
@@ -86,6 +86,7 @@ private:
   void getDateTimeAssayEndHandler();
   void runAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void testAssayHandler(modular_server::Interrupt * interrupt_ptr);
+  void stopAssayHandler(modular_server::Interrupt * interrupt_ptr);
 
 };
 

@@ -20,8 +20,7 @@ void SleepAssayController::setup()
   HighPowerSwitchController::setup();
 
   // Variable Setup
-  testing_ = false;
-  date_time_assay_start_ = 0;
+  stopAssay();
 
   // Set Device ID
   modular_server_.setDeviceName(constants::device_name);
@@ -150,6 +149,9 @@ void SleepAssayController::setup()
   modular_server::Callback & test_assay_callback = modular_server_.createCallback(constants::test_assay_callback_name);
   test_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&SleepAssayController::testAssayHandler));
 
+  modular_server::Callback & stop_assay_callback = modular_server_.createCallback(constants::stop_assay_callback_name);
+  stop_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&SleepAssayController::stopAssayHandler));
+
 }
 
 void SleepAssayController::setEpochTime(const time_t epoch_time)
@@ -186,6 +188,14 @@ void SleepAssayController::testAssay()
   }
   testing_ = true;
   startAssay();
+}
+
+void SleepAssayController::stopAssay()
+{
+  stopAllPwm();
+  testing_ = false;
+  date_time_assay_start_ = 0;
+  date_time_experiment_start_ = 0;
 }
 
 bool SleepAssayController::assayStarted()
@@ -275,18 +285,19 @@ void SleepAssayController::startCameraTrigger()
   long on_duration;
   getCameraTriggerPwmInfo(channels,period,on_duration);
 
-  startPwm(channels,0,period,on_duration);
+  long delay = 0;
+  startPwm(channels,delay,period,on_duration);
 }
 
 void SleepAssayController::startAssay()
 {
-  Serial << "assay started\n";
   stopAllPwm();
   enableAll();
   startCameraTrigger();
 
   time_t date_time_now = getDateTimeNow();
   date_time_assay_start_ = date_time_now;
+  date_time_experiment_start_ = date_time_assay_start_;
 
   long entrainment_duration;
   modular_server_.property(constants::entrainment_duration_property_name).getValue(entrainment_duration);
@@ -307,30 +318,61 @@ void SleepAssayController::startAssay()
 
     if ((offset > 0) && (offset < on_duration))
     {
-      entrainment_duration_ = entrainment_duration - 1;
       period -= offset;
       on_duration -= offset;
-      int pwm_index = addPwm(channels,0,scaleDuration(period),scaleDuration(on_duration),1);
+      long delay = 0;
+      long count = 1;
+      int pwm_index = addPwm(channels,delay,scaleDuration(period),scaleDuration(on_duration),count);
+      const int entrainment_duration2 = entrainment_duration - 1;
       addCountCompletedFunctor(pwm_index,
-                               makeFunctor((Functor0 *)0,*this,&SleepAssayController::startEntrainment));
+                               makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
+                               entrainment_duration2);
+      date_time_experiment_start_ += scaleDuration(entrainment_duration2*constants::seconds_per_day);
+      date_time_experiment_start_ += scaleDuration(period/constants::milliseconds_per_second);
     }
-
+    else if (offset >= on_duration)
+    {
+      long delay = period - offset;
+      const int entrainment_duration2 = entrainment_duration - 1;
+      addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
+                         delay,
+                         entrainment_duration2);
+      date_time_experiment_start_ += scaleDuration(entrainment_duration2*constants::seconds_per_day);
+      date_time_experiment_start_ += scaleDuration(delay/constants::milliseconds_per_second);
+    }
+    else if (offset <= 0)
+    {
+      long delay = abs(offset);
+      const int entrainment_duration2 = entrainment_duration;
+      addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
+                         delay,
+                         entrainment_duration2);
+      date_time_experiment_start_ += scaleDuration(entrainment_duration2*constants::seconds_per_day);
+      date_time_experiment_start_ += scaleDuration(delay/constants::milliseconds_per_second);
+    }
+  }
+  else
+  {
+    
   }
 }
 
-void SleepAssayController::startEntrainment()
+void SleepAssayController::startEntrainment(const int entrainment_duration)
 {
-  Serial << "entrainment started\n";
-  if (entrainment_duration_ > 0)
+  if (entrainment_duration > 0)
   {
     uint32_t channels;
     long period;
     long on_duration;
     getWhiteLightPwmInfo(channels,period,on_duration);
 
-    int pwm_index = addPwm(channels,0,scaleDuration(period),scaleDuration(on_duration),entrainment_duration_);
+    int pwm_index = addPwm(channels,0,scaleDuration(period),scaleDuration(on_duration),entrainment_duration);
     // addCountCompletedFunctor(pwm_index,
     //                          makeFunctor((Functor0 *)0,*this,&SleepAssayController::startEntrainment));
+  }
+  else
+  {
+    
   }
 }
 
@@ -469,4 +511,9 @@ void SleepAssayController::testAssayHandler(modular_server::Interrupt * interrup
     return;
   }
   testAssay();
+}
+
+void SleepAssayController::stopAssayHandler(modular_server::Interrupt * interrupt_ptr)
+{
+  stopAssay();
 }

@@ -125,7 +125,7 @@ const long time_zone_offset_max = 14;
 const long time_zone_offset_default = -4;
 
 CONSTANT_STRING(entrainment_duration_property_name,"entrainmentDuration");
-const long entrainment_duration_min = 0;
+const long entrainment_duration_min = 1;
 const long entrainment_duration_max = 10;
 const long entrainment_duration_default = 2;
 
@@ -148,10 +148,13 @@ CONSTANT_STRING(get_epoch_time_function_name,"getEpochTime");
 CONSTANT_STRING(get_date_time_now_function_name,"getDateTimeNow");
 CONSTANT_STRING(get_date_time_assay_start_function_name,"getDateTimeAssayStart");
 CONSTANT_STRING(get_date_time_assay_end_function_name,"getDateTimeAssayEnd");
+CONSTANT_STRING(get_date_time_experiment_start_function_name,"getDateTimeExperimentStart");
+CONSTANT_STRING(get_date_time_experiment_end_function_name,"getDateTimeExperimentEnd");
 
 // Callbacks
 CONSTANT_STRING(run_assay_callback_name,"runAssay");
 CONSTANT_STRING(test_assay_callback_name,"testAssay");
+CONSTANT_STRING(stop_assay_callback_name,"stopAssay");
 
 // Errors
 CONSTANT_STRING(time_not_set_error,"Time is not set! Must use setEpochTime method. To get epoch time manually, you can visit https://www.epochconverter.com/ or use bash: date +%s");
