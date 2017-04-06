@@ -163,21 +163,21 @@ void SleepAssayController::setup()
   now_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::nowHandler));
   now_function.setReturnTypeObject();
 
-  modular_server::Function & assay_start_function = modular_server_.createFunction(constants::assay_start_function_name);
-  assay_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::assayStartHandler));
-  assay_start_function.setReturnTypeObject();
+  modular_server::Function & get_assay_start_function = modular_server_.createFunction(constants::get_assay_start_function_name);
+  get_assay_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getAssayStartHandler));
+  get_assay_start_function.setReturnTypeObject();
 
-  modular_server::Function & assay_end_function = modular_server_.createFunction(constants::assay_end_function_name);
-  assay_end_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::assayEndHandler));
-  assay_end_function.setReturnTypeObject();
+  modular_server::Function & get_assay_end_function = modular_server_.createFunction(constants::get_assay_end_function_name);
+  get_assay_end_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getAssayEndHandler));
+  get_assay_end_function.setReturnTypeObject();
 
-  modular_server::Function & experiment_start_function = modular_server_.createFunction(constants::experiment_start_function_name);
-  experiment_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::experimentStartHandler));
-  experiment_start_function.setReturnTypeObject();
+  modular_server::Function & get_experiment_start_function = modular_server_.createFunction(constants::get_experiment_start_function_name);
+  get_experiment_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getExperimentStartHandler));
+  get_experiment_start_function.setReturnTypeObject();
 
-  modular_server::Function & experiment_end_function = modular_server_.createFunction(constants::experiment_end_function_name);
-  experiment_end_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::experimentEndHandler));
-  experiment_end_function.setReturnTypeObject();
+  modular_server::Function & get_experiment_end_function = modular_server_.createFunction(constants::get_experiment_end_function_name);
+  get_experiment_end_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getExperimentEndHandler));
+  get_experiment_end_function.setReturnTypeObject();
 
   modular_server::Function & get_experiment_info_function = modular_server_.createFunction(constants::get_experiment_info_function_name);
   get_experiment_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getExperimentInfoHandler));
@@ -272,7 +272,7 @@ void SleepAssayController::stopAssay()
 
 bool SleepAssayController::assayStarted()
 {
-  time_t date_time_assay_start = assayStart();
+  time_t date_time_assay_start = getAssayStart();
   return (date_time_assay_start != 0);
 }
 
@@ -300,29 +300,29 @@ time_t SleepAssayController::now()
   return ::now() + time_zone_offset*constants::minutes_per_hour*constants::seconds_per_minute;
 }
 
-time_t SleepAssayController::assayStart()
+time_t SleepAssayController::getAssayStart()
 {
   return date_time_assay_start_;
 }
 
-time_t SleepAssayController::assayEnd()
+time_t SleepAssayController::getAssayEnd()
 {
   long recovery_duration;
   modular_server_.property(constants::recovery_duration_property_name).getValue(recovery_duration);
 
-  time_t date_time_assay_end = experimentEnd();
+  time_t date_time_assay_end = getExperimentEnd();
   date_time_assay_end += scaleDuration(recovery_duration*constants::seconds_per_day);
   return date_time_assay_end;
 }
 
-time_t SleepAssayController::experimentStart()
+time_t SleepAssayController::getExperimentStart()
 {
   return date_time_experiment_start_;
 }
 
-time_t SleepAssayController::experimentEnd()
+time_t SleepAssayController::getExperimentEnd()
 {
-  time_t date_time_experiment_end = experimentStart();
+  time_t date_time_experiment_end = getExperimentStart();
   date_time_experiment_end += scaleDuration(experiment_day_array_.size()*constants::seconds_per_day);
   return date_time_experiment_end;
 }
@@ -637,7 +637,7 @@ void SleepAssayController::nowHandler()
   writeDateTimeToResponse(date_time_now);
 }
 
-void SleepAssayController::assayStartHandler()
+void SleepAssayController::getAssayStartHandler()
 {
   if (!timeIsSet())
   {
@@ -651,12 +651,12 @@ void SleepAssayController::assayStartHandler()
     return;
   }
 
-  time_t date_time_assay_start = assayStart();
+  time_t date_time_assay_start = getAssayStart();
   modular_server_.response().writeResultKey();
   writeDateTimeToResponse(date_time_assay_start);
 }
 
-void SleepAssayController::assayEndHandler()
+void SleepAssayController::getAssayEndHandler()
 {
   if (!timeIsSet())
   {
@@ -670,12 +670,12 @@ void SleepAssayController::assayEndHandler()
     return;
   }
 
-  time_t date_time_assay_end = assayEnd();
+  time_t date_time_assay_end = getAssayEnd();
   modular_server_.response().writeResultKey();
   writeDateTimeToResponse(date_time_assay_end);
 }
 
-void SleepAssayController::experimentStartHandler()
+void SleepAssayController::getExperimentStartHandler()
 {
   if (!timeIsSet())
   {
@@ -689,12 +689,12 @@ void SleepAssayController::experimentStartHandler()
     return;
   }
 
-  time_t date_time_experiment_start = experimentStart();
+  time_t date_time_experiment_start = getExperimentStart();
   modular_server_.response().writeResultKey();
   writeDateTimeToResponse(date_time_experiment_start);
 }
 
-void SleepAssayController::experimentEndHandler()
+void SleepAssayController::getExperimentEndHandler()
 {
   if (!timeIsSet())
   {
@@ -708,7 +708,7 @@ void SleepAssayController::experimentEndHandler()
     return;
   }
 
-  time_t date_time_experiment_end = experimentEnd();
+  time_t date_time_experiment_end = getExperimentEnd();
   modular_server_.response().writeResultKey();
   writeDateTimeToResponse(date_time_experiment_end);
 }

@@ -51,10 +51,10 @@ public:
   long scaleDuration(const long duration);
 
   time_t now();
-  time_t assayStart();
-  time_t assayEnd();
-  time_t experimentStart();
-  time_t experimentEnd();
+  time_t getAssayStart();
+  time_t getAssayEnd();
+  time_t getExperimentStart();
+  time_t getExperimentEnd();
 
   Array<sleep_assay_controller::constants::ExperimentDayInfo,
         sleep_assay_controller::constants::EXPERIMENT_DAY_COUNT_MAX> getExperimentInfo();
@@ -104,10 +104,10 @@ private:
   void setTimeHandler();
   void getTimeHandler();
   void nowHandler();
-  void assayStartHandler();
-  void assayEndHandler();
-  void experimentStartHandler();
-  void experimentEndHandler();
+  void getAssayStartHandler();
+  void getAssayEndHandler();
+  void getExperimentStartHandler();
+  void getExperimentEndHandler();
   void getExperimentInfoHandler();
   void getExperimentDayInfoHandler();
   void addExperimentDayDefaultHandler();
