@@ -122,25 +122,25 @@ void SleepAssayController::setup()
   epoch_time_parameter.setUnits(constants::seconds_unit);
 
   // Functions
-  modular_server::Function & set_epoch_time_function = modular_server_.createFunction(constants::set_epoch_time_function_name);
-  set_epoch_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setEpochTimeHandler));
-  set_epoch_time_function.addParameter(epoch_time_parameter);
+  modular_server::Function & set_time_function = modular_server_.createFunction(constants::set_time_function_name);
+  set_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setTimeHandler));
+  set_time_function.addParameter(epoch_time_parameter);
 
-  modular_server::Function & get_epoch_time_function = modular_server_.createFunction(constants::get_epoch_time_function_name);
-  get_epoch_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getEpochTimeHandler));
-  get_epoch_time_function.setReturnTypeLong();
+  modular_server::Function & get_time_function = modular_server_.createFunction(constants::get_time_function_name);
+  get_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getTimeHandler));
+  get_time_function.setReturnTypeLong();
 
-  modular_server::Function & get_date_time_now_function = modular_server_.createFunction(constants::get_date_time_now_function_name);
-  get_date_time_now_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getDateTimeNowHandler));
-  get_date_time_now_function.setReturnTypeObject();
+  modular_server::Function & now_function = modular_server_.createFunction(constants::now_function_name);
+  now_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::nowHandler));
+  now_function.setReturnTypeObject();
 
-  modular_server::Function & get_date_time_assay_start_function = modular_server_.createFunction(constants::get_date_time_assay_start_function_name);
-  get_date_time_assay_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getDateTimeAssayStartHandler));
-  get_date_time_assay_start_function.setReturnTypeObject();
+  modular_server::Function & assay_start_function = modular_server_.createFunction(constants::assay_start_function_name);
+  assay_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::assayStartHandler));
+  assay_start_function.setReturnTypeObject();
 
-  modular_server::Function & get_date_time_assay_end_function = modular_server_.createFunction(constants::get_date_time_assay_end_function_name);
-  get_date_time_assay_end_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getDateTimeAssayEndHandler));
-  get_date_time_assay_end_function.setReturnTypeObject();
+  modular_server::Function & assay_end_function = modular_server_.createFunction(constants::assay_end_function_name);
+  assay_end_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::assayEndHandler));
+  assay_end_function.setReturnTypeObject();
 
   // Callbacks
   modular_server::Callback & run_assay_callback = modular_server_.createCallback(constants::run_assay_callback_name);
@@ -154,14 +154,14 @@ void SleepAssayController::setup()
 
 }
 
-void SleepAssayController::setEpochTime(const time_t epoch_time)
+void SleepAssayController::setTime(const time_t epoch_time)
 {
-  setTime(epoch_time);
+  ::setTime(epoch_time);
 }
 
-time_t SleepAssayController::getEpochTime()
+time_t SleepAssayController::getTime()
 {
-  return now();
+  return ::now();
 }
 
 bool SleepAssayController::timeIsSet()
@@ -200,7 +200,7 @@ void SleepAssayController::stopAssay()
 
 bool SleepAssayController::assayStarted()
 {
-  time_t date_time_assay_start = getDateTimeAssayStart();
+  time_t date_time_assay_start = assayStart();
   return (date_time_assay_start != 0);
 }
 
@@ -221,19 +221,19 @@ long SleepAssayController::scaleDuration(const long duration)
   return duration;
 }
 
-time_t SleepAssayController::getDateTimeNow()
+time_t SleepAssayController::now()
 {
   long time_zone_offset;
   modular_server_.property(constants::time_zone_offset_property_name).getValue(time_zone_offset);
-  return now() + time_zone_offset*constants::minutes_per_hour*constants::seconds_per_minute;
+  return ::now() + time_zone_offset*constants::minutes_per_hour*constants::seconds_per_minute;
 }
 
-time_t SleepAssayController::getDateTimeAssayStart()
+time_t SleepAssayController::assayStart()
 {
   return date_time_assay_start_;
 }
 
-time_t SleepAssayController::getDateTimeAssayEnd()
+time_t SleepAssayController::assayEnd()
 {
   long entrainment_duration;
   modular_server_.property(constants::entrainment_duration_property_name).getValue(entrainment_duration);
@@ -241,7 +241,7 @@ time_t SleepAssayController::getDateTimeAssayEnd()
   long recovery_duration;
   modular_server_.property(constants::recovery_duration_property_name).getValue(recovery_duration);
 
-  time_t date_time_assay_end = getDateTimeAssayStart();
+  time_t date_time_assay_end = assayStart();
   date_time_assay_end += entrainment_duration*constants::seconds_per_day;
   date_time_assay_end += recovery_duration*constants::seconds_per_day;
   return date_time_assay_end;
@@ -295,7 +295,7 @@ void SleepAssayController::startAssay()
   enableAll();
   startCameraTrigger();
 
-  time_t date_time_now = getDateTimeNow();
+  time_t date_time_now = SleepAssayController::now();
   date_time_assay_start_ = date_time_now;
   date_time_experiment_start_ = date_time_assay_start_;
 
@@ -428,36 +428,36 @@ void SleepAssayController::updatePowersHandler()
   power_max_property.setElementValue(channel,power);
 }
 
-void SleepAssayController::setEpochTimeHandler()
+void SleepAssayController::setTimeHandler()
 {
   long epoch_time;
   modular_server_.parameter(constants::epoch_time_parameter_name).getValue(epoch_time);
-  setEpochTime(epoch_time);
+  SleepAssayController::setTime(epoch_time);
 }
 
-void SleepAssayController::getEpochTimeHandler()
+void SleepAssayController::getTimeHandler()
 {
   if (!timeIsSet())
   {
     modular_server_.response().returnError(constants::time_not_set_error);
     return;
   }
-  time_t epoch_time = getEpochTime();
+  time_t epoch_time = getTime();
   modular_server_.response().returnResult(epoch_time);
 }
 
-void SleepAssayController::getDateTimeNowHandler()
+void SleepAssayController::nowHandler()
 {
   if (!timeIsSet())
   {
     modular_server_.response().returnError(constants::time_not_set_error);
     return;
   }
-  time_t date_time_now = getDateTimeNow();
+  time_t date_time_now = SleepAssayController::now();
   writeDateTimeToResponse(date_time_now);
 }
 
-void SleepAssayController::getDateTimeAssayStartHandler()
+void SleepAssayController::assayStartHandler()
 {
   if (!timeIsSet())
   {
@@ -471,11 +471,11 @@ void SleepAssayController::getDateTimeAssayStartHandler()
     return;
   }
 
-  time_t date_time_assay_start = getDateTimeAssayStart();
+  time_t date_time_assay_start = assayStart();
   writeDateTimeToResponse(date_time_assay_start);
 }
 
-void SleepAssayController::getDateTimeAssayEndHandler()
+void SleepAssayController::assayEndHandler()
 {
   if (!timeIsSet())
   {
@@ -489,7 +489,7 @@ void SleepAssayController::getDateTimeAssayEndHandler()
     return;
   }
 
-  time_t date_time_assay_end = getDateTimeAssayEnd();
+  time_t date_time_assay_end = assayEnd();
   writeDateTimeToResponse(date_time_assay_end);
 }
 

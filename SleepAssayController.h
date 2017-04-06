@@ -38,8 +38,8 @@ public:
   SleepAssayController();
   virtual void setup();
 
-  void setEpochTime(const time_t epoch_time);
-  time_t getEpochTime();
+  void setTime(const time_t epoch_time);
+  time_t getTime();
   bool timeIsSet();
 
   void runAssay();
@@ -49,9 +49,9 @@ public:
   bool testing();
   long scaleDuration(const long duration);
 
-  time_t getDateTimeNow();
-  time_t getDateTimeAssayStart();
-  time_t getDateTimeAssayEnd();
+  time_t now();
+  time_t assayStart();
+  time_t assayEnd();
 
 private:
   modular_server::Property properties_[sleep_assay_controller::constants::PROPERTY_COUNT_MAX];
@@ -79,11 +79,11 @@ private:
 
   // Handlers
   void updatePowersHandler();
-  void setEpochTimeHandler();
-  void getEpochTimeHandler();
-  void getDateTimeNowHandler();
-  void getDateTimeAssayStartHandler();
-  void getDateTimeAssayEndHandler();
+  void setTimeHandler();
+  void getTimeHandler();
+  void nowHandler();
+  void assayStartHandler();
+  void assayEndHandler();
   void runAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void testAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void stopAssayHandler(modular_server::Interrupt * interrupt_ptr);

@@ -143,13 +143,13 @@ const long testing_day_duration_default = 6;
 CONSTANT_STRING(epoch_time_parameter_name,"epoch_time");
 
 // Functions
-CONSTANT_STRING(set_epoch_time_function_name,"setEpochTime");
-CONSTANT_STRING(get_epoch_time_function_name,"getEpochTime");
-CONSTANT_STRING(get_date_time_now_function_name,"getDateTimeNow");
-CONSTANT_STRING(get_date_time_assay_start_function_name,"getDateTimeAssayStart");
-CONSTANT_STRING(get_date_time_assay_end_function_name,"getDateTimeAssayEnd");
-CONSTANT_STRING(get_date_time_experiment_start_function_name,"getDateTimeExperimentStart");
-CONSTANT_STRING(get_date_time_experiment_end_function_name,"getDateTimeExperimentEnd");
+CONSTANT_STRING(set_time_function_name,"setTime");
+CONSTANT_STRING(get_time_function_name,"getTime");
+CONSTANT_STRING(now_function_name,"now");
+CONSTANT_STRING(assay_start_function_name,"assayStart");
+CONSTANT_STRING(assay_end_function_name,"assayEnd");
+CONSTANT_STRING(experiment_start_function_name,"experimentStart");
+CONSTANT_STRING(experiment_end_function_name,"experimentEnd");
 
 // Callbacks
 CONSTANT_STRING(run_assay_callback_name,"runAssay");
@@ -157,7 +157,7 @@ CONSTANT_STRING(test_assay_callback_name,"testAssay");
 CONSTANT_STRING(stop_assay_callback_name,"stopAssay");
 
 // Errors
-CONSTANT_STRING(time_not_set_error,"Time is not set! Must use setEpochTime method. To get epoch time manually, you can visit https://www.epochconverter.com/ or use bash: date +%s");
+CONSTANT_STRING(time_not_set_error,"Time is not set! Must use setTime method. To get epoch time manually, you can visit https://www.epochconverter.com/ or use bash: date +%s");
 CONSTANT_STRING(assay_not_started_error,"Assay not started!");
 
 }

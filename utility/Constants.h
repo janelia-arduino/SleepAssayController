@@ -150,13 +150,13 @@ extern const long testing_day_duration_default;
 extern ConstantString epoch_time_parameter_name;
 
 // Functions
-extern ConstantString set_epoch_time_function_name;
-extern ConstantString get_epoch_time_function_name;
-extern ConstantString get_date_time_now_function_name;
-extern ConstantString get_date_time_assay_start_function_name;
-extern ConstantString get_date_time_assay_end_function_name;
-extern ConstantString get_date_time_experiment_start_function_name;
-extern ConstantString get_date_time_experiment_end_function_name;
+extern ConstantString set_time_function_name;
+extern ConstantString get_time_function_name;
+extern ConstantString now_function_name;
+extern ConstantString assay_start_function_name;
+extern ConstantString assay_end_function_name;
+extern ConstantString experiment_start_function_name;
+extern ConstantString experiment_end_function_name;
 
 // Callbacks
 extern ConstantString run_assay_callback_name;
