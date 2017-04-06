@@ -17,8 +17,8 @@ namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=19};
-enum{PARAMETER_COUNT_MAX=2};
-enum{FUNCTION_COUNT_MAX=10};
+enum{PARAMETER_COUNT_MAX=9};
+enum{FUNCTION_COUNT_MAX=13};
 enum{CALLBACK_COUNT_MAX=3};
 
 extern ConstantString device_name;
@@ -58,9 +58,6 @@ struct ExperimentDayInfo
   double buzzer_delay_hours;
   double buzzer_duration_hours;
 };
-
-extern ConstantString white_light_string;
-extern ConstantString red_light_string;
 
 // Interrupts
 
@@ -165,6 +162,28 @@ extern ConstantString epoch_time_parameter_name;
 
 extern ConstantString experiment_day_parameter_name;
 
+extern ConstantString white_light_parameter_name;
+
+extern ConstantString red_light_parameter_name;
+
+extern ConstantString red_light_delay_parameter_name;
+extern const double red_light_delay_min;
+extern const double red_light_delay_max;
+
+extern ConstantString red_light_duration_parameter_name;
+extern const double red_light_duration_min;
+extern const double red_light_duration_max;
+
+extern ConstantString buzzer_parameter_name;
+
+extern ConstantString buzzer_delay_parameter_name;
+extern const double buzzer_delay_min;
+extern const double buzzer_delay_max;
+
+extern ConstantString buzzer_duration_parameter_name;
+extern const double buzzer_duration_min;
+extern const double buzzer_duration_max;
+
 // Functions
 extern ConstantString set_time_function_name;
 extern ConstantString get_time_function_name;
@@ -176,6 +195,9 @@ extern ConstantString experiment_end_function_name;
 extern ConstantString get_experiment_info_function_name;
 extern ConstantString get_experiment_day_info_function_name;
 extern ConstantString add_default_experiment_day_function_name;
+extern ConstantString set_experiment_day_white_light_info_function_name;
+extern ConstantString set_experiment_day_red_light_info_function_name;
+extern ConstantString set_experiment_day_buzzer_info_function_name;
 
 // Callbacks
 extern ConstantString run_assay_callback_name;

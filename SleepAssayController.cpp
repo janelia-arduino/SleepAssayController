@@ -125,6 +125,31 @@ void SleepAssayController::setup()
   experiment_day_parameter.setTypeLong();
   experiment_day_parameter.setRange((long)0,(long)constants::EXPERIMENT_DAY_COUNT_MAX - 1);
 
+  modular_server::Parameter & white_light_parameter = modular_server_.createParameter(constants::white_light_parameter_name);
+  white_light_parameter.setTypeBool();
+
+  modular_server::Parameter & red_light_parameter = modular_server_.createParameter(constants::red_light_parameter_name);
+  red_light_parameter.setTypeBool();
+
+  modular_server::Parameter & red_light_delay_parameter = modular_server_.createParameter(constants::red_light_delay_parameter_name);
+  red_light_delay_parameter.setRange(constants::red_light_delay_min,constants::red_light_delay_max);
+  red_light_delay_parameter.setUnits(constants::hours_unit);
+
+  modular_server::Parameter & red_light_duration_parameter = modular_server_.createParameter(constants::red_light_duration_parameter_name);
+  red_light_duration_parameter.setRange(constants::red_light_duration_min,constants::red_light_duration_max);
+  red_light_duration_parameter.setUnits(constants::hours_unit);
+
+  modular_server::Parameter & buzzer_parameter = modular_server_.createParameter(constants::buzzer_parameter_name);
+  buzzer_parameter.setTypeBool();
+
+  modular_server::Parameter & buzzer_delay_parameter = modular_server_.createParameter(constants::buzzer_delay_parameter_name);
+  buzzer_delay_parameter.setRange(constants::buzzer_delay_min,constants::buzzer_delay_max);
+  buzzer_delay_parameter.setUnits(constants::hours_unit);
+
+  modular_server::Parameter & buzzer_duration_parameter = modular_server_.createParameter(constants::buzzer_duration_parameter_name);
+  buzzer_duration_parameter.setRange(constants::buzzer_duration_min,constants::buzzer_duration_max);
+  buzzer_duration_parameter.setUnits(constants::hours_unit);
+
   // Functions
   modular_server::Function & set_time_function = modular_server_.createFunction(constants::set_time_function_name);
   set_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setTimeHandler));
@@ -461,8 +486,13 @@ void SleepAssayController::writeExperimentDayInfoToResponse(const size_t experim
 
   constants::ExperimentDayInfo experiment_day_info = experiment_day_array_[experiment_day];
 
-  modular_server_.response().write(constants::white_light_string,experiment_day_info.white_light);
-  modular_server_.response().write(constants::red_light_string,experiment_day_info.red_light);
+  modular_server_.response().write(constants::white_light_parameter_name,experiment_day_info.white_light);
+  modular_server_.response().write(constants::red_light_parameter_name,experiment_day_info.red_light);
+  modular_server_.response().write(constants::red_light_delay_parameter_name,experiment_day_info.red_light_delay_hours);
+  modular_server_.response().write(constants::red_light_duration_parameter_name,experiment_day_info.red_light_duration_hours);
+  modular_server_.response().write(constants::buzzer_parameter_name,experiment_day_info.buzzer);
+  modular_server_.response().write(constants::buzzer_delay_parameter_name,experiment_day_info.buzzer_delay_hours);
+  modular_server_.response().write(constants::buzzer_duration_parameter_name,experiment_day_info.buzzer_duration_hours);
 
   modular_server_.response().endObject();
 }

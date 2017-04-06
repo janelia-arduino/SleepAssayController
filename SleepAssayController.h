@@ -60,6 +60,7 @@ public:
         sleep_assay_controller::constants::EXPERIMENT_DAY_COUNT_MAX> getExperimentInfo();
   bool experimentDayExists(const size_t experiment_day);
   size_t addDefaultExperimentDay();
+  void setExperimentDayWhiteLightInfo(const size_t experiment_day);
 
 private:
   modular_server::Property properties_[sleep_assay_controller::constants::PROPERTY_COUNT_MAX];
@@ -101,6 +102,9 @@ private:
   void getExperimentInfoHandler();
   void getExperimentDayInfoHandler();
   void addDefaultExperimentDayHandler();
+  void setExperimentDayWhiteLightInfoHandler();
+  void setExperimentDayRedLightInfoHandler();
+  void setExperimentDayBuzzerInfoHandler();
   void runAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void testAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void stopAssayHandler(modular_server::Interrupt * interrupt_ptr);

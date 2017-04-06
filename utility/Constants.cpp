@@ -46,9 +46,6 @@ CONSTANT_STRING(second_string,"second");
 const double camera_trigger_duty_cycle = 50.0;
 const double camera_trigger_duty_cycle_max = 100.0;
 
-CONSTANT_STRING(white_light_string,"white_light");
-CONSTANT_STRING(red_light_string,"red_light");
-
 // Interrupts
 
 // Units
@@ -147,6 +144,28 @@ CONSTANT_STRING(epoch_time_parameter_name,"epoch_time");
 
 CONSTANT_STRING(experiment_day_parameter_name,"experiment_day");
 
+CONSTANT_STRING(white_light_parameter_name,"white_light");
+
+CONSTANT_STRING(red_light_parameter_name,"red_light");
+
+CONSTANT_STRING(red_light_delay_parameter_name,"red_light_delay");
+const double red_light_delay_min = 0.0;
+const double red_light_delay_max = 24.0;
+
+CONSTANT_STRING(red_light_duration_parameter_name,"red_light_duration");
+const double red_light_duration_min = 0.0;
+const double red_light_duration_max = 24.0;
+
+CONSTANT_STRING(buzzer_parameter_name,"buzzer");
+
+CONSTANT_STRING(buzzer_delay_parameter_name,"buzzer_delay");
+const double buzzer_delay_min = 0.0;
+const double buzzer_delay_max = 24.0;
+
+CONSTANT_STRING(buzzer_duration_parameter_name,"buzzer_duration");
+const double buzzer_duration_min = 0.0;
+const double buzzer_duration_max = 24.0;
+
 // Functions
 CONSTANT_STRING(set_time_function_name,"setTime");
 CONSTANT_STRING(get_time_function_name,"getTime");
@@ -158,6 +177,9 @@ CONSTANT_STRING(experiment_end_function_name,"experimentEnd");
 CONSTANT_STRING(get_experiment_info_function_name,"getExperimentInfo");
 CONSTANT_STRING(get_experiment_day_info_function_name,"getExperimentDayInfo");
 CONSTANT_STRING(add_default_experiment_day_function_name,"addDefaultExperimentDay");
+CONSTANT_STRING(set_experiment_day_white_light_info_function_name,"setExperimentDayWhiteLightInfo");
+CONSTANT_STRING(set_experiment_day_red_light_info_function_name,"setExperimentDayRedLightInfo");
+CONSTANT_STRING(set_experiment_day_buzzer_info_function_name,"setExperimentDayBuzzerInfo");
 
 // Callbacks
 CONSTANT_STRING(run_assay_callback_name,"runAssay");
