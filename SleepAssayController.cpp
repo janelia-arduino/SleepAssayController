@@ -171,6 +171,10 @@ void SleepAssayController::setup()
   get_assay_end_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getAssayEndHandler));
   get_assay_end_function.setReturnTypeObject();
 
+  modular_server::Function & get_assay_duration_function = modular_server_.createFunction(constants::get_assay_duration_function_name);
+  get_assay_duration_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getAssayDurationHandler));
+  get_assay_duration_function.setReturnTypeLong();
+
   modular_server::Function & get_experiment_start_function = modular_server_.createFunction(constants::get_experiment_start_function_name);
   get_experiment_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getExperimentStartHandler));
   get_experiment_start_function.setReturnTypeObject();
@@ -178,6 +182,10 @@ void SleepAssayController::setup()
   modular_server::Function & get_experiment_end_function = modular_server_.createFunction(constants::get_experiment_end_function_name);
   get_experiment_end_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getExperimentEndHandler));
   get_experiment_end_function.setReturnTypeObject();
+
+  modular_server::Function & get_experiment_duration_function = modular_server_.createFunction(constants::get_experiment_duration_function_name);
+  get_experiment_duration_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getExperimentDurationHandler));
+  get_experiment_duration_function.setReturnTypeLong();
 
   modular_server::Function & get_experiment_info_function = modular_server_.createFunction(constants::get_experiment_info_function_name);
   get_experiment_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getExperimentInfoHandler));
@@ -315,6 +323,19 @@ time_t SleepAssayController::getAssayEnd()
   return date_time_assay_end;
 }
 
+uint8_t SleepAssayController::getAssayDuration()
+{
+  long entrainment_duration;
+  modular_server_.property(constants::entrainment_duration_property_name).getValue(entrainment_duration);
+
+  long recovery_duration;
+  modular_server_.property(constants::recovery_duration_property_name).getValue(recovery_duration);
+
+  uint8_t experiment_duration = getExperimentDuration();
+
+  return entrainment_duration + experiment_duration + recovery_duration;
+}
+
 time_t SleepAssayController::getExperimentStart()
 {
   return date_time_experiment_start_;
@@ -325,6 +346,11 @@ time_t SleepAssayController::getExperimentEnd()
   time_t date_time_experiment_end = getExperimentStart();
   date_time_experiment_end += scaleDuration(experiment_day_array_.size()*constants::seconds_per_day);
   return date_time_experiment_end;
+}
+
+uint8_t SleepAssayController::getExperimentDuration()
+{
+  return experiment_day_array_.size();
 }
 
 Array<constants::ExperimentDayInfo,
@@ -675,6 +701,12 @@ void SleepAssayController::getAssayEndHandler()
   writeDateTimeToResponse(date_time_assay_end);
 }
 
+void SleepAssayController::getAssayDurationHandler()
+{
+  uint8_t assay_duration = getAssayDuration();
+  modular_server_.response().returnResult(assay_duration);
+}
+
 void SleepAssayController::getExperimentStartHandler()
 {
   if (!timeIsSet())
@@ -711,6 +743,12 @@ void SleepAssayController::getExperimentEndHandler()
   time_t date_time_experiment_end = getExperimentEnd();
   modular_server_.response().writeResultKey();
   writeDateTimeToResponse(date_time_experiment_end);
+}
+
+void SleepAssayController::getExperimentDurationHandler()
+{
+  uint8_t experiment_duration = getExperimentDuration();
+  modular_server_.response().returnResult(experiment_duration);
 }
 
 void SleepAssayController::getExperimentInfoHandler()

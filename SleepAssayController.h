@@ -53,8 +53,10 @@ public:
   time_t now();
   time_t getAssayStart();
   time_t getAssayEnd();
+  uint8_t getAssayDuration();
   time_t getExperimentStart();
   time_t getExperimentEnd();
+  uint8_t getExperimentDuration();
 
   Array<sleep_assay_controller::constants::ExperimentDayInfo,
         sleep_assay_controller::constants::EXPERIMENT_DAY_COUNT_MAX> getExperimentInfo();
@@ -106,8 +108,10 @@ private:
   void nowHandler();
   void getAssayStartHandler();
   void getAssayEndHandler();
+  void getAssayDurationHandler();
   void getExperimentStartHandler();
   void getExperimentEndHandler();
+  void getExperimentDurationHandler();
   void getExperimentInfoHandler();
   void getExperimentDayInfoHandler();
   void addExperimentDayDefaultHandler();
