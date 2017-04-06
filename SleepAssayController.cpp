@@ -200,6 +200,11 @@ void SleepAssayController::setup()
   add_experiment_day_default_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::addExperimentDayDefaultHandler));
   add_experiment_day_default_function.setReturnTypeLong();
 
+  modular_server::Function & add_experiment_day_copy_function = modular_server_.createFunction(constants::add_experiment_day_copy_function_name);
+  add_experiment_day_copy_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::addExperimentDayCopyHandler));
+  add_experiment_day_copy_function.addParameter(experiment_day_parameter);
+  add_experiment_day_copy_function.setReturnTypeLong();
+
   modular_server::Function & set_experiment_day_white_light_function = modular_server_.createFunction(constants::set_experiment_day_white_light_function_name);
   set_experiment_day_white_light_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setExperimentDayWhiteLightHandler));
   set_experiment_day_white_light_function.addParameter(experiment_day_parameter);
@@ -372,6 +377,17 @@ size_t SleepAssayController::addExperimentDayDefault()
   experiment_day_array_.push_back(experiment_day_info);
   size_t experiment_day = experiment_day_array_.size() - 1;
   return experiment_day;
+}
+
+size_t SleepAssayController::addExperimentDayCopy(const size_t experiment_day)
+{
+  constants::ExperimentDayInfo experiment_day_info;
+  if (experimentDayExists(experiment_day))
+  {
+    experiment_day_info = experiment_day_array_[experiment_day];
+  }
+  experiment_day_array_.push_back(experiment_day_info);
+  return experiment_day_array_.size() - 1;
 }
 
 void SleepAssayController::setExperimentDayWhiteLight(const size_t experiment_day,
@@ -783,6 +799,15 @@ void SleepAssayController::getExperimentDayInfoHandler()
 void SleepAssayController::addExperimentDayDefaultHandler()
 {
   size_t experiment_day = addExperimentDayDefault();
+  modular_server_.response().returnResult(experiment_day);
+}
+
+void SleepAssayController::addExperimentDayCopyHandler()
+{
+  long experiment_day;
+  modular_server_.parameter(constants::experiment_day_parameter_name).getValue(experiment_day);
+
+  experiment_day = addExperimentDayCopy(experiment_day);
   modular_server_.response().returnResult(experiment_day);
 }
 

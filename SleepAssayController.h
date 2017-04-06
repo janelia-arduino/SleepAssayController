@@ -62,6 +62,7 @@ public:
         sleep_assay_controller::constants::EXPERIMENT_DAY_COUNT_MAX> getExperimentInfo();
   bool experimentDayExists(const size_t experiment_day);
   size_t addExperimentDayDefault();
+  size_t addExperimentDayCopy(const size_t experiment_day);
   void setExperimentDayWhiteLight(const size_t experiment_day,
                                   const bool white_light);
   void setExperimentDayRedLight(const size_t experiment_day,
@@ -115,6 +116,7 @@ private:
   void getExperimentInfoHandler();
   void getExperimentDayInfoHandler();
   void addExperimentDayDefaultHandler();
+  void addExperimentDayCopyHandler();
   void setExperimentDayWhiteLightHandler();
   void setExperimentDayRedLightHandler();
   void setExperimentDayBuzzerHandler();

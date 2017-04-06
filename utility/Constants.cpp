@@ -179,6 +179,7 @@ CONSTANT_STRING(get_experiment_duration_function_name,"getExperimentDuration");
 CONSTANT_STRING(get_experiment_info_function_name,"getExperimentInfo");
 CONSTANT_STRING(get_experiment_day_info_function_name,"getExperimentDayInfo");
 CONSTANT_STRING(add_experiment_day_default_function_name,"addExperimentDayDefault");
+CONSTANT_STRING(add_experiment_day_copy_function_name,"addExperimentDayCopy");
 CONSTANT_STRING(set_experiment_day_white_light_function_name,"setExperimentDayWhiteLight");
 CONSTANT_STRING(set_experiment_day_red_light_function_name,"setExperimentDayRedLight");
 CONSTANT_STRING(set_experiment_day_buzzer_function_name,"setExperimentDayBuzzer");
