@@ -46,6 +46,9 @@ CONSTANT_STRING(second_string,"second");
 const double camera_trigger_duty_cycle = 50.0;
 const double camera_trigger_duty_cycle_max = 100.0;
 
+CONSTANT_STRING(white_light_string,"white_light");
+CONSTANT_STRING(red_light_string,"red_light");
+
 // Interrupts
 
 // Units
@@ -142,6 +145,8 @@ const long testing_day_duration_default = 6;
 // Parameters
 CONSTANT_STRING(epoch_time_parameter_name,"epoch_time");
 
+CONSTANT_STRING(experiment_day_parameter_name,"experiment_day");
+
 // Functions
 CONSTANT_STRING(set_time_function_name,"setTime");
 CONSTANT_STRING(get_time_function_name,"getTime");
@@ -150,6 +155,9 @@ CONSTANT_STRING(assay_start_function_name,"assayStart");
 CONSTANT_STRING(assay_end_function_name,"assayEnd");
 CONSTANT_STRING(experiment_start_function_name,"experimentStart");
 CONSTANT_STRING(experiment_end_function_name,"experimentEnd");
+CONSTANT_STRING(get_experiment_info_function_name,"getExperimentInfo");
+CONSTANT_STRING(get_experiment_day_info_function_name,"getExperimentDayInfo");
+CONSTANT_STRING(add_default_experiment_day_function_name,"addDefaultExperimentDay");
 
 // Callbacks
 CONSTANT_STRING(run_assay_callback_name,"runAssay");
@@ -159,6 +167,7 @@ CONSTANT_STRING(stop_assay_callback_name,"stopAssay");
 // Errors
 CONSTANT_STRING(time_not_set_error,"Time is not set! Must use setTime method. To get epoch time manually, you can visit https://www.epochconverter.com/ or use bash: date +%s");
 CONSTANT_STRING(assay_not_started_error,"Assay not started!");
+CONSTANT_STRING(experiment_day_does_not_exist_error,"Experiment day does not exist!");
 
 }
 }

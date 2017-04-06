@@ -121,6 +121,10 @@ void SleepAssayController::setup()
   epoch_time_parameter.setTypeLong();
   epoch_time_parameter.setUnits(constants::seconds_unit);
 
+  modular_server::Parameter & experiment_day_parameter = modular_server_.createParameter(constants::experiment_day_parameter_name);
+  experiment_day_parameter.setTypeLong();
+  experiment_day_parameter.setRange((long)0,(long)constants::EXPERIMENT_DAY_COUNT_MAX - 1);
+
   // Functions
   modular_server::Function & set_time_function = modular_server_.createFunction(constants::set_time_function_name);
   set_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setTimeHandler));
@@ -141,6 +145,27 @@ void SleepAssayController::setup()
   modular_server::Function & assay_end_function = modular_server_.createFunction(constants::assay_end_function_name);
   assay_end_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::assayEndHandler));
   assay_end_function.setReturnTypeObject();
+
+  modular_server::Function & experiment_start_function = modular_server_.createFunction(constants::experiment_start_function_name);
+  experiment_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::experimentStartHandler));
+  experiment_start_function.setReturnTypeObject();
+
+  modular_server::Function & experiment_end_function = modular_server_.createFunction(constants::experiment_end_function_name);
+  experiment_end_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::experimentEndHandler));
+  experiment_end_function.setReturnTypeObject();
+
+  modular_server::Function & get_experiment_info_function = modular_server_.createFunction(constants::get_experiment_info_function_name);
+  get_experiment_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getExperimentInfoHandler));
+  get_experiment_info_function.setReturnTypeArray();
+
+  modular_server::Function & get_experiment_day_info_function = modular_server_.createFunction(constants::get_experiment_day_info_function_name);
+  get_experiment_day_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getExperimentDayInfoHandler));
+  get_experiment_day_info_function.addParameter(experiment_day_parameter);
+  get_experiment_day_info_function.setReturnTypeObject();
+
+  modular_server::Function & add_default_experiment_day_function = modular_server_.createFunction(constants::add_default_experiment_day_function_name);
+  add_default_experiment_day_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::addDefaultExperimentDayHandler));
+  add_default_experiment_day_function.setReturnTypeLong();
 
   // Callbacks
   modular_server::Callback & run_assay_callback = modular_server_.createCallback(constants::run_assay_callback_name);
@@ -235,16 +260,50 @@ time_t SleepAssayController::assayStart()
 
 time_t SleepAssayController::assayEnd()
 {
-  long entrainment_duration;
-  modular_server_.property(constants::entrainment_duration_property_name).getValue(entrainment_duration);
-
   long recovery_duration;
   modular_server_.property(constants::recovery_duration_property_name).getValue(recovery_duration);
 
-  time_t date_time_assay_end = assayStart();
-  date_time_assay_end += entrainment_duration*constants::seconds_per_day;
-  date_time_assay_end += recovery_duration*constants::seconds_per_day;
+  time_t date_time_assay_end = experimentEnd();
+  date_time_assay_end += scaleDuration(recovery_duration*constants::seconds_per_day);
   return date_time_assay_end;
+}
+
+time_t SleepAssayController::experimentStart()
+{
+  return date_time_experiment_start_;
+}
+
+time_t SleepAssayController::experimentEnd()
+{
+  time_t date_time_experiment_end = experimentStart();
+  date_time_experiment_end += scaleDuration(experiment_day_array_.size()*constants::seconds_per_day);
+  return date_time_experiment_end;
+}
+
+Array<constants::ExperimentDayInfo,
+      constants::EXPERIMENT_DAY_COUNT_MAX> SleepAssayController::getExperimentInfo()
+{
+  return experiment_day_array_;
+}
+
+size_t SleepAssayController::addDefaultExperimentDay()
+{
+  constants::ExperimentDayInfo experiment_day_info;
+  experiment_day_info.white_light = true;
+  experiment_day_info.red_light = false;
+  experiment_day_info.red_light_delay_hours = 0.0;
+  experiment_day_info.red_light_duration_hours = 0.0;
+  experiment_day_info.buzzer = false;
+  experiment_day_info.buzzer_delay_hours = 0.0;
+  experiment_day_info.buzzer_duration_hours = 0.0;
+  experiment_day_array_.push_back(experiment_day_info);
+  size_t experiment_day = experiment_day_array_.size() - 1;
+  return experiment_day;
+}
+
+bool SleepAssayController::experimentDayExists(const size_t experiment_day)
+{
+  return (experiment_day < experiment_day_array_.size());
 }
 
 void SleepAssayController::getCameraTriggerPwmInfo(uint32_t & channels,
@@ -378,8 +437,6 @@ void SleepAssayController::startEntrainment(const int entrainment_duration)
 
 void SleepAssayController::writeDateTimeToResponse(const time_t date_time)
 {
-  modular_server_.response().writeResultKey();
-
   modular_server_.response().beginObject();
 
   modular_server_.response().write(constants::year_string,year(date_time));
@@ -388,6 +445,24 @@ void SleepAssayController::writeDateTimeToResponse(const time_t date_time)
   modular_server_.response().write(constants::hour_string,hour(date_time));
   modular_server_.response().write(constants::minute_string,minute(date_time));
   modular_server_.response().write(constants::second_string,second(date_time));
+
+  modular_server_.response().endObject();
+}
+
+void SleepAssayController::writeExperimentDayInfoToResponse(const size_t experiment_day)
+{
+  modular_server_.response().beginObject();
+
+  if (experiment_day >= experiment_day_array_.size())
+  {
+    modular_server_.response().endObject();
+    return;
+  }
+
+  constants::ExperimentDayInfo experiment_day_info = experiment_day_array_[experiment_day];
+
+  modular_server_.response().write(constants::white_light_string,experiment_day_info.white_light);
+  modular_server_.response().write(constants::red_light_string,experiment_day_info.red_light);
 
   modular_server_.response().endObject();
 }
@@ -454,6 +529,7 @@ void SleepAssayController::nowHandler()
     return;
   }
   time_t date_time_now = SleepAssayController::now();
+  modular_server_.response().writeResultKey();
   writeDateTimeToResponse(date_time_now);
 }
 
@@ -472,6 +548,7 @@ void SleepAssayController::assayStartHandler()
   }
 
   time_t date_time_assay_start = assayStart();
+  modular_server_.response().writeResultKey();
   writeDateTimeToResponse(date_time_assay_start);
 }
 
@@ -490,7 +567,81 @@ void SleepAssayController::assayEndHandler()
   }
 
   time_t date_time_assay_end = assayEnd();
+  modular_server_.response().writeResultKey();
   writeDateTimeToResponse(date_time_assay_end);
+}
+
+void SleepAssayController::experimentStartHandler()
+{
+  if (!timeIsSet())
+  {
+    modular_server_.response().returnError(constants::time_not_set_error);
+    return;
+  }
+  bool assay_started = assayStarted();
+  if (!assay_started)
+  {
+    modular_server_.response().returnError(constants::assay_not_started_error);
+    return;
+  }
+
+  time_t date_time_experiment_start = experimentStart();
+  modular_server_.response().writeResultKey();
+  writeDateTimeToResponse(date_time_experiment_start);
+}
+
+void SleepAssayController::experimentEndHandler()
+{
+  if (!timeIsSet())
+  {
+    modular_server_.response().returnError(constants::time_not_set_error);
+    return;
+  }
+  bool assay_started = assayStarted();
+  if (!assay_started)
+  {
+    modular_server_.response().returnError(constants::assay_not_started_error);
+    return;
+  }
+
+  time_t date_time_experiment_end = experimentEnd();
+  modular_server_.response().writeResultKey();
+  writeDateTimeToResponse(date_time_experiment_end);
+}
+
+void SleepAssayController::getExperimentInfoHandler()
+{
+  modular_server_.response().writeResultKey();
+
+  modular_server_.response().beginArray();
+
+  for (size_t day=0; day<experiment_day_array_.size(); ++day)
+  {
+    writeExperimentDayInfoToResponse(day);
+  }
+
+  modular_server_.response().endArray();
+}
+
+void SleepAssayController::getExperimentDayInfoHandler()
+{
+  long experiment_day;
+  modular_server_.parameter(constants::experiment_day_parameter_name).getValue(experiment_day);
+
+  if (!experimentDayExists(experiment_day))
+  {
+    modular_server_.response().returnError(constants::experiment_day_does_not_exist_error);
+    return;
+  }
+
+  modular_server_.response().writeResultKey();
+  writeExperimentDayInfoToResponse(experiment_day);
+}
+
+void SleepAssayController::addDefaultExperimentDayHandler()
+{
+  size_t experiment_day = addDefaultExperimentDay();
+  modular_server_.response().returnResult(experiment_day);
 }
 
 void SleepAssayController::runAssayHandler(modular_server::Interrupt * interrupt_ptr)

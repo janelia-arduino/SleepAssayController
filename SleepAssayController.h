@@ -47,11 +47,19 @@ public:
   void stopAssay();
   bool assayStarted();
   bool testing();
+
   long scaleDuration(const long duration);
 
   time_t now();
   time_t assayStart();
   time_t assayEnd();
+  time_t experimentStart();
+  time_t experimentEnd();
+
+  Array<sleep_assay_controller::constants::ExperimentDayInfo,
+        sleep_assay_controller::constants::EXPERIMENT_DAY_COUNT_MAX> getExperimentInfo();
+  bool experimentDayExists(const size_t experiment_day);
+  size_t addDefaultExperimentDay();
 
 private:
   modular_server::Property properties_[sleep_assay_controller::constants::PROPERTY_COUNT_MAX];
@@ -63,6 +71,9 @@ private:
 
   time_t date_time_assay_start_;
   time_t date_time_experiment_start_;
+
+  Array<sleep_assay_controller::constants::ExperimentDayInfo,
+        sleep_assay_controller::constants::EXPERIMENT_DAY_COUNT_MAX> experiment_day_array_;
 
   void getCameraTriggerPwmInfo(uint32_t & channels,
                                long & period,
@@ -76,6 +87,7 @@ private:
   void startEntrainment(const int entrainment_duration);
 
   void writeDateTimeToResponse(const time_t date_time);
+  void writeExperimentDayInfoToResponse(const size_t experiment_day);
 
   // Handlers
   void updatePowersHandler();
@@ -84,6 +96,11 @@ private:
   void nowHandler();
   void assayStartHandler();
   void assayEndHandler();
+  void experimentStartHandler();
+  void experimentEndHandler();
+  void getExperimentInfoHandler();
+  void getExperimentDayInfoHandler();
+  void addDefaultExperimentDayHandler();
   void runAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void testAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void stopAssayHandler(modular_server::Interrupt * interrupt_ptr);

@@ -16,6 +16,7 @@ namespace sleep_assay_controller
 {
 namespace constants
 {
+enum{EXPERIMENT_DAY_COUNT_MAX=20};
 
 // Interrupts
 

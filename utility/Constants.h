@@ -17,8 +17,8 @@ namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=19};
-enum{PARAMETER_COUNT_MAX=1};
-enum{FUNCTION_COUNT_MAX=7};
+enum{PARAMETER_COUNT_MAX=2};
+enum{FUNCTION_COUNT_MAX=10};
 enum{CALLBACK_COUNT_MAX=3};
 
 extern ConstantString device_name;
@@ -47,6 +47,20 @@ extern ConstantString second_string;
 
 extern const double camera_trigger_duty_cycle;
 extern const double camera_trigger_duty_cycle_max;
+
+struct ExperimentDayInfo
+{
+  bool white_light;
+  bool red_light;
+  double red_light_delay_hours;
+  double red_light_duration_hours;
+  bool buzzer;
+  double buzzer_delay_hours;
+  double buzzer_duration_hours;
+};
+
+extern ConstantString white_light_string;
+extern ConstantString red_light_string;
 
 // Interrupts
 
@@ -149,6 +163,8 @@ extern const long testing_day_duration_default;
 // Parameters
 extern ConstantString epoch_time_parameter_name;
 
+extern ConstantString experiment_day_parameter_name;
+
 // Functions
 extern ConstantString set_time_function_name;
 extern ConstantString get_time_function_name;
@@ -157,6 +173,9 @@ extern ConstantString assay_start_function_name;
 extern ConstantString assay_end_function_name;
 extern ConstantString experiment_start_function_name;
 extern ConstantString experiment_end_function_name;
+extern ConstantString get_experiment_info_function_name;
+extern ConstantString get_experiment_day_info_function_name;
+extern ConstantString add_default_experiment_day_function_name;
 
 // Callbacks
 extern ConstantString run_assay_callback_name;
@@ -166,6 +185,7 @@ extern ConstantString stop_assay_callback_name;
 // Errors
 extern ConstantString time_not_set_error;
 extern ConstantString assay_not_started_error;
+extern ConstantString experiment_day_does_not_exist_error;
 }
 }
 #include "5x3.h"
