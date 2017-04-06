@@ -59,8 +59,17 @@ public:
   Array<sleep_assay_controller::constants::ExperimentDayInfo,
         sleep_assay_controller::constants::EXPERIMENT_DAY_COUNT_MAX> getExperimentInfo();
   bool experimentDayExists(const size_t experiment_day);
-  size_t addDefaultExperimentDay();
-  void setExperimentDayWhiteLightInfo(const size_t experiment_day);
+  size_t addExperimentDayDefault();
+  void setExperimentDayWhiteLight(const size_t experiment_day,
+                                  const bool white_light);
+  void setExperimentDayRedLight(const size_t experiment_day,
+                                const bool red_light,
+                                const double red_light_delay_hours,
+                                const double red_light_duration_hours);
+  void setExperimentDayBuzzer(const size_t experiment_day,
+                              const bool buzzer,
+                              const double buzzer_delay_hours,
+                              const double buzzer_duration_hours);
 
 private:
   modular_server::Property properties_[sleep_assay_controller::constants::PROPERTY_COUNT_MAX];
@@ -101,10 +110,10 @@ private:
   void experimentEndHandler();
   void getExperimentInfoHandler();
   void getExperimentDayInfoHandler();
-  void addDefaultExperimentDayHandler();
-  void setExperimentDayWhiteLightInfoHandler();
-  void setExperimentDayRedLightInfoHandler();
-  void setExperimentDayBuzzerInfoHandler();
+  void addExperimentDayDefaultHandler();
+  void setExperimentDayWhiteLightHandler();
+  void setExperimentDayRedLightHandler();
+  void setExperimentDayBuzzerHandler();
   void runAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void testAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void stopAssayHandler(modular_server::Interrupt * interrupt_ptr);

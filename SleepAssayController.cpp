@@ -188,9 +188,31 @@ void SleepAssayController::setup()
   get_experiment_day_info_function.addParameter(experiment_day_parameter);
   get_experiment_day_info_function.setReturnTypeObject();
 
-  modular_server::Function & add_default_experiment_day_function = modular_server_.createFunction(constants::add_default_experiment_day_function_name);
-  add_default_experiment_day_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::addDefaultExperimentDayHandler));
-  add_default_experiment_day_function.setReturnTypeLong();
+  modular_server::Function & add_experiment_day_default_function = modular_server_.createFunction(constants::add_experiment_day_default_function_name);
+  add_experiment_day_default_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::addExperimentDayDefaultHandler));
+  add_experiment_day_default_function.setReturnTypeLong();
+
+  modular_server::Function & set_experiment_day_white_light_function = modular_server_.createFunction(constants::set_experiment_day_white_light_function_name);
+  set_experiment_day_white_light_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setExperimentDayWhiteLightHandler));
+  set_experiment_day_white_light_function.addParameter(experiment_day_parameter);
+  set_experiment_day_white_light_function.addParameter(white_light_parameter);
+  set_experiment_day_white_light_function.setReturnTypeObject();
+
+  modular_server::Function & set_experiment_day_red_light_function = modular_server_.createFunction(constants::set_experiment_day_red_light_function_name);
+  set_experiment_day_red_light_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setExperimentDayRedLightHandler));
+  set_experiment_day_red_light_function.addParameter(experiment_day_parameter);
+  set_experiment_day_red_light_function.addParameter(red_light_parameter);
+  set_experiment_day_red_light_function.addParameter(red_light_delay_parameter);
+  set_experiment_day_red_light_function.addParameter(red_light_duration_parameter);
+  set_experiment_day_red_light_function.setReturnTypeObject();
+
+  modular_server::Function & set_experiment_day_buzzer_function = modular_server_.createFunction(constants::set_experiment_day_buzzer_function_name);
+  set_experiment_day_buzzer_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setExperimentDayBuzzerHandler));
+  set_experiment_day_buzzer_function.addParameter(experiment_day_parameter);
+  set_experiment_day_buzzer_function.addParameter(buzzer_parameter);
+  set_experiment_day_buzzer_function.addParameter(buzzer_delay_parameter);
+  set_experiment_day_buzzer_function.addParameter(buzzer_duration_parameter);
+  set_experiment_day_buzzer_function.setReturnTypeObject();
 
   // Callbacks
   modular_server::Callback & run_assay_callback = modular_server_.createCallback(constants::run_assay_callback_name);
@@ -311,7 +333,7 @@ Array<constants::ExperimentDayInfo,
   return experiment_day_array_;
 }
 
-size_t SleepAssayController::addDefaultExperimentDay()
+size_t SleepAssayController::addExperimentDayDefault()
 {
   constants::ExperimentDayInfo experiment_day_info;
   experiment_day_info.white_light = true;
@@ -324,6 +346,58 @@ size_t SleepAssayController::addDefaultExperimentDay()
   experiment_day_array_.push_back(experiment_day_info);
   size_t experiment_day = experiment_day_array_.size() - 1;
   return experiment_day;
+}
+
+void SleepAssayController::setExperimentDayWhiteLight(const size_t experiment_day,
+                                                      const bool white_light)
+{
+  if (!experimentDayExists(experiment_day))
+  {
+    return;
+  }
+  experiment_day_array_[experiment_day].white_light = white_light;
+}
+
+void SleepAssayController::setExperimentDayRedLight(const size_t experiment_day,
+                                                    const bool red_light,
+                                                    const double red_light_delay_hours,
+                                                    const double red_light_duration_hours)
+{
+  if (!experimentDayExists(experiment_day))
+  {
+    return;
+  }
+  experiment_day_array_[experiment_day].red_light = red_light;
+  experiment_day_array_[experiment_day].red_light_delay_hours = red_light_delay_hours;
+  if ((red_light_duration_hours + red_light_delay_hours) < constants::red_light_duration_max)
+  {
+    experiment_day_array_[experiment_day].red_light_duration_hours = red_light_duration_hours;
+  }
+  else
+  {
+    experiment_day_array_[experiment_day].red_light_duration_hours = constants::red_light_duration_max - red_light_delay_hours;
+  }
+}
+
+void SleepAssayController::setExperimentDayBuzzer(const size_t experiment_day,
+                                                  const bool buzzer,
+                                                  const double buzzer_delay_hours,
+                                                  const double buzzer_duration_hours)
+{
+  if (!experimentDayExists(experiment_day))
+  {
+    return;
+  }
+  experiment_day_array_[experiment_day].buzzer = buzzer;
+  experiment_day_array_[experiment_day].buzzer_delay_hours = buzzer_delay_hours;
+  if ((buzzer_duration_hours + buzzer_delay_hours) < constants::buzzer_duration_max)
+  {
+    experiment_day_array_[experiment_day].buzzer_duration_hours = buzzer_duration_hours;
+  }
+  else
+  {
+    experiment_day_array_[experiment_day].buzzer_duration_hours = constants::buzzer_duration_max - buzzer_delay_hours;
+  }
 }
 
 bool SleepAssayController::experimentDayExists(const size_t experiment_day)
@@ -668,10 +742,82 @@ void SleepAssayController::getExperimentDayInfoHandler()
   writeExperimentDayInfoToResponse(experiment_day);
 }
 
-void SleepAssayController::addDefaultExperimentDayHandler()
+void SleepAssayController::addExperimentDayDefaultHandler()
 {
-  size_t experiment_day = addDefaultExperimentDay();
+  size_t experiment_day = addExperimentDayDefault();
   modular_server_.response().returnResult(experiment_day);
+}
+
+void SleepAssayController::setExperimentDayWhiteLightHandler()
+{
+  long experiment_day;
+  modular_server_.parameter(constants::experiment_day_parameter_name).getValue(experiment_day);
+
+  if (!experimentDayExists(experiment_day))
+  {
+    modular_server_.response().returnError(constants::experiment_day_does_not_exist_error);
+    return;
+  }
+
+  bool white_light;
+  modular_server_.parameter(constants::white_light_parameter_name).getValue(white_light);
+
+  setExperimentDayWhiteLight(experiment_day,white_light);
+
+  modular_server_.response().writeResultKey();
+  writeExperimentDayInfoToResponse(experiment_day);
+}
+
+void SleepAssayController::setExperimentDayRedLightHandler()
+{
+  long experiment_day;
+  modular_server_.parameter(constants::experiment_day_parameter_name).getValue(experiment_day);
+
+  if (!experimentDayExists(experiment_day))
+  {
+    modular_server_.response().returnError(constants::experiment_day_does_not_exist_error);
+    return;
+  }
+
+  bool red_light;
+  modular_server_.parameter(constants::red_light_parameter_name).getValue(red_light);
+
+  double red_light_delay;
+  modular_server_.parameter(constants::red_light_delay_parameter_name).getValue(red_light_delay);
+
+  double red_light_duration;
+  modular_server_.parameter(constants::red_light_duration_parameter_name).getValue(red_light_duration);
+
+  setExperimentDayRedLight(experiment_day,red_light,red_light_delay,red_light_duration);
+
+  modular_server_.response().writeResultKey();
+  writeExperimentDayInfoToResponse(experiment_day);
+}
+
+void SleepAssayController::setExperimentDayBuzzerHandler()
+{
+  long experiment_day;
+  modular_server_.parameter(constants::experiment_day_parameter_name).getValue(experiment_day);
+
+  if (!experimentDayExists(experiment_day))
+  {
+    modular_server_.response().returnError(constants::experiment_day_does_not_exist_error);
+    return;
+  }
+
+  bool buzzer;
+  modular_server_.parameter(constants::buzzer_parameter_name).getValue(buzzer);
+
+  double buzzer_delay;
+  modular_server_.parameter(constants::buzzer_delay_parameter_name).getValue(buzzer_delay);
+
+  double buzzer_duration;
+  modular_server_.parameter(constants::buzzer_duration_parameter_name).getValue(buzzer_duration);
+
+  setExperimentDayBuzzer(experiment_day,buzzer,buzzer_delay,buzzer_duration);
+
+  modular_server_.response().writeResultKey();
+  writeExperimentDayInfoToResponse(experiment_day);
 }
 
 void SleepAssayController::runAssayHandler(modular_server::Interrupt * interrupt_ptr)

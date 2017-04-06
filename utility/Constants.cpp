@@ -176,10 +176,10 @@ CONSTANT_STRING(experiment_start_function_name,"experimentStart");
 CONSTANT_STRING(experiment_end_function_name,"experimentEnd");
 CONSTANT_STRING(get_experiment_info_function_name,"getExperimentInfo");
 CONSTANT_STRING(get_experiment_day_info_function_name,"getExperimentDayInfo");
-CONSTANT_STRING(add_default_experiment_day_function_name,"addDefaultExperimentDay");
-CONSTANT_STRING(set_experiment_day_white_light_info_function_name,"setExperimentDayWhiteLightInfo");
-CONSTANT_STRING(set_experiment_day_red_light_info_function_name,"setExperimentDayRedLightInfo");
-CONSTANT_STRING(set_experiment_day_buzzer_info_function_name,"setExperimentDayBuzzerInfo");
+CONSTANT_STRING(add_experiment_day_default_function_name,"addExperimentDayDefault");
+CONSTANT_STRING(set_experiment_day_white_light_function_name,"setExperimentDayWhiteLight");
+CONSTANT_STRING(set_experiment_day_red_light_function_name,"setExperimentDayRedLight");
+CONSTANT_STRING(set_experiment_day_buzzer_function_name,"setExperimentDayBuzzer");
 
 // Callbacks
 CONSTANT_STRING(run_assay_callback_name,"runAssay");
