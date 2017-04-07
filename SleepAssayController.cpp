@@ -548,10 +548,35 @@ void SleepAssayController::getRedLightPwmInfo(const size_t experiment_day,
                                               HighPowerSwitchController::RecursivePwmValues & periods,
                                               HighPowerSwitchController::RecursivePwmValues & on_durations)
 {
+  long channel;
+  modular_server_.property(constants::red_light_channel_property_name).getValue(channel);
+  uint32_t bit = 1;
+  channels = bit << channel;
+
+  long frequency;
+  modular_server_.property(constants::red_light_frequency_property_name).getValue(frequency);
+  long period_0 = (1.0/(double)frequency)*constants::milliseconds_per_second;
+  periods.push_back(period_0);
+
+  long duty_cycle;
+  modular_server_.property(constants::red_light_duty_cycle_property_name).getValue(duty_cycle);
+  long on_duration_0 = period_0*(double)duty_cycle/(double)constants::red_light_duty_cycle_max;
+  on_durations.push_back(on_duration_0);
+
   if (experimentDayExists(experiment_day))
   {
-    
+    constants::ExperimentDayInfo & experiment_day_info = experiment_day_array_[experiment_day];
+    double red_light_delay_hours = experiment_day_info.red_light_delay_hours;
+    delay = scaleDuration(red_light_delay_hours*constants::milliseconds_per_hour);
+
+    double red_light_duration_hours = experiment_day_info.red_light_duration_hours;
+    long on_duration_1 = scaleDuration(red_light_duration_hours*constants::milliseconds_per_hour);
+    on_durations.push_back(on_duration_1);
+
+    long period_1 = delay + on_duration_1 + 1;
+    periods.push_back(period_1);
   }
+
 }
 
 void SleepAssayController::startCameraTrigger()
@@ -663,17 +688,32 @@ void SleepAssayController::startExperimentDay(const int experiment_day)
     long white_light_on_duration;
     getWhiteLightPwmInfo(white_light_channels,white_light_period,white_light_on_duration);
 
-    int pwm_index = addPwm(white_light_channels,0,white_light_period,white_light_on_duration,1);
+    int white_light_pwm_index = addPwm(white_light_channels,0,white_light_period,white_light_on_duration,1);
     const int next_experiment_day = experiment_day + 1;
-    addCountCompletedFunctor(pwm_index,
+    addCountCompletedFunctor(white_light_pwm_index,
                              makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
                              next_experiment_day);
 
     constants::ExperimentDayInfo & experiment_day_info = experiment_day_array_[experiment_day];
+
     bool red_light = experiment_day_info.red_light;
     if (red_light)
     {
-      
+      uint32_t red_light_channels;
+      long red_light_delay;
+      HighPowerSwitchController::RecursivePwmValues red_light_periods;
+      HighPowerSwitchController::RecursivePwmValues red_light_on_durations;
+      getRedLightPwmInfo(experiment_day,
+                         red_light_channels,
+                         red_light_delay,
+                         red_light_periods,
+                         red_light_on_durations);
+
+      int red_light_pwm_index = addRecursivePwm(red_light_channels,
+                                                red_light_delay,
+                                                red_light_periods,
+                                                red_light_on_durations,
+                                                1);
     }
   }
   else
