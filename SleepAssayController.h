@@ -104,10 +104,18 @@ private:
   void getWhiteLightPwmInfo(uint32_t & channels,
                             long & period,
                             long & on_duration);
+  void getRedLightPwmInfo(const size_t experiment_day,
+                          uint32_t & channels,
+                          long & delay,
+                          HighPowerSwitchController::RecursivePwmValues & periods,
+                          HighPowerSwitchController::RecursivePwmValues & on_durations);
 
   void startCameraTrigger();
   void startAssay();
   void startEntrainment(const int entrainment_duration);
+  void startExperimentDay(const int experiment_day);
+  void startRecovery();
+  void stopAssay(const int arg);
 
   void writeDateTimeToResponse(const time_t date_time);
   void writeExperimentDayInfoToResponse(const size_t experiment_day);

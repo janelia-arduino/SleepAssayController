@@ -542,6 +542,18 @@ void SleepAssayController::getWhiteLightPwmInfo(uint32_t & channels,
   on_duration = on_duration_hours*constants::milliseconds_per_hour;
 }
 
+void SleepAssayController::getRedLightPwmInfo(const size_t experiment_day,
+                                              uint32_t & channels,
+                                              long & delay,
+                                              HighPowerSwitchController::RecursivePwmValues & periods,
+                                              HighPowerSwitchController::RecursivePwmValues & on_durations)
+{
+  if (experimentDayExists(experiment_day))
+  {
+    
+  }
+}
+
 void SleepAssayController::startCameraTrigger()
 {
   uint32_t channels;
@@ -617,7 +629,7 @@ void SleepAssayController::startAssay()
   }
   else
   {
-
+    // not necessary if minimum entrainment_duration is 1, not 0
   }
 }
 
@@ -631,13 +643,70 @@ void SleepAssayController::startEntrainment(const int entrainment_duration)
     getWhiteLightPwmInfo(channels,period,on_duration);
 
     int pwm_index = addPwm(channels,0,scaleDuration(period),scaleDuration(on_duration),entrainment_duration);
-    // addCountCompletedFunctor(pwm_index,
-    //                          makeFunctor((Functor0 *)0,*this,&SleepAssayController::startEntrainment));
+    addCountCompletedFunctor(pwm_index,
+                             makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
+                             0);
   }
   else
   {
-
+    startExperimentDay(0);
   }
+}
+
+void SleepAssayController::startExperimentDay(const int experiment_day)
+{
+  if (experiment_day < experiment_day_array_.size())
+  {
+    uint32_t white_light_channels;
+    long white_light_period;
+    long white_light_on_duration;
+    getWhiteLightPwmInfo(white_light_channels,white_light_period,white_light_on_duration);
+
+    int pwm_index = addPwm(white_light_channels,0,scaleDuration(white_light_period),scaleDuration(white_light_on_duration),1);
+    const int next_experiment_day = experiment_day + 1;
+    addCountCompletedFunctor(pwm_index,
+                             makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
+                             next_experiment_day);
+
+    constants::ExperimentDayInfo & experiment_day_info = experiment_day_array_[experiment_day];
+    bool red_light = experiment_day_info.red_light;
+    if (red_light)
+    {
+      
+    }
+  }
+  else
+  {
+    startRecovery();
+  }
+}
+
+void SleepAssayController::startRecovery()
+{
+  long recovery_duration;
+  modular_server_.property(constants::recovery_duration_property_name).getValue(recovery_duration);
+
+  if (recovery_duration > 0)
+  {
+    uint32_t channels;
+    long period;
+    long on_duration;
+    getWhiteLightPwmInfo(channels,period,on_duration);
+
+    int pwm_index = addPwm(channels,0,scaleDuration(period),scaleDuration(on_duration),recovery_duration);
+    addCountCompletedFunctor(pwm_index,
+                             makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::stopAssay),
+                             -1);
+  }
+  else
+  {
+    stopAssay(-1);
+  }
+}
+
+void SleepAssayController::stopAssay(const int arg)
+{
+  stopAssay();
 }
 
 void SleepAssayController::writeDateTimeToResponse(const time_t date_time)
