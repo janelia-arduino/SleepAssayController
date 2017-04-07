@@ -17,8 +17,8 @@ namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=19};
-enum{PARAMETER_COUNT_MAX=9};
-enum{FUNCTION_COUNT_MAX=16};
+enum{PARAMETER_COUNT_MAX=10};
+enum{FUNCTION_COUNT_MAX=20};
 enum{CALLBACK_COUNT_MAX=3};
 
 extern ConstantString device_name;
@@ -184,6 +184,8 @@ extern ConstantString buzzer_duration_parameter_name;
 extern const double buzzer_duration_min;
 extern const double buzzer_duration_max;
 
+extern ConstantString day_count_parameter_name;
+
 // Functions
 extern ConstantString set_time_function_name;
 extern ConstantString get_time_function_name;
@@ -196,8 +198,12 @@ extern ConstantString get_experiment_end_function_name;
 extern ConstantString get_experiment_duration_function_name;
 extern ConstantString get_experiment_info_function_name;
 extern ConstantString get_experiment_day_info_function_name;
-extern ConstantString add_experiment_day_default_function_name;
+extern ConstantString add_experiment_day_function_name;
+extern ConstantString add_experiment_days_function_name;
 extern ConstantString add_experiment_day_copy_function_name;
+extern ConstantString add_experiment_day_copies_function_name;
+extern ConstantString remove_last_experiment_day_function_name;
+extern ConstantString remove_all_experiment_days_function_name;
 extern ConstantString set_experiment_day_white_light_function_name;
 extern ConstantString set_experiment_day_red_light_function_name;
 extern ConstantString set_experiment_day_buzzer_function_name;

@@ -58,11 +58,22 @@ public:
   time_t getExperimentEnd();
   uint8_t getExperimentDuration();
 
-  Array<sleep_assay_controller::constants::ExperimentDayInfo,
-        sleep_assay_controller::constants::EXPERIMENT_DAY_COUNT_MAX> getExperimentInfo();
+  typedef Array<sleep_assay_controller::constants::ExperimentDayInfo,
+                sleep_assay_controller::constants::EXPERIMENT_DAY_COUNT_MAX> experiment_day_info_array_t;
+  typedef Array<size_t,
+                sleep_assay_controller::constants::EXPERIMENT_DAY_COUNT_MAX> experiment_day_array_t;
+
+  experiment_day_info_array_t getExperimentInfo();
   bool experimentDayExists(const size_t experiment_day);
-  size_t addExperimentDayDefault();
+
+  size_t addExperimentDay();
+  experiment_day_array_t addExperimentDays(const size_t experiment_day_count);
   size_t addExperimentDayCopy(const size_t experiment_day);
+  experiment_day_array_t addExperimentDayCopies(const size_t experiment_day,
+                                                const size_t experiment_day_count);
+  void removeLastExperimentDay();
+  void removeAllExperimentDays();
+
   void setExperimentDayWhiteLight(const size_t experiment_day,
                                   const bool white_light);
   void setExperimentDayRedLight(const size_t experiment_day,
@@ -85,8 +96,7 @@ private:
   time_t date_time_assay_start_;
   time_t date_time_experiment_start_;
 
-  Array<sleep_assay_controller::constants::ExperimentDayInfo,
-        sleep_assay_controller::constants::EXPERIMENT_DAY_COUNT_MAX> experiment_day_array_;
+  experiment_day_info_array_t experiment_day_array_;
 
   void getCameraTriggerPwmInfo(uint32_t & channels,
                                long & period,
@@ -115,8 +125,12 @@ private:
   void getExperimentDurationHandler();
   void getExperimentInfoHandler();
   void getExperimentDayInfoHandler();
-  void addExperimentDayDefaultHandler();
+  void addExperimentDayHandler();
+  void addExperimentDaysHandler();
   void addExperimentDayCopyHandler();
+  void addExperimentDayCopiesHandler();
+  void removeLastExperimentDayHandler();
+  void removeAllExperimentDaysHandler();
   void setExperimentDayWhiteLightHandler();
   void setExperimentDayRedLightHandler();
   void setExperimentDayBuzzerHandler();
