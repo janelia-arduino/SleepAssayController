@@ -574,7 +574,7 @@ void SleepAssayController::getRedLightPwmInfo(const size_t experiment_day,
     long on_duration_1 = scaleDuration(red_light_duration_hours*constants::milliseconds_per_hour);
     on_durations.push_back(on_duration_1);
 
-    long period_1 = delay + on_duration_1 + 1;
+    long period_1 = on_duration_1 + 1;
     periods.push_back(period_1);
   }
 
@@ -619,7 +619,7 @@ void SleepAssayController::getBuzzerPwmInfo(const size_t experiment_day,
     long on_duration_1 = scaleDuration(buzzer_duration_hours*constants::milliseconds_per_hour);
     on_durations.push_back(on_duration_1);
 
-    long period_1 = delay + on_duration_1 + 1;
+    long period_1 = on_duration_1 + 1;
     periods.push_back(period_1);
   }
 
@@ -778,12 +778,15 @@ void SleepAssayController::startExperimentDay(const int experiment_day)
                        buzzer_on_durations);
 
       buzzer_enabled_ = true;
-      addEventUsingDelay();
-      // int buzzer_pwm_index = addRecursivePwm(buzzer_channels,
-      //                                        buzzer_delay,
-      //                                        buzzer_periods,
-      //                                        buzzer_on_durations,
-      //                                        1);
+      long buzzer_start_delay = buzzer_delay;
+      addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::buzz),
+                         buzzer_start_delay,
+                         experiment_day);
+
+      long buzzer_end_delay = buzzer_start_delay + buzzer_on_durations.back();
+      addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::disableBuzzer),
+                         buzzer_end_delay,
+                         -1);
     }
   }
   else
@@ -818,6 +821,36 @@ void SleepAssayController::startRecovery()
 void SleepAssayController::stopAssay(const int arg)
 {
   stopAssay();
+}
+
+void SleepAssayController::buzz(const int experiment_day)
+{
+  if (buzzer_enabled_)
+  {
+    uint32_t buzzer_channels;
+    long buzzer_delay;
+    HighPowerSwitchController::RecursivePwmValues buzzer_periods;
+    HighPowerSwitchController::RecursivePwmValues buzzer_on_durations;
+    getBuzzerPwmInfo(experiment_day,
+                     buzzer_channels,
+                     buzzer_delay,
+                     buzzer_periods,
+                     buzzer_on_durations);
+
+    int pwm_index = addPwm(buzzer_channels,
+                           0,
+                           buzzer_periods.front(),
+                           buzzer_on_durations.front(),
+                           1);
+    addCountCompletedFunctor(pwm_index,
+                             makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::buzz),
+                             experiment_day);
+  }
+}
+
+void SleepAssayController::disableBuzzer(const int arg)
+{
+  buzzer_enabled_ = false;
 }
 
 void SleepAssayController::writeDateTimeToResponse(const time_t date_time)

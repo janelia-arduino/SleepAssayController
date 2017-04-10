@@ -111,6 +111,11 @@ private:
                           long & delay,
                           HighPowerSwitchController::RecursivePwmValues & periods,
                           HighPowerSwitchController::RecursivePwmValues & on_durations);
+  void getBuzzerPwmInfo(const size_t experiment_day,
+                        uint32_t & channels,
+                        long & delay,
+                        HighPowerSwitchController::RecursivePwmValues & periods,
+                        HighPowerSwitchController::RecursivePwmValues & on_durations);
 
   void startCameraTrigger();
   void startAssay();
@@ -118,6 +123,8 @@ private:
   void startExperimentDay(const int experiment_day);
   void startRecovery();
   void stopAssay(const int arg);
+  void buzz(const int experiment_day);
+  void disableBuzzer(const int arg);
 
   void writeDateTimeToResponse(const time_t date_time);
   void writeExperimentDayInfoToResponse(const size_t experiment_day);
