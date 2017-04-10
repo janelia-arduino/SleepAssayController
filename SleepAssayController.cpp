@@ -301,6 +301,7 @@ void SleepAssayController::stopAssay()
   testing_ = false;
   date_time_assay_start_ = 0;
   date_time_experiment_start_ = 0;
+  buzzer_enabled_ = false;
 }
 
 bool SleepAssayController::assayStarted()
@@ -579,6 +580,51 @@ void SleepAssayController::getRedLightPwmInfo(const size_t experiment_day,
 
 }
 
+void SleepAssayController::getBuzzerPwmInfo(const size_t experiment_day,
+                                            uint32_t & channels,
+                                            long & delay,
+                                            HighPowerSwitchController::RecursivePwmValues & periods,
+                                            HighPowerSwitchController::RecursivePwmValues & on_durations)
+{
+  long channel;
+  modular_server_.property(constants::buzzer_channel_property_name).getValue(channel);
+  uint32_t bit = 1;
+  channels = bit << channel;
+
+  long on_duration_0;
+  modular_server_.property(constants::buzzer_on_duration_property_name).getValue(on_duration_0);
+  on_duration_0 *= constants::milliseconds_per_second;
+  on_durations.push_back(on_duration_0);
+
+  long buzzer_wait_min;
+  modular_server_.property(constants::buzzer_wait_min_property_name).getValue(buzzer_wait_min);
+  buzzer_wait_min *= constants::milliseconds_per_second;
+
+  long buzzer_wait_max;
+  modular_server_.property(constants::buzzer_wait_max_property_name).getValue(buzzer_wait_max);
+  buzzer_wait_max *= constants::milliseconds_per_second;
+
+  long off_duration_0 = random(buzzer_wait_min,buzzer_wait_max);
+
+  long period_0 = on_duration_0 + off_duration_0;
+  periods.push_back(period_0);
+
+  if (experimentDayExists(experiment_day))
+  {
+    constants::ExperimentDayInfo & experiment_day_info = experiment_day_array_[experiment_day];
+    double buzzer_delay_hours = experiment_day_info.buzzer_delay_hours;
+    delay = scaleDuration(buzzer_delay_hours*constants::milliseconds_per_hour);
+
+    double buzzer_duration_hours = experiment_day_info.buzzer_duration_hours;
+    long on_duration_1 = scaleDuration(buzzer_duration_hours*constants::milliseconds_per_hour);
+    on_durations.push_back(on_duration_1);
+
+    long period_1 = delay + on_duration_1 + 1;
+    periods.push_back(period_1);
+  }
+
+}
+
 void SleepAssayController::startCameraTrigger()
 {
   uint32_t channels;
@@ -595,6 +641,8 @@ void SleepAssayController::startAssay()
   stopAllPwm();
   enableAll();
   startCameraTrigger();
+
+  buzzer_enabled_ = false;
 
   time_t date_time_now = SleepAssayController::now();
   date_time_assay_start_ = date_time_now;
@@ -714,6 +762,28 @@ void SleepAssayController::startExperimentDay(const int experiment_day)
                                                 red_light_periods,
                                                 red_light_on_durations,
                                                 1);
+    }
+
+    bool buzzer = experiment_day_info.buzzer;
+    if (buzzer)
+    {
+      uint32_t buzzer_channels;
+      long buzzer_delay;
+      HighPowerSwitchController::RecursivePwmValues buzzer_periods;
+      HighPowerSwitchController::RecursivePwmValues buzzer_on_durations;
+      getBuzzerPwmInfo(experiment_day,
+                       buzzer_channels,
+                       buzzer_delay,
+                       buzzer_periods,
+                       buzzer_on_durations);
+
+      buzzer_enabled_ = true;
+      addEventUsingDelay();
+      // int buzzer_pwm_index = addRecursivePwm(buzzer_channels,
+      //                                        buzzer_delay,
+      //                                        buzzer_periods,
+      //                                        buzzer_on_durations,
+      //                                        1);
     }
   }
   else

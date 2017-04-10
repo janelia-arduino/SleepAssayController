@@ -96,6 +96,8 @@ private:
   time_t date_time_assay_start_;
   time_t date_time_experiment_start_;
 
+  bool buzzer_enabled_;
+
   experiment_day_info_array_t experiment_day_array_;
 
   void getCameraTriggerPwmInfo(uint32_t & channels,

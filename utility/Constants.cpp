@@ -117,7 +117,7 @@ const long buzzer_wait_min_default = 1;
 CONSTANT_STRING(buzzer_wait_max_property_name,"buzzerWaitMax");
 const long buzzer_wait_max_min = 1;
 const long buzzer_wait_max_max = 3600;
-const long buzzer_wait_max_default = 10;
+const long buzzer_wait_max_default = 3;
 
 CONSTANT_STRING(time_zone_offset_property_name,"timeZoneOffset");
 const long time_zone_offset_min = -12;
