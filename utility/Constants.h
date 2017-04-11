@@ -18,7 +18,7 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=19};
 enum{PARAMETER_COUNT_MAX=10};
-enum{FUNCTION_COUNT_MAX=20};
+enum{FUNCTION_COUNT_MAX=22};
 enum{CALLBACK_COUNT_MAX=3};
 
 extern ConstantString device_name;
@@ -36,6 +36,7 @@ extern const long milliseconds_per_second;
 extern const long milliseconds_per_minute;
 extern const long milliseconds_per_hour;
 extern const long milliseconds_per_day;
+extern const long seconds_per_hour;
 extern const long seconds_per_day;
 
 extern ConstantString year_string;
@@ -58,6 +59,30 @@ struct ExperimentDayInfo
   double buzzer_delay_hours;
   double buzzer_duration_hours;
 };
+
+struct AssayStatus
+{
+  time_t time;
+  double assay_day;
+  const ConstantString * phase_ptr;
+  double phase_day;
+};
+
+extern ConstantString time_now_string;
+extern ConstantString time_entrainment_start_string;
+extern ConstantString time_assay_start_string;
+extern ConstantString time_experiment_start_string;
+extern ConstantString time_experiment_end_string;
+extern ConstantString time_assay_end_string;
+extern ConstantString date_time_now_string;
+extern ConstantString assay_day_string;
+extern ConstantString phase_string;
+extern ConstantString phase_day_string;
+extern ConstantString phase_assay_not_started_string;
+extern ConstantString phase_entrainment_string;
+extern ConstantString phase_experiment_string;
+extern ConstantString phase_recovery_string;
+extern ConstantString phase_assay_finished_string;
 
 // Interrupts
 
@@ -196,6 +221,7 @@ extern ConstantString get_assay_duration_function_name;
 extern ConstantString get_experiment_start_function_name;
 extern ConstantString get_experiment_end_function_name;
 extern ConstantString get_experiment_duration_function_name;
+extern ConstantString get_entrainment_start_function_name;
 extern ConstantString get_experiment_info_function_name;
 extern ConstantString get_experiment_day_info_function_name;
 extern ConstantString add_experiment_day_function_name;
@@ -207,6 +233,7 @@ extern ConstantString remove_all_experiment_days_function_name;
 extern ConstantString set_experiment_day_white_light_function_name;
 extern ConstantString set_experiment_day_red_light_function_name;
 extern ConstantString set_experiment_day_buzzer_function_name;
+extern ConstantString get_assay_status_function_name;
 
 // Callbacks
 extern ConstantString run_assay_callback_name;

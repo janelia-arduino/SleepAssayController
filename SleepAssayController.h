@@ -41,6 +41,7 @@ public:
   void setTime(const time_t epoch_time);
   time_t getTime();
   bool timeIsSet();
+  time_t epochTimeToLocalTime(const time_t epoch_time);
 
   void runAssay();
   void testAssay();
@@ -57,6 +58,7 @@ public:
   time_t getExperimentStart();
   time_t getExperimentEnd();
   uint8_t getExperimentDuration();
+  time_t getEntrainmentStart();
 
   typedef Array<sleep_assay_controller::constants::ExperimentDayInfo,
                 sleep_assay_controller::constants::EXPERIMENT_DAY_COUNT_MAX> experiment_day_info_array_t;
@@ -85,6 +87,8 @@ public:
                               const double buzzer_delay_hours,
                               const double buzzer_duration_hours);
 
+  sleep_assay_controller::constants::AssayStatus getAssayStatus();
+
 private:
   modular_server::Property properties_[sleep_assay_controller::constants::PROPERTY_COUNT_MAX];
   modular_server::Parameter parameters_[sleep_assay_controller::constants::PARAMETER_COUNT_MAX];
@@ -93,8 +97,8 @@ private:
 
   bool testing_;
 
-  time_t date_time_assay_start_;
-  time_t date_time_experiment_start_;
+  time_t time_assay_start_;
+  time_t time_experiment_start_;
 
   bool buzzer_enabled_;
 
@@ -126,7 +130,7 @@ private:
   void buzz(const int experiment_day);
   void disableBuzzer(const int arg);
 
-  void writeDateTimeToResponse(const time_t date_time);
+  void writeDateTimeToResponse(const time_t time);
   void writeExperimentDayInfoToResponse(const size_t experiment_day);
 
   // Handlers
@@ -140,6 +144,7 @@ private:
   void getExperimentStartHandler();
   void getExperimentEndHandler();
   void getExperimentDurationHandler();
+  void getEntrainmentStartHandler();
   void getExperimentInfoHandler();
   void getExperimentDayInfoHandler();
   void addExperimentDayHandler();
@@ -151,6 +156,7 @@ private:
   void setExperimentDayWhiteLightHandler();
   void setExperimentDayRedLightHandler();
   void setExperimentDayBuzzerHandler();
+  void getAssayStatusHandler();
   void runAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void testAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void stopAssayHandler(modular_server::Interrupt * interrupt_ptr);

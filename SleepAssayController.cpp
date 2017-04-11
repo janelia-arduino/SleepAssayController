@@ -20,6 +20,9 @@ void SleepAssayController::setup()
   HighPowerSwitchController::setup();
 
   // Variable Setup
+  time_assay_start_ = 0;
+  time_experiment_start_ = 0;
+  testing_ = false;
   stopAssay();
 
   // Set Device ID
@@ -190,6 +193,10 @@ void SleepAssayController::setup()
   get_experiment_duration_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getExperimentDurationHandler));
   get_experiment_duration_function.setReturnTypeLong();
 
+  modular_server::Function & get_entrainment_start_function = modular_server_.createFunction(constants::get_entrainment_start_function_name);
+  get_entrainment_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getEntrainmentStartHandler));
+  get_entrainment_start_function.setReturnTypeObject();
+
   modular_server::Function & get_experiment_info_function = modular_server_.createFunction(constants::get_experiment_info_function_name);
   get_experiment_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getExperimentInfoHandler));
   get_experiment_info_function.setReturnTypeArray();
@@ -247,6 +254,10 @@ void SleepAssayController::setup()
   set_experiment_day_buzzer_function.addParameter(buzzer_duration_parameter);
   set_experiment_day_buzzer_function.setReturnTypeObject();
 
+  modular_server::Function & get_assay_status_function = modular_server_.createFunction(constants::get_assay_status_function_name);
+  get_assay_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getAssayStatusHandler));
+  get_assay_status_function.setReturnTypeObject();
+
   // Callbacks
   modular_server::Callback & run_assay_callback = modular_server_.createCallback(constants::run_assay_callback_name);
   run_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&SleepAssayController::runAssayHandler));
@@ -275,6 +286,15 @@ bool SleepAssayController::timeIsSet()
   return (time_status != timeNotSet);
 }
 
+time_t SleepAssayController::epochTimeToLocalTime(const time_t epoch_time)
+{
+  long time_zone_offset;
+  modular_server_.property(constants::time_zone_offset_property_name).getValue(time_zone_offset);
+
+  return epoch_time + time_zone_offset*constants::seconds_per_hour;
+}
+
+
 void SleepAssayController::runAssay()
 {
   if (!timeIsSet())
@@ -298,16 +318,13 @@ void SleepAssayController::testAssay()
 void SleepAssayController::stopAssay()
 {
   stopAllPwm();
-  testing_ = false;
-  date_time_assay_start_ = 0;
-  date_time_experiment_start_ = 0;
   buzzer_enabled_ = false;
 }
 
 bool SleepAssayController::assayStarted()
 {
-  time_t date_time_assay_start = getAssayStart();
-  return (date_time_assay_start != 0);
+  time_t time_assay_start = getAssayStart();
+  return (time_assay_start != 0);
 }
 
 bool SleepAssayController::testing()
@@ -329,24 +346,26 @@ long SleepAssayController::scaleDuration(const long duration)
 
 time_t SleepAssayController::now()
 {
-  long time_zone_offset;
-  modular_server_.property(constants::time_zone_offset_property_name).getValue(time_zone_offset);
-  return ::now() + time_zone_offset*constants::minutes_per_hour*constants::seconds_per_minute;
+  return ::now();
 }
 
 time_t SleepAssayController::getAssayStart()
 {
-  return date_time_assay_start_;
+  return time_assay_start_;
 }
 
 time_t SleepAssayController::getAssayEnd()
 {
+  if (!assayStarted())
+  {
+    return 0;
+  }
   long recovery_duration;
   modular_server_.property(constants::recovery_duration_property_name).getValue(recovery_duration);
 
-  time_t date_time_assay_end = getExperimentEnd();
-  date_time_assay_end += scaleDuration(recovery_duration*constants::seconds_per_day);
-  return date_time_assay_end;
+  time_t time_assay_end = getExperimentEnd();
+  time_assay_end += scaleDuration(recovery_duration*constants::seconds_per_day);
+  return time_assay_end;
 }
 
 uint8_t SleepAssayController::getAssayDuration()
@@ -364,19 +383,39 @@ uint8_t SleepAssayController::getAssayDuration()
 
 time_t SleepAssayController::getExperimentStart()
 {
-  return date_time_experiment_start_;
+  return time_experiment_start_;
 }
 
 time_t SleepAssayController::getExperimentEnd()
 {
-  time_t date_time_experiment_end = getExperimentStart();
-  date_time_experiment_end += scaleDuration(experiment_day_array_.size()*constants::seconds_per_day);
-  return date_time_experiment_end;
+  if (!assayStarted())
+  {
+    return 0;
+  }
+  time_t time_experiment_end = getExperimentStart();
+  time_experiment_end += scaleDuration(experiment_day_array_.size()*constants::seconds_per_day);
+  return time_experiment_end;
 }
 
 uint8_t SleepAssayController::getExperimentDuration()
 {
   return experiment_day_array_.size();
+}
+
+time_t SleepAssayController::getEntrainmentStart()
+{
+  if (!assayStarted())
+  {
+    return 0;
+  }
+
+  long entrainment_duration;
+  modular_server_.property(constants::entrainment_duration_property_name).getValue(entrainment_duration);
+
+  time_t time_entrainment_start = getExperimentStart();
+  time_entrainment_start -= scaleDuration(entrainment_duration*constants::seconds_per_day);
+
+  return time_entrainment_start;
 }
 
 SleepAssayController::experiment_day_info_array_t SleepAssayController::getExperimentInfo()
@@ -505,6 +544,53 @@ void SleepAssayController::setExperimentDayBuzzer(const size_t experiment_day,
   {
     experiment_day_array_[experiment_day].buzzer_duration_hours = constants::buzzer_duration_max - buzzer_delay_hours;
   }
+}
+
+sleep_assay_controller::constants::AssayStatus SleepAssayController::getAssayStatus()
+{
+  constants::AssayStatus assay_status;
+  time_t time_now = getTime();
+
+  assay_status.time = time_now;
+  assay_status.assay_day = -1;
+  assay_status.phase_ptr = &constants::phase_assay_not_started_string;
+  assay_status.phase_day = -1;
+
+  if (assayStarted())
+  {
+    time_t time_entrainment_start = getEntrainmentStart();
+    time_t time_assay_start = getAssayStart();
+    time_t time_experiment_start = getExperimentStart();
+    time_t time_experiment_end = getExperimentEnd();
+    time_t time_assay_end = getAssayEnd();
+    double seconds_per_day_scaled = scaleDuration(constants::seconds_per_day);
+
+    assay_status.assay_day = (time_now - time_entrainment_start)/seconds_per_day_scaled;
+
+    if (time_now < time_experiment_start)
+    {
+      assay_status.phase_ptr = &constants::phase_entrainment_string;
+      assay_status.phase_day = (double)(time_now - time_entrainment_start)/seconds_per_day_scaled;
+    }
+    else if (time_now < time_experiment_end)
+    {
+      assay_status.phase_ptr = &constants::phase_experiment_string;
+      assay_status.phase_day = (double)(time_now - time_experiment_start)/seconds_per_day_scaled;
+    }
+    else if (time_now < time_assay_end)
+    {
+      assay_status.phase_ptr = &constants::phase_recovery_string;
+      assay_status.phase_day = (double)(time_now - time_experiment_end)/seconds_per_day_scaled;
+    }
+    else
+    {
+      assay_status.assay_day = (double)(time_assay_end - time_entrainment_start)/seconds_per_day_scaled;
+      assay_status.phase_ptr = &constants::phase_assay_finished_string;
+      assay_status.phase_day = (double)(time_assay_end - time_experiment_end)/seconds_per_day_scaled;
+    }
+  }
+
+  return assay_status;
 }
 
 bool SleepAssayController::experimentDayExists(const size_t experiment_day)
@@ -644,9 +730,9 @@ void SleepAssayController::startAssay()
 
   buzzer_enabled_ = false;
 
-  time_t date_time_now = SleepAssayController::now();
-  date_time_assay_start_ = date_time_now;
-  date_time_experiment_start_ = date_time_assay_start_;
+  time_t time_now = SleepAssayController::now();
+  time_assay_start_ = time_now;
+  time_experiment_start_ = time_assay_start_;
 
   long entrainment_duration;
   modular_server_.property(constants::entrainment_duration_property_name).getValue(entrainment_duration);
@@ -661,9 +747,9 @@ void SleepAssayController::startAssay()
     long start_time;
     modular_server_.property(constants::white_light_start_time_property_name).getValue(start_time);
 
-    long offset = (hour(date_time_now) - start_time)*constants::milliseconds_per_hour;
-    offset += minute(date_time_now)*constants::milliseconds_per_minute;
-    offset += second(date_time_now)*constants::milliseconds_per_second;
+    long offset = (hour(time_now) - start_time)*constants::milliseconds_per_hour;
+    offset += minute(time_now)*constants::milliseconds_per_minute;
+    offset += second(time_now)*constants::milliseconds_per_second;
     offset = scaleDuration(offset);
 
     if ((offset > 0) && (offset < on_duration))
@@ -677,8 +763,8 @@ void SleepAssayController::startAssay()
       addCountCompletedFunctor(pwm_index,
                                makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
                                entrainment_duration2);
-      date_time_experiment_start_ += scaleDuration(entrainment_duration2*constants::seconds_per_day);
-      date_time_experiment_start_ += period/constants::milliseconds_per_second;
+      time_experiment_start_ += scaleDuration(entrainment_duration2*constants::seconds_per_day);
+      time_experiment_start_ += period/constants::milliseconds_per_second;
     }
     else if (offset >= on_duration)
     {
@@ -687,8 +773,8 @@ void SleepAssayController::startAssay()
       addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
                          delay,
                          entrainment_duration2);
-      date_time_experiment_start_ += scaleDuration(entrainment_duration2*constants::seconds_per_day);
-      date_time_experiment_start_ += delay/constants::milliseconds_per_second;
+      time_experiment_start_ += scaleDuration(entrainment_duration2*constants::seconds_per_day);
+      time_experiment_start_ += delay/constants::milliseconds_per_second;
     }
     else if (offset <= 0)
     {
@@ -697,8 +783,8 @@ void SleepAssayController::startAssay()
       addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
                          delay,
                          entrainment_duration2);
-      date_time_experiment_start_ += scaleDuration(entrainment_duration2*constants::seconds_per_day);
-      date_time_experiment_start_ += delay/constants::milliseconds_per_second;
+      time_experiment_start_ += scaleDuration(entrainment_duration2*constants::seconds_per_day);
+      time_experiment_start_ += delay/constants::milliseconds_per_second;
     }
   }
   else
@@ -853,16 +939,18 @@ void SleepAssayController::disableBuzzer(const int arg)
   buzzer_enabled_ = false;
 }
 
-void SleepAssayController::writeDateTimeToResponse(const time_t date_time)
+void SleepAssayController::writeDateTimeToResponse(const time_t time)
 {
+  time_t local_time = epochTimeToLocalTime(time);
+
   modular_server_.response().beginObject();
 
-  modular_server_.response().write(constants::year_string,year(date_time));
-  modular_server_.response().write(constants::month_string,month(date_time));
-  modular_server_.response().write(constants::day_string,day(date_time));
-  modular_server_.response().write(constants::hour_string,hour(date_time));
-  modular_server_.response().write(constants::minute_string,minute(date_time));
-  modular_server_.response().write(constants::second_string,second(date_time));
+  modular_server_.response().write(constants::year_string,year(local_time));
+  modular_server_.response().write(constants::month_string,month(local_time));
+  modular_server_.response().write(constants::day_string,day(local_time));
+  modular_server_.response().write(constants::hour_string,hour(local_time));
+  modular_server_.response().write(constants::minute_string,minute(local_time));
+  modular_server_.response().write(constants::second_string,second(local_time));
 
   modular_server_.response().endObject();
 }
@@ -951,9 +1039,9 @@ void SleepAssayController::nowHandler()
     modular_server_.response().returnError(constants::time_not_set_error);
     return;
   }
-  time_t date_time_now = SleepAssayController::now();
+  time_t time_now = SleepAssayController::now();
   modular_server_.response().writeResultKey();
-  writeDateTimeToResponse(date_time_now);
+  writeDateTimeToResponse(time_now);
 }
 
 void SleepAssayController::getAssayStartHandler()
@@ -970,9 +1058,9 @@ void SleepAssayController::getAssayStartHandler()
     return;
   }
 
-  time_t date_time_assay_start = getAssayStart();
+  time_t time_assay_start = getAssayStart();
   modular_server_.response().writeResultKey();
-  writeDateTimeToResponse(date_time_assay_start);
+  writeDateTimeToResponse(time_assay_start);
 }
 
 void SleepAssayController::getAssayEndHandler()
@@ -989,9 +1077,9 @@ void SleepAssayController::getAssayEndHandler()
     return;
   }
 
-  time_t date_time_assay_end = getAssayEnd();
+  time_t time_assay_end = getAssayEnd();
   modular_server_.response().writeResultKey();
-  writeDateTimeToResponse(date_time_assay_end);
+  writeDateTimeToResponse(time_assay_end);
 }
 
 void SleepAssayController::getAssayDurationHandler()
@@ -1014,9 +1102,9 @@ void SleepAssayController::getExperimentStartHandler()
     return;
   }
 
-  time_t date_time_experiment_start = getExperimentStart();
+  time_t time_experiment_start = getExperimentStart();
   modular_server_.response().writeResultKey();
-  writeDateTimeToResponse(date_time_experiment_start);
+  writeDateTimeToResponse(time_experiment_start);
 }
 
 void SleepAssayController::getExperimentEndHandler()
@@ -1033,15 +1121,34 @@ void SleepAssayController::getExperimentEndHandler()
     return;
   }
 
-  time_t date_time_experiment_end = getExperimentEnd();
+  time_t time_experiment_end = getExperimentEnd();
   modular_server_.response().writeResultKey();
-  writeDateTimeToResponse(date_time_experiment_end);
+  writeDateTimeToResponse(time_experiment_end);
 }
 
 void SleepAssayController::getExperimentDurationHandler()
 {
   uint8_t experiment_duration = getExperimentDuration();
   modular_server_.response().returnResult(experiment_duration);
+}
+
+void SleepAssayController::getEntrainmentStartHandler()
+{
+  if (!timeIsSet())
+  {
+    modular_server_.response().returnError(constants::time_not_set_error);
+    return;
+  }
+  bool assay_started = assayStarted();
+  if (!assay_started)
+  {
+    modular_server_.response().returnError(constants::assay_not_started_error);
+    return;
+  }
+
+  time_t time_entrainment_start = getEntrainmentStart();
+  modular_server_.response().writeResultKey();
+  writeDateTimeToResponse(time_entrainment_start);
 }
 
 void SleepAssayController::getExperimentInfoHandler()
@@ -1210,6 +1317,46 @@ void SleepAssayController::setExperimentDayBuzzerHandler()
 
   modular_server_.response().writeResultKey();
   writeExperimentDayInfoToResponse(experiment_day);
+}
+
+void SleepAssayController::getAssayStatusHandler()
+{
+  constants::AssayStatus assay_status = getAssayStatus();
+
+  modular_server_.response().writeResultKey();
+
+  modular_server_.response().beginObject();
+
+  // modular_server_.response().write(constants::time_entrainment_start_string,getEntrainmentStart());
+
+  // modular_server_.response().write(constants::time_assay_start_string,getAssayStart());
+
+  // modular_server_.response().write(constants::time_experiment_start_string,getExperimentStart());
+
+  // modular_server_.response().write(constants::time_experiment_end_string,getExperimentEnd());
+
+  // modular_server_.response().write(constants::time_assay_end_string,getAssayEnd());
+
+  modular_server_.response().write(constants::time_now_string,assay_status.time);
+
+  modular_server_.response().writeKey(constants::date_time_now_string);
+  if (timeIsSet())
+  {
+    writeDateTimeToResponse(assay_status.time);
+  }
+  else
+  {
+    modular_server_.response().beginObject();
+    modular_server_.response().endObject();
+  }
+
+  modular_server_.response().write(constants::assay_day_string,assay_status.assay_day);
+
+  modular_server_.response().write(constants::phase_string,assay_status.phase_ptr);
+
+  modular_server_.response().write(constants::phase_day_string,assay_status.phase_day);
+
+  modular_server_.response().endObject();
 }
 
 void SleepAssayController::runAssayHandler(modular_server::Interrupt * interrupt_ptr)

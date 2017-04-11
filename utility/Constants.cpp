@@ -34,7 +34,8 @@ const long milliseconds_per_second = 1000;
 const long milliseconds_per_minute = milliseconds_per_second*seconds_per_minute;
 const long milliseconds_per_hour = milliseconds_per_second*seconds_per_minute*minutes_per_hour;
 const long milliseconds_per_day = milliseconds_per_hour*hours_per_day;
-const long seconds_per_day = seconds_per_minute*minutes_per_hour*hours_per_day;
+const long seconds_per_hour = seconds_per_minute*minutes_per_hour;
+const long seconds_per_day = seconds_per_hour*hours_per_day;
 
 CONSTANT_STRING(year_string,"year");
 CONSTANT_STRING(month_string,"month");
@@ -45,6 +46,22 @@ CONSTANT_STRING(second_string,"second");
 
 const double camera_trigger_duty_cycle = 50.0;
 const double camera_trigger_duty_cycle_max = 100.0;
+
+CONSTANT_STRING(time_now_string,"time_now");
+CONSTANT_STRING(time_entrainment_start_string,"time_entrainment_start");
+CONSTANT_STRING(time_assay_start_string,"time_assay_start");
+CONSTANT_STRING(time_experiment_start_string,"time_experiment_start");
+CONSTANT_STRING(time_experiment_end_string,"time_experiment_end");
+CONSTANT_STRING(time_assay_end_string,"time_assay_end");
+CONSTANT_STRING(date_time_now_string,"date_time_now");
+CONSTANT_STRING(assay_day_string,"assay_day");
+CONSTANT_STRING(phase_string,"phase");
+CONSTANT_STRING(phase_day_string,"phase_day");
+CONSTANT_STRING(phase_assay_not_started_string,"ASSAY_NOT_STARTED");
+CONSTANT_STRING(phase_entrainment_string,"ENTRAINMENT");
+CONSTANT_STRING(phase_experiment_string,"EXPERIMENT");
+CONSTANT_STRING(phase_recovery_string,"RECOVERY");
+CONSTANT_STRING(phase_assay_finished_string,"ASSAY_FINISHED");
 
 // Interrupts
 
@@ -178,6 +195,7 @@ CONSTANT_STRING(get_assay_duration_function_name,"getAssayDuration");
 CONSTANT_STRING(get_experiment_start_function_name,"getExperimentStart");
 CONSTANT_STRING(get_experiment_end_function_name,"getExperimentEnd");
 CONSTANT_STRING(get_experiment_duration_function_name,"getExperimentDuration");
+CONSTANT_STRING(get_entrainment_start_function_name,"getEntrainmentStart");
 CONSTANT_STRING(get_experiment_info_function_name,"getExperimentInfo");
 CONSTANT_STRING(get_experiment_day_info_function_name,"getExperimentDayInfo");
 CONSTANT_STRING(add_experiment_day_function_name,"addExperimentDay");
@@ -189,6 +207,7 @@ CONSTANT_STRING(remove_all_experiment_days_function_name,"removeAllExperimentDay
 CONSTANT_STRING(set_experiment_day_white_light_function_name,"setExperimentDayWhiteLight");
 CONSTANT_STRING(set_experiment_day_red_light_function_name,"setExperimentDayRedLight");
 CONSTANT_STRING(set_experiment_day_buzzer_function_name,"setExperimentDayBuzzer");
+CONSTANT_STRING(get_assay_status_function_name,"getAssayStatus");
 
 // Callbacks
 CONSTANT_STRING(run_assay_callback_name,"runAssay");
