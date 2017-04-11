@@ -62,6 +62,9 @@ CONSTANT_STRING(phase_entrainment_string,"ENTRAINMENT");
 CONSTANT_STRING(phase_experiment_string,"EXPERIMENT");
 CONSTANT_STRING(phase_recovery_string,"RECOVERY");
 CONSTANT_STRING(phase_assay_finished_string,"ASSAY_FINISHED");
+CONSTANT_STRING(white_light_on_string,"white_light_on");
+CONSTANT_STRING(red_light_pulsing_string,"red_light_pulsing");
+CONSTANT_STRING(buzzing_string,"buzzing");
 
 // Interrupts
 

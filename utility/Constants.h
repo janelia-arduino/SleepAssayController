@@ -66,6 +66,9 @@ struct AssayStatus
   double assay_day;
   const ConstantString * phase_ptr;
   double phase_day;
+  bool white_light_on;
+  bool red_light_pulsing;
+  bool buzzing;
 };
 
 extern ConstantString time_now_string;
@@ -83,6 +86,9 @@ extern ConstantString phase_entrainment_string;
 extern ConstantString phase_experiment_string;
 extern ConstantString phase_recovery_string;
 extern ConstantString phase_assay_finished_string;
+extern ConstantString white_light_on_string;
+extern ConstantString red_light_pulsing_string;
+extern ConstantString buzzing_string;
 
 // Interrupts
 

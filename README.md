@@ -27,6 +27,7 @@ License:
       "getExperimentStart",
       "getExperimentEnd",
       "getExperimentDuration",
+      "getEntrainmentStart",
       "getExperimentInfo",
       "getExperimentDayInfo",
       "addExperimentDay",
@@ -37,7 +38,8 @@ License:
       "removeAllExperimentDays",
       "setExperimentDayWhiteLight",
       "setExperimentDayRedLight",
-      "setExperimentDayBuzzer"
+      "setExperimentDayBuzzer",
+      "getAssayStatus"
     ],
     "parameters":[
       "epoch_time",
@@ -79,6 +81,50 @@ License:
     ]
   }
 }
+```
+
+## Example Usage
+
+### Command Line
+
+First get epoch time on the client computer using one of any number of
+ways:
+
+#### Web Page
+
+<https://www.epochconverter.com/>
+
+#### Bash
+
+```shell
+date +%s
+```
+
+Example: epoch_time = 1491943626
+
+Set the time on the device:
+
+```shell
+setTime 1491943626
+```
+
+### Python
+
+```python
+import ModularClient
+
+dev = ModularClient()
+
+import time
+epoch_time = int(time.time())
+
+dev.setTime(epoch_time)
+```
+
+### Matlab
+
+```matlab
+
 ```
 
 ## More Detailed Modular Device Information

@@ -89,6 +89,10 @@ public:
 
   sleep_assay_controller::constants::AssayStatus getAssayStatus();
 
+  bool whiteLightOn();
+  bool redLightPulsing();
+  bool buzzing();
+
 private:
   modular_server::Property properties_[sleep_assay_controller::constants::PROPERTY_COUNT_MAX];
   modular_server::Parameter parameters_[sleep_assay_controller::constants::PARAMETER_COUNT_MAX];
@@ -101,6 +105,7 @@ private:
   time_t time_experiment_start_;
 
   bool buzzer_enabled_;
+  bool buzzing_;
 
   experiment_day_info_array_t experiment_day_array_;
 

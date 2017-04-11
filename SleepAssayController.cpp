@@ -319,6 +319,7 @@ void SleepAssayController::stopAssay()
 {
   stopAllPwm();
   buzzer_enabled_ = false;
+  buzzing_ = false;
 }
 
 bool SleepAssayController::assayStarted()
@@ -555,6 +556,9 @@ sleep_assay_controller::constants::AssayStatus SleepAssayController::getAssaySta
   assay_status.assay_day = -1;
   assay_status.phase_ptr = &constants::phase_assay_not_started_string;
   assay_status.phase_day = -1;
+  assay_status.white_light_on = false;
+  assay_status.red_light_pulsing = false;
+  assay_status.buzzing = false;
 
   if (assayStarted())
   {
@@ -576,6 +580,8 @@ sleep_assay_controller::constants::AssayStatus SleepAssayController::getAssaySta
     {
       assay_status.phase_ptr = &constants::phase_experiment_string;
       assay_status.phase_day = (double)(time_now - time_experiment_start)/seconds_per_day_scaled;
+      assay_status.red_light_pulsing = redLightPulsing();
+      assay_status.buzzing = buzzing();
     }
     else if (time_now < time_assay_end)
     {
@@ -588,9 +594,45 @@ sleep_assay_controller::constants::AssayStatus SleepAssayController::getAssaySta
       assay_status.phase_ptr = &constants::phase_assay_finished_string;
       assay_status.phase_day = (double)(time_assay_end - time_experiment_end)/seconds_per_day_scaled;
     }
+
+    assay_status.white_light_on = whiteLightOn();
   }
 
   return assay_status;
+}
+
+bool SleepAssayController::whiteLightOn()
+{
+  long channel;
+  modular_server_.property(constants::white_light_channel_property_name).getValue(channel);
+
+  return channelIsOn(channel);
+}
+
+bool SleepAssayController::redLightPulsing()
+{
+  long channel;
+  modular_server_.property(constants::red_light_channel_property_name).getValue(channel);
+
+  ChannelsPwmIndexes channels_pwm_indexes = getChannelsPwmIndexes();
+  RecursivePwmValues channel_pwm_indexes = channels_pwm_indexes[channel];
+
+  bool red_light_pulsing = false;
+
+  for (size_t i=0; i<channel_pwm_indexes.size(); ++i)
+  {
+    if (channel_pwm_indexes[i] >= 0)
+    {
+      red_light_pulsing = true;
+      break;
+    }
+  }
+  return red_light_pulsing;
+}
+
+bool SleepAssayController::buzzing()
+{
+  return buzzing_;
 }
 
 bool SleepAssayController::experimentDayExists(const size_t experiment_day)
@@ -729,6 +771,7 @@ void SleepAssayController::startAssay()
   startCameraTrigger();
 
   buzzer_enabled_ = false;
+  buzzing_ = false;
 
   time_t time_now = SleepAssayController::now();
   time_assay_start_ = time_now;
@@ -913,6 +956,7 @@ void SleepAssayController::buzz(const int experiment_day)
 {
   if (buzzer_enabled_)
   {
+    buzzing_ = true;
     uint32_t buzzer_channels;
     long buzzer_delay;
     HighPowerSwitchController::RecursivePwmValues buzzer_periods;
@@ -931,6 +975,10 @@ void SleepAssayController::buzz(const int experiment_day)
     addCountCompletedFunctor(pwm_index,
                              makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::buzz),
                              experiment_day);
+  }
+  else
+  {
+    buzzing_ = false;
   }
 }
 
@@ -1355,6 +1403,12 @@ void SleepAssayController::getAssayStatusHandler()
   modular_server_.response().write(constants::phase_string,assay_status.phase_ptr);
 
   modular_server_.response().write(constants::phase_day_string,assay_status.phase_day);
+
+  modular_server_.response().write(constants::white_light_on_string,assay_status.white_light_on);
+
+  modular_server_.response().write(constants::red_light_pulsing_string,assay_status.red_light_pulsing);
+
+  modular_server_.response().write(constants::buzzing_string,assay_status.buzzing);
 
   modular_server_.response().endObject();
 }
