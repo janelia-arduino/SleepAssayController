@@ -804,6 +804,11 @@ void SleepAssayController::startAssay()
     long start_time;
     modular_server_.property(constants::white_light_start_time_property_name).getValue(start_time);
 
+    long time_zone_offset;
+    modular_server_.property(constants::time_zone_offset_property_name).getValue(time_zone_offset);
+
+    start_time -= time_zone_offset;
+
     long offset = (hour(time_now) - start_time)*constants::milliseconds_per_hour;
     offset += minute(time_now)*constants::milliseconds_per_minute;
     offset += second(time_now)*constants::milliseconds_per_second;

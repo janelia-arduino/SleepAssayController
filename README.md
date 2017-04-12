@@ -266,7 +266,7 @@ dev.get_assay_status()
  'white_light_on': False}
 dev.run_assay()
 dev.get_assay_end()
-{'day': 17, 'hour': 5, 'minute': 0, 'month': 4, 'second': 0, 'year': 2017}
+{'day': 17, 'hour': 9, 'minute': 0, 'month': 4, 'second': 0, 'year': 2017}
 dev.get_assay_status()
 {'assay_day': 0.367361,
  'buzzing': False,
@@ -425,7 +425,7 @@ dev.getAssayEnd()
       year: 2017
      month: 4
        day: 17
-      hour: 5
+      hour: 9
     minute: 0
     second: 0
 dev.getAssayStatus()
