@@ -124,6 +124,7 @@ t = time.time()
 if time.localtime(t).tm_isdst and time.daylight:
     time_zone_offset = -time.altzone/(60*60)
 dev.time_zone_offset('setValue',time_zone_offset)
+-4
 dev.now()
 {'day': 12, 'hour': 11, 'minute': 30, 'month': 4, 'second': 43, 'year': 2017}
 # check to make sure this matches the local date and time
@@ -152,7 +153,9 @@ dev.get_property_values()
 dev.get_assay_duration()
 4
 dev.entrainment_duration('setValue',1)
+1
 dev.recovery_duration('setValue',1)
+1
 dev.get_assay_duration()
 2
 dev.get_experiment_info()
@@ -287,9 +290,154 @@ dev.get_assay_status()
 ```matlab
 getAvailableComPorts()
 serial_port = 'COM9' % example
-dev = ModularClient(serial_port)
-dev.open()
-dev.setTime(etime(clock,[1970,1,1,0,0,0]))
+dev = ModularClient(serial_port);
+dev.open();
+dev.setPropertiesToDefaults();
+% look up time zone offset for your location
+% taking into account daylight savings time
+% if necessary
+% e.g. 
+% U.S. Eastern = -5
+% U.S. Eastern daylight savings = -4
+time_zone_offset = -4;
+dev.timeZoneOffset('setValue',time_zone_offset);
+dev.setTime(etime(clock,[1970,1,1,0,0,0]));
+n = dev.now();
+t = clock;
+dev.adjustTime((t(4) - n.hour)*60*60);
+dev.now()
+      year: 2017
+     month: 4
+       day: 12
+      hour: 10
+    minute: 44
+    second: 27
+% check to make sure this matches the local date and time
+dev.getPropertyValues()
+              serialNumber: 0
+                  powerMax: [100 50 50 50 100 100 100 100]
+      cameraTriggerChannel: 0
+    cameraTriggerFrequency: 0.5000
+         whiteLightChannel: 1
+           whiteLightPower: 50
+       whiteLightStartTime: 9
+      whiteLightOnDuration: 12
+           redLightChannel: 2
+             redLightPower: 50
+         redLightFrequency: 10
+         redLightDutyCycle: 50
+             buzzerChannel: 3
+               buzzerPower: 50
+          buzzerOnDuration: 1
+             buzzerWaitMin: 1
+             buzzerWaitMax: 3
+            timeZoneOffset: -4
+       entrainmentDuration: 2
+          recoveryDuration: 2
+        testingDayDuration: 24
+dev.getAssayDuration()
+    4
+dev.entrainmentDuration('setValue',1);
+dev.recoveryDuration('setValue',1);
+dev.getAssayDuration()
+     2
+dev.getExperimentInfo()
+   Empty cell array: 0-by-1
+dev.addExperimentDay()
+     0
+info = dev.getExperimentInfo();
+info{1}
+           white_light: 1
+             red_light: 0
+       red_light_delay: 0
+    red_light_duration: 0
+                buzzer: 0
+          buzzer_delay: 0
+       buzzer_duration: 0
+dev.setExperimentDayRedLight(0,1,12,4)
+           white_light: 1
+             red_light: 1
+       red_light_delay: 12.0000
+    red_light_duration: 4
+                buzzer: 0
+          buzzer_delay: 0
+       buzzer_duration: 0
+dev.getExperimentDuration()
+     1
+dev.getAssayDuration()
+     3
+dev.addExperimentDayCopies(0,2)
+     1     2
+dev.getExperimentDuration()
+     3
+dev.getAssayDuration()
+     5
+dev.setExperimentDayBuzzer(1,1,4,3)
+           white_light: 1
+             red_light: 1
+       red_light_delay: 12.0000
+    red_light_duration: 4
+                buzzer: 1
+          buzzer_delay: 4
+       buzzer_duration: 3
+info = dev.getExperimentInfo();
+info{2}
+           white_light: 1
+             red_light: 1
+       red_light_delay: 12.0000
+    red_light_duration: 4
+                buzzer: 1
+          buzzer_delay: 4
+       buzzer_duration: 3
+dev.testAssay();
+dev.getAssayStatus()
+             time_now: 1.4920e+09
+        date_time_now: [1x1 struct]
+            assay_day: 0.7500
+                phase: 'ENTRAINMENT'
+            phase_day: 0.7500
+       white_light_on: 0
+    red_light_pulsing: 0
+              buzzing: 0
+              testing: 1
+dev.getAssayStatus()
+             time_now: 1.4920e+09
+        date_time_now: [1x1 struct]
+            assay_day: 1.5417
+                phase: 'EXPERIMENT'
+            phase_day: 0.5417
+       white_light_on: 0
+    red_light_pulsing: 1
+              buzzing: 0
+              testing: 1
+dev.getAssayStatus()
+             time_now: 1.4920e+09
+        date_time_now: [1x1 struct]
+            assay_day: 5
+                phase: 'ASSAY_FINISHED'
+            phase_day: 1
+       white_light_on: 0
+    red_light_pulsing: 0
+              buzzing: 0
+              testing: 1
+dev.runAssay();
+dev.getAssayEnd()
+      year: 2017
+     month: 4
+       day: 17
+      hour: 5
+    minute: 0
+    second: 0
+dev.getAssayStatus()
+             time_now: 1.4920e+09
+        date_time_now: [1x1 struct]
+            assay_day: 0.4853
+                phase: 'ENTRAINMENT'
+            phase_day: 0.4853
+       white_light_on: 1
+    red_light_pulsing: 0
+              buzzing: 0
+              testing: 0
 ```
 
 ## More Detailed Modular Device Information
