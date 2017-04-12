@@ -65,6 +65,7 @@ CONSTANT_STRING(phase_assay_finished_string,"ASSAY_FINISHED");
 CONSTANT_STRING(white_light_on_string,"white_light_on");
 CONSTANT_STRING(red_light_pulsing_string,"red_light_pulsing");
 CONSTANT_STRING(buzzing_string,"buzzing");
+CONSTANT_STRING(testing_string,"testing");
 
 // Interrupts
 
@@ -157,10 +158,14 @@ const long recovery_duration_default = 2;
 CONSTANT_STRING(testing_day_duration_property_name,"testingDayDuration");
 const long testing_day_duration_min = 1;
 const long testing_day_duration_max = 240;
-const long testing_day_duration_default = 6;
+const long testing_day_duration_default = 24;
 
 // Parameters
 CONSTANT_STRING(epoch_time_parameter_name,"epoch_time");
+const long epoch_time_min = 1490000000;
+const long epoch_time_max = 2147483647;
+
+CONSTANT_STRING(adjust_time_parameter_name,"adjust_time");
 
 CONSTANT_STRING(experiment_day_parameter_name,"experiment_day");
 
@@ -191,6 +196,7 @@ CONSTANT_STRING(day_count_parameter_name,"day_count");
 // Functions
 CONSTANT_STRING(set_time_function_name,"setTime");
 CONSTANT_STRING(get_time_function_name,"getTime");
+CONSTANT_STRING(adjust_time_function_name,"adjustTime");
 CONSTANT_STRING(now_function_name,"now");
 CONSTANT_STRING(get_assay_start_function_name,"getAssayStart");
 CONSTANT_STRING(get_assay_end_function_name,"getAssayEnd");

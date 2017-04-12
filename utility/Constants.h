@@ -17,8 +17,8 @@ namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=19};
-enum{PARAMETER_COUNT_MAX=10};
-enum{FUNCTION_COUNT_MAX=22};
+enum{PARAMETER_COUNT_MAX=11};
+enum{FUNCTION_COUNT_MAX=23};
 enum{CALLBACK_COUNT_MAX=3};
 
 extern ConstantString device_name;
@@ -69,6 +69,7 @@ struct AssayStatus
   bool white_light_on;
   bool red_light_pulsing;
   bool buzzing;
+  bool testing;
 };
 
 extern ConstantString time_now_string;
@@ -89,6 +90,7 @@ extern ConstantString phase_assay_finished_string;
 extern ConstantString white_light_on_string;
 extern ConstantString red_light_pulsing_string;
 extern ConstantString buzzing_string;
+extern ConstantString testing_string;
 
 // Interrupts
 
@@ -190,6 +192,10 @@ extern const long testing_day_duration_default;
 
 // Parameters
 extern ConstantString epoch_time_parameter_name;
+extern const long epoch_time_min;
+extern const long epoch_time_max;
+
+extern ConstantString adjust_time_parameter_name;
 
 extern ConstantString experiment_day_parameter_name;
 
@@ -220,6 +226,7 @@ extern ConstantString day_count_parameter_name;
 // Functions
 extern ConstantString set_time_function_name;
 extern ConstantString get_time_function_name;
+extern ConstantString adjust_time_function_name;
 extern ConstantString now_function_name;
 extern ConstantString get_assay_start_function_name;
 extern ConstantString get_assay_end_function_name;

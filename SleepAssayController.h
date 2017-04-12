@@ -40,6 +40,7 @@ public:
 
   void setTime(const time_t epoch_time);
   time_t getTime();
+  void adjustTime(const long adjust_time);
   bool timeIsSet();
   time_t epochTimeToLocalTime(const time_t epoch_time);
 
@@ -131,7 +132,7 @@ private:
   void startEntrainment(const int entrainment_duration);
   void startExperimentDay(const int experiment_day);
   void startRecovery();
-  void stopAssay(const int arg);
+  void endAssay(const int arg);
   void buzz(const int experiment_day);
   void disableBuzzer(const int arg);
 
@@ -142,6 +143,7 @@ private:
   void updatePowersHandler();
   void setTimeHandler();
   void getTimeHandler();
+  void adjustTimeHandler();
   void nowHandler();
   void getAssayStartHandler();
   void getAssayEndHandler();

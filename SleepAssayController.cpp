@@ -20,9 +20,6 @@ void SleepAssayController::setup()
   HighPowerSwitchController::setup();
 
   // Variable Setup
-  time_assay_start_ = 0;
-  time_experiment_start_ = 0;
-  testing_ = false;
   stopAssay();
 
   // Set Device ID
@@ -121,8 +118,12 @@ void SleepAssayController::setup()
 
   // Parameters
   modular_server::Parameter & epoch_time_parameter = modular_server_.createParameter(constants::epoch_time_parameter_name);
-  epoch_time_parameter.setTypeLong();
+  epoch_time_parameter.setRange(constants::epoch_time_min,constants::epoch_time_max);
   epoch_time_parameter.setUnits(constants::seconds_unit);
+
+  modular_server::Parameter & adjust_time_parameter = modular_server_.createParameter(constants::adjust_time_parameter_name);
+  adjust_time_parameter.setTypeLong();
+  adjust_time_parameter.setUnits(constants::seconds_unit);
 
   modular_server::Parameter & experiment_day_parameter = modular_server_.createParameter(constants::experiment_day_parameter_name);
   experiment_day_parameter.setTypeLong();
@@ -164,6 +165,10 @@ void SleepAssayController::setup()
   modular_server::Function & get_time_function = modular_server_.createFunction(constants::get_time_function_name);
   get_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getTimeHandler));
   get_time_function.setReturnTypeLong();
+
+  modular_server::Function & adjust_time_function = modular_server_.createFunction(constants::adjust_time_function_name);
+  adjust_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::adjustTimeHandler));
+  adjust_time_function.addParameter(adjust_time_parameter);
 
   modular_server::Function & now_function = modular_server_.createFunction(constants::now_function_name);
   now_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::nowHandler));
@@ -280,6 +285,11 @@ time_t SleepAssayController::getTime()
   return ::now();
 }
 
+void SleepAssayController::adjustTime(const long adjust_time)
+{
+  ::adjustTime(adjust_time);
+}
+
 bool SleepAssayController::timeIsSet()
 {
   timeStatus_t time_status = timeStatus();
@@ -320,6 +330,9 @@ void SleepAssayController::stopAssay()
   stopAllPwm();
   buzzer_enabled_ = false;
   buzzing_ = false;
+  time_assay_start_ = 0;
+  time_experiment_start_ = 0;
+  testing_ = false;
 }
 
 bool SleepAssayController::assayStarted()
@@ -559,6 +572,7 @@ sleep_assay_controller::constants::AssayStatus SleepAssayController::getAssaySta
   assay_status.white_light_on = false;
   assay_status.red_light_pulsing = false;
   assay_status.buzzing = false;
+  assay_status.testing = testing();
 
   if (assayStarted())
   {
@@ -938,18 +952,20 @@ void SleepAssayController::startRecovery()
 
     int pwm_index = addPwm(channels,0,period,on_duration,recovery_duration);
     addCountCompletedFunctor(pwm_index,
-                             makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::stopAssay),
+                             makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::endAssay),
                              -1);
   }
   else
   {
-    stopAssay(-1);
+    endAssay(-1);
   }
 }
 
-void SleepAssayController::stopAssay(const int arg)
+void SleepAssayController::endAssay(const int arg)
 {
-  stopAssay();
+  stopAllPwm();
+  buzzer_enabled_ = false;
+  buzzing_ = false;
 }
 
 void SleepAssayController::buzz(const int experiment_day)
@@ -1078,6 +1094,13 @@ void SleepAssayController::getTimeHandler()
   }
   time_t epoch_time = getTime();
   modular_server_.response().returnResult(epoch_time);
+}
+
+void SleepAssayController::adjustTimeHandler()
+{
+  long adjust_time;
+  modular_server_.parameter(constants::adjust_time_parameter_name).getValue(adjust_time);
+  SleepAssayController::adjustTime(adjust_time);
 }
 
 void SleepAssayController::nowHandler()
@@ -1409,6 +1432,8 @@ void SleepAssayController::getAssayStatusHandler()
   modular_server_.response().write(constants::red_light_pulsing_string,assay_status.red_light_pulsing);
 
   modular_server_.response().write(constants::buzzing_string,assay_status.buzzing);
+
+  modular_server_.response().write(constants::testing_string,assay_status.testing);
 
   modular_server_.response().endObject();
 }
