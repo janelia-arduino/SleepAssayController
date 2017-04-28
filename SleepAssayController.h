@@ -94,6 +94,11 @@ public:
   bool redLightPulsing();
   bool buzzing();
 
+  void testWhiteLightPower(const long power);
+  void testRedLightPower(const long power);
+  void testBuzzerPower(const long power);
+  void stopAllPowerTests();
+
 private:
   modular_server::Property properties_[sleep_assay_controller::constants::PROPERTY_COUNT_MAX];
   modular_server::Parameter parameters_[sleep_assay_controller::constants::PARAMETER_COUNT_MAX];
@@ -164,6 +169,10 @@ private:
   void setExperimentDayRedLightHandler();
   void setExperimentDayBuzzerHandler();
   void getAssayStatusHandler();
+  void testWhiteLightPowerHandler();
+  void testRedLightPowerHandler();
+  void testBuzzerPowerHandler();
+  void stopAllPowerTestsHandler();
   void runAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void testAssayHandler(modular_server::Interrupt * interrupt_ptr);
   void stopAssayHandler(modular_server::Interrupt * interrupt_ptr);

@@ -217,6 +217,10 @@ CONSTANT_STRING(set_experiment_day_white_light_function_name,"setExperimentDayWh
 CONSTANT_STRING(set_experiment_day_red_light_function_name,"setExperimentDayRedLight");
 CONSTANT_STRING(set_experiment_day_buzzer_function_name,"setExperimentDayBuzzer");
 CONSTANT_STRING(get_assay_status_function_name,"getAssayStatus");
+CONSTANT_STRING(test_white_light_power_function_name,"testWhiteLightPower");
+CONSTANT_STRING(test_red_light_power_function_name,"testRedLightPower");
+CONSTANT_STRING(test_buzzer_power_function_name,"testBuzzerPower");
+CONSTANT_STRING(stop_all_power_tests_function_name,"stopAllPowerTests");
 
 // Callbacks
 CONSTANT_STRING(run_assay_callback_name,"runAssay");

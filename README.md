@@ -10,6 +10,14 @@ License:
 
 [Examples](./examples)
 
+## Inherits
+
+[ModularServer](https://github.com/janelia-arduino/ModularServer)
+
+[ModularDeviceBase](https://github.com/janelia-arduino/ModularDeviceBase)
+
+[HighPowerSwitchController](https://github.com/janelia-arduino/HighPowerSwitchController)
+
 ## API
 
 ```json
@@ -40,7 +48,11 @@ License:
       "setExperimentDayWhiteLight",
       "setExperimentDayRedLight",
       "setExperimentDayBuzzer",
-      "getAssayStatus"
+      "getAssayStatus",
+      "testWhiteLightPower",
+      "testRedLightPower",
+      "testBuzzerPower",
+      "stopAllPowerTests"
     ],
     "parameters":[
       "epoch_time",

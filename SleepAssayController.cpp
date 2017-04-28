@@ -157,6 +157,8 @@ void SleepAssayController::setup()
   modular_server::Parameter & day_count_parameter = modular_server_.createParameter(constants::day_count_parameter_name);
   day_count_parameter.setRange((long)1,(long)constants::EXPERIMENT_DAY_COUNT_MAX);
 
+  modular_server::Parameter & power_parameter = modular_server_.parameter(high_power_switch_controller::constants::power_parameter_name);
+
   // Functions
   modular_server::Function & set_time_function = modular_server_.createFunction(constants::set_time_function_name);
   set_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setTimeHandler));
@@ -263,6 +265,21 @@ void SleepAssayController::setup()
   get_assay_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getAssayStatusHandler));
   get_assay_status_function.setReturnTypeObject();
 
+  modular_server::Function & test_white_light_power_function = modular_server_.createFunction(constants::test_white_light_power_function_name);
+  test_white_light_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::testWhiteLightPowerHandler));
+  test_white_light_power_function.addParameter(power_parameter);
+
+  modular_server::Function & test_red_light_power_function = modular_server_.createFunction(constants::test_red_light_power_function_name);
+  test_red_light_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::testRedLightPowerHandler));
+  test_red_light_power_function.addParameter(power_parameter);
+
+  modular_server::Function & test_buzzer_power_function = modular_server_.createFunction(constants::test_buzzer_power_function_name);
+  test_buzzer_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::testBuzzerPowerHandler));
+  test_buzzer_power_function.addParameter(power_parameter);
+
+  modular_server::Function & stop_all_power_tests_function = modular_server_.createFunction(constants::stop_all_power_tests_function_name);
+  stop_all_power_tests_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::stopAllPowerTestsHandler));
+
   // Callbacks
   modular_server::Callback & run_assay_callback = modular_server_.createCallback(constants::run_assay_callback_name);
   run_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&SleepAssayController::runAssayHandler));
@@ -307,7 +324,7 @@ time_t SleepAssayController::epochTimeToLocalTime(const time_t epoch_time)
 
 void SleepAssayController::runAssay()
 {
-  if (!timeIsSet())
+  if (!timeIsSet() || assayStarted())
   {
     return;
   }
@@ -317,7 +334,7 @@ void SleepAssayController::runAssay()
 
 void SleepAssayController::testAssay()
 {
-  if (!timeIsSet())
+  if (!timeIsSet() || assayStarted())
   {
     return;
   }
@@ -328,6 +345,7 @@ void SleepAssayController::testAssay()
 void SleepAssayController::stopAssay()
 {
   stopAllPwm();
+  setAllChannelsOff();
   buzzer_enabled_ = false;
   buzzing_ = false;
   time_assay_start_ = 0;
@@ -649,6 +667,55 @@ bool SleepAssayController::buzzing()
   return buzzing_;
 }
 
+void SleepAssayController::testWhiteLightPower(const long power)
+{
+  if (assayStarted())
+  {
+    return;
+  }
+
+  long channel;
+  modular_server_.property(constants::white_light_channel_property_name).getValue(channel);
+
+  setChannelOnAtPower(channel,power);
+}
+
+void SleepAssayController::testRedLightPower(const long power)
+{
+  if (assayStarted())
+  {
+    return;
+  }
+
+  long channel;
+  modular_server_.property(constants::red_light_channel_property_name).getValue(channel);
+
+  setChannelOnAtPower(channel,power);
+}
+
+void SleepAssayController::testBuzzerPower(const long power)
+{
+  if (assayStarted())
+  {
+    return;
+  }
+
+  long channel;
+  modular_server_.property(constants::buzzer_channel_property_name).getValue(channel);
+
+  setChannelOnAtPower(channel,power);
+}
+
+void SleepAssayController::stopAllPowerTests()
+{
+  if (assayStarted())
+  {
+    return;
+  }
+
+  setAllChannelsOff();
+}
+
 bool SleepAssayController::experimentDayExists(const size_t experiment_day)
 {
   return (experiment_day < experiment_day_array_.size());
@@ -781,6 +848,7 @@ void SleepAssayController::startCameraTrigger()
 void SleepAssayController::startAssay()
 {
   stopAllPwm();
+  setAllChannelsOff();
   enableAll();
   startCameraTrigger();
 
@@ -1452,6 +1520,35 @@ void SleepAssayController::getAssayStatusHandler()
   modular_server_.response().write(constants::testing_string,assay_status.testing);
 
   modular_server_.response().endObject();
+}
+
+void SleepAssayController::testWhiteLightPowerHandler()
+{
+  size_t power;
+  modular_server_.parameter(high_power_switch_controller::constants::power_parameter_name).getValue(power);
+
+  testWhiteLightPower(power);
+}
+
+void SleepAssayController::testRedLightPowerHandler()
+{
+  size_t power;
+  modular_server_.parameter(high_power_switch_controller::constants::power_parameter_name).getValue(power);
+
+  testRedLightPower(power);
+}
+
+void SleepAssayController::testBuzzerPowerHandler()
+{
+  size_t power;
+  modular_server_.parameter(high_power_switch_controller::constants::power_parameter_name).getValue(power);
+
+  testBuzzerPower(power);
+}
+
+void SleepAssayController::stopAllPowerTestsHandler()
+{
+  stopAllPowerTests();
 }
 
 void SleepAssayController::runAssayHandler(modular_server::Interrupt * interrupt_ptr)
