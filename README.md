@@ -89,7 +89,13 @@ License:
 
 ### Command Line
 
-First get epoch time on the client computer using one of any number of
+First, set properties to defaults.
+
+```shell
+setPropertiesToDefaults
+```
+
+Then get epoch time on the client computer using one of any number of
 ways:
 
 #### Web Page
@@ -107,7 +113,288 @@ Example: epoch_time = 1491943626
 Set the time on the device:
 
 ```shell
-setTime 1491943626
+setTime 1493391042
+```
+
+Check the date and time make sure this matches the local date and
+time.
+
+```shell
+now
+```
+
+response:
+
+```json
+{
+  "id":"now",
+  "result":{
+    "year":2017,
+    "month":4,
+    "day":28,
+    "hour":10,
+    "minute":50,
+    "second":46
+  }
+}
+```
+
+If it is off by a few hours, the time zone may need to be adjusted.
+
+```shell
+getPropertyValues
+```
+
+response:
+
+```json
+{
+  "id":"getPropertyValues",
+  "result":{
+    "serialNumber":0,
+    "powerMax":[
+      100,
+      50,
+      50,
+      50,
+      100,
+      100,
+      100,
+      100
+    ],
+    "cameraTriggerChannel":0,
+    "cameraTriggerFrequency":0.500000,
+    "whiteLightChannel":1,
+    "whiteLightPower":50,
+    "whiteLightStartTime":9,
+    "whiteLightOnDuration":12,
+    "redLightChannel":2,
+    "redLightPower":50,
+    "redLightFrequency":10,
+    "redLightDutyCycle":50,
+    "buzzerChannel":3,
+    "buzzerPower":50,
+    "buzzerOnDuration":1,
+    "buzzerWaitMin":1,
+    "buzzerWaitMax":3,
+    "timeZoneOffset":-4,
+    "entrainmentDuration":2,
+    "recoveryDuration":2,
+    "testingDayDuration":24
+  }
+}
+```
+
+```shell
+getAssayDuration
+```
+
+response:
+
+```json
+{
+  "id":"getAssayDuration",
+  "result":4
+}
+```
+
+```shell
+entrainmentDuration setValue 1
+```
+
+response:
+
+```json
+{
+  "id":"entrainmentDuration",
+  "result":1
+}
+```
+
+```shell
+recoveryDuration setValue 1
+```
+
+response:
+
+```json
+{
+  "id":"recoveryDuration",
+  "result":1
+}
+```
+
+```shell
+getAssayDuration
+```
+
+response:
+
+```json
+{
+  "id":"getAssayDuration",
+  "result":2
+}
+```
+
+```shell
+getExperimentInfo
+```
+
+response:
+
+```json
+{
+  "id":"getExperimentInfo",
+  "result":[]
+}
+```
+
+```shell
+addExperimentDay
+```
+
+response:
+
+```json
+{
+  "id":"addExperimentDay",
+  "result":0
+}
+```
+
+```shell
+getExperimentInfo
+```
+
+response:
+
+```json
+{
+  "id":"getExperimentInfo",
+  "result":[
+    {
+      "white_light":true,
+      "red_light":false,
+      "red_light_delay":0.000000,
+      "red_light_duration":0.000000,
+      "buzzer":false,
+      "buzzer_delay":0.000000,
+      "buzzer_duration":0.000000
+    }
+  ]
+}
+```
+
+```shell
+setExperimentDayWhiteLight 0 false
+```
+
+response:
+
+```json
+{
+  "id":"setExperimentDayWhiteLight",
+  "result":{
+    "white_light":false,
+    "red_light":false,
+    "red_light_delay":0.000000,
+    "red_light_duration":0.000000,
+    "buzzer":false,
+    "buzzer_delay":0.000000,
+    "buzzer_duration":0.000000
+  }
+}
+```
+
+```shell
+setExperimentDayRedLight 0 true 0 12
+```
+
+response:
+
+```json
+{
+  "id":"setExperimentDayRedLight",
+  "result":{
+    "white_light":false,
+    "red_light":true,
+    "red_light_delay":0.000000,
+    "red_light_duration":12.000000,
+    "buzzer":false,
+    "buzzer_delay":0.000000,
+    "buzzer_duration":0.000000
+  }
+}
+```
+
+```shell
+getExperimentDuration
+```
+
+response:
+
+```json
+{
+  "id":"getExperimentDuration",
+  "result":1
+}
+```
+
+```shell
+getAssayDuration
+```
+
+response:
+
+```json
+{
+  "id":"getAssayDuration",
+  "result":3
+}
+```
+
+```shell
+testAssay
+```
+
+response:
+
+```json
+{
+  "id":"testAssay",
+  "result":null
+}
+```
+
+```shell
+getAssayStatus
+```
+
+response:
+
+```json
+{
+  "id":"getAssayStatus",
+  "result":{
+    "time_now":1493392140,
+    "date_time_now":{
+      "year":2017,
+      "month":4,
+      "day":28,
+      "hour":11,
+      "minute":9,
+      "second":0
+    },
+    "assay_day":1.208333,
+    "phase":"EXPERIMENT",
+    "phase_day":0.208333,
+    "white_light_on":false,
+    "red_light_pulsing":true,
+    "buzzing":false,
+    "testing":true
+  }
+}
 ```
 
 ### Python
@@ -296,7 +583,7 @@ dev.setPropertiesToDefaults();
 % look up time zone offset for your location
 % taking into account daylight savings time
 % if necessary
-% e.g. 
+% e.g.
 % U.S. Eastern = -5
 % U.S. Eastern daylight savings = -4
 time_zone_offset = -4;
