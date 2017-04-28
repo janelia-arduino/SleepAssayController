@@ -89,28 +89,35 @@ License:
 
 ### Command Line
 
+Open terminal, set baud rate to 115200 and set to append newline to
+each request sent to the device.
+
 First, set properties to defaults.
+
+request:
 
 ```shell
 setPropertiesToDefaults
 ```
 
 Then get epoch time on the client computer using one of any number of
-ways:
+ways.
 
-#### Web Page
+Web Page:
 
 <https://www.epochconverter.com/>
 
-#### Bash
+Bash:
 
 ```shell
 date +%s
 ```
 
-Example: epoch_time = 1491943626
+Example: epoch_time = 1493391042
 
 Set the time on the device:
+
+request:
 
 ```shell
 setTime 1493391042
@@ -118,6 +125,8 @@ setTime 1493391042
 
 Check the date and time make sure this matches the local date and
 time.
+
+request:
 
 ```shell
 now
@@ -140,6 +149,8 @@ response:
 ```
 
 If it is off by a few hours, the time zone may need to be adjusted.
+
+request:
 
 ```shell
 getPropertyValues
@@ -185,6 +196,8 @@ response:
 }
 ```
 
+request:
+
 ```shell
 getAssayDuration
 ```
@@ -197,6 +210,8 @@ response:
   "result":4
 }
 ```
+
+request:
 
 ```shell
 entrainmentDuration setValue 1
@@ -211,6 +226,8 @@ response:
 }
 ```
 
+request:
+
 ```shell
 recoveryDuration setValue 1
 ```
@@ -223,6 +240,8 @@ response:
   "result":1
 }
 ```
+
+request:
 
 ```shell
 getAssayDuration
@@ -237,6 +256,8 @@ response:
 }
 ```
 
+request:
+
 ```shell
 getExperimentInfo
 ```
@@ -250,6 +271,8 @@ response:
 }
 ```
 
+request:
+
 ```shell
 addExperimentDay
 ```
@@ -262,6 +285,8 @@ response:
   "result":0
 }
 ```
+
+request:
 
 ```shell
 getExperimentInfo
@@ -286,6 +311,8 @@ response:
 }
 ```
 
+request:
+
 ```shell
 setExperimentDayWhiteLight 0 false
 ```
@@ -306,6 +333,8 @@ response:
   }
 }
 ```
+
+request:
 
 ```shell
 setExperimentDayRedLight 0 true 0 12
@@ -328,6 +357,8 @@ response:
 }
 ```
 
+request:
+
 ```shell
 getExperimentDuration
 ```
@@ -340,6 +371,8 @@ response:
   "result":1
 }
 ```
+
+request:
 
 ```shell
 getAssayDuration
@@ -354,6 +387,8 @@ response:
 }
 ```
 
+request:
+
 ```shell
 testAssay
 ```
@@ -366,6 +401,8 @@ response:
   "result":null
 }
 ```
+
+request:
 
 ```shell
 getAssayStatus
