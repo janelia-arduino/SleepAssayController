@@ -884,13 +884,24 @@ void SleepAssayController::startExperimentDay(const int experiment_day)
     long white_light_on_duration;
     getWhiteLightPwmInfo(white_light_channels,white_light_period,white_light_on_duration);
 
-    int white_light_pwm_index = addPwm(white_light_channels,0,white_light_period,white_light_on_duration,1);
-    const int next_experiment_day = experiment_day + 1;
-    addCountCompletedFunctor(white_light_pwm_index,
-                             makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
-                             next_experiment_day);
-
     constants::ExperimentDayInfo & experiment_day_info = experiment_day_array_[experiment_day];
+
+    const int next_experiment_day = experiment_day + 1;
+
+    bool white_light = experiment_day_info.white_light;
+    if (white_light)
+    {
+      int white_light_pwm_index = addPwm(white_light_channels,0,white_light_period,white_light_on_duration,1);
+      addCountCompletedFunctor(white_light_pwm_index,
+                               makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
+                               next_experiment_day);
+    }
+    else
+    {
+      addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
+                         white_light_period,
+                         next_experiment_day);
+    }
 
     bool red_light = experiment_day_info.red_light;
     if (red_light)
