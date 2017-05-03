@@ -324,7 +324,7 @@ time_t SleepAssayController::epochTimeToLocalTime(const time_t epoch_time)
 
 void SleepAssayController::runAssay()
 {
-  if (!timeIsSet() || assayStarted())
+  if (!timeIsSet() || (assayStarted() && !assayFinished()))
   {
     return;
   }
@@ -334,7 +334,7 @@ void SleepAssayController::runAssay()
 
 void SleepAssayController::testAssay()
 {
-  if (!timeIsSet() || assayStarted())
+  if (!timeIsSet() || (assayStarted() && !assayFinished()))
   {
     return;
   }
@@ -346,17 +346,26 @@ void SleepAssayController::stopAssay()
 {
   stopAllPwm();
   setAllChannelsOff();
-  buzzer_enabled_ = false;
-  buzzing_ = false;
+
+  assay_started_ = false;
+  assay_finished_ = false;
+  testing_ = false;
+
   time_assay_start_ = 0;
   time_experiment_start_ = 0;
-  testing_ = false;
+
+  buzzer_enabled_ = false;
+  buzzing_ = false;
 }
 
 bool SleepAssayController::assayStarted()
 {
-  time_t time_assay_start = getAssayStart();
-  return (time_assay_start != 0);
+  return assay_started_;
+}
+
+bool SleepAssayController::assayFinished()
+{
+  return assay_finished_;
 }
 
 bool SleepAssayController::testing()
@@ -669,7 +678,7 @@ bool SleepAssayController::buzzing()
 
 void SleepAssayController::testWhiteLightPower(const long power)
 {
-  if (assayStarted())
+  if (assayStarted() && !assayFinished())
   {
     return;
   }
@@ -682,7 +691,7 @@ void SleepAssayController::testWhiteLightPower(const long power)
 
 void SleepAssayController::testRedLightPower(const long power)
 {
-  if (assayStarted())
+  if (assayStarted() && !assayFinished())
   {
     return;
   }
@@ -695,7 +704,7 @@ void SleepAssayController::testRedLightPower(const long power)
 
 void SleepAssayController::testBuzzerPower(const long power)
 {
-  if (assayStarted())
+  if (assayStarted() && !assayFinished())
   {
     return;
   }
@@ -708,7 +717,7 @@ void SleepAssayController::testBuzzerPower(const long power)
 
 void SleepAssayController::stopAllPowerTests()
 {
-  if (assayStarted())
+  if (assayStarted() && !assayFinished())
   {
     return;
   }
@@ -851,6 +860,9 @@ void SleepAssayController::startAssay()
   setAllChannelsOff();
   enableAll();
   startCameraTrigger();
+
+  assay_started_ = true;
+  assay_finished_ = false;
 
   buzzer_enabled_ = false;
   buzzing_ = false;
@@ -1048,6 +1060,9 @@ void SleepAssayController::startRecovery()
 void SleepAssayController::endAssay(const int arg)
 {
   stopAllPwm();
+
+  assay_finished_ = true;
+
   buzzer_enabled_ = false;
   buzzing_ = false;
 }

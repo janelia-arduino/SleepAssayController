@@ -48,6 +48,7 @@ public:
   void testAssay();
   void stopAssay();
   bool assayStarted();
+  bool assayFinished();
   bool testing();
 
   long scaleDuration(const long duration);
@@ -105,6 +106,8 @@ private:
   modular_server::Function functions_[sleep_assay_controller::constants::FUNCTION_COUNT_MAX];
   modular_server::Callback callbacks_[sleep_assay_controller::constants::CALLBACK_COUNT_MAX];
 
+  bool assay_started_;
+  bool assay_finished_;
   bool testing_;
 
   time_t time_assay_start_;
