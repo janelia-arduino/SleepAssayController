@@ -16,6 +16,8 @@
 #include "EventController.h"
 #include "Time.h"
 
+#include "ModularClient.h"
+
 #include "ModularServer.h"
 #include "ModularDeviceBase.h"
 #include "HighPowerSwitchController.h"
