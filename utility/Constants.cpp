@@ -70,11 +70,11 @@ CONSTANT_STRING(testing_string,"testing");
 // Interrupts
 
 // Units
-CONSTANT_STRING(hz_unit,"Hz");
-CONSTANT_STRING(seconds_unit,"s");
-CONSTANT_STRING(hours_unit,"hours");
-CONSTANT_STRING(days_unit,"days");
-CONSTANT_STRING(military_time_hours_unit,"military_time_hours");
+CONSTANT_STRING(hz_units,"Hz");
+CONSTANT_STRING(seconds_units,"s");
+CONSTANT_STRING(hours_units,"hours");
+CONSTANT_STRING(days_units,"days");
+CONSTANT_STRING(military_time_hours_units,"military_time_hours");
 
 // Properties
 CONSTANT_STRING(camera_trigger_channel_property_name,"cameraTriggerChannel");

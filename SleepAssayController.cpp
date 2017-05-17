@@ -42,7 +42,7 @@ void SleepAssayController::setup()
 
   modular_server::Property & camera_trigger_frequency_property = modular_server_.createProperty(constants::camera_trigger_frequency_property_name,constants::camera_trigger_frequency_default);
   camera_trigger_frequency_property.setRange(constants::camera_trigger_frequency_min,constants::camera_trigger_frequency_max);
-  camera_trigger_frequency_property.setUnits(constants::hz_unit);
+  camera_trigger_frequency_property.setUnits(constants::hz_units);
 
   modular_server::Property & white_light_channel_property = modular_server_.createProperty(constants::white_light_channel_property_name,constants::white_light_channel_default);
   white_light_channel_property.setRange(constants::channel_min,constants::channel_max);
@@ -50,16 +50,16 @@ void SleepAssayController::setup()
 
   modular_server::Property & white_light_power_property = modular_server_.createProperty(constants::white_light_power_property_name,constants::white_light_power_default);
   white_light_power_property.setRange(constants::white_light_power_min,constants::white_light_power_max);
-  white_light_power_property.setUnits(high_power_switch_controller::constants::percent_unit);
+  white_light_power_property.setUnits(high_power_switch_controller::constants::percent_units);
   white_light_power_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updatePowersHandler));
 
   modular_server::Property & white_light_start_time_property = modular_server_.createProperty(constants::white_light_start_time_property_name,constants::white_light_start_time_default);
   white_light_start_time_property.setRange(constants::white_light_start_time_min,constants::white_light_start_time_max);
-  white_light_start_time_property.setUnits(constants::military_time_hours_unit);
+  white_light_start_time_property.setUnits(constants::military_time_hours_units);
 
   modular_server::Property & white_light_on_duration_property = modular_server_.createProperty(constants::white_light_on_duration_property_name,constants::white_light_on_duration_default);
   white_light_on_duration_property.setRange(constants::white_light_on_duration_min,constants::white_light_on_duration_max);
-  white_light_on_duration_property.setUnits(constants::hours_unit);
+  white_light_on_duration_property.setUnits(constants::hours_units);
 
   modular_server::Property & red_light_channel_property = modular_server_.createProperty(constants::red_light_channel_property_name,constants::red_light_channel_default);
   red_light_channel_property.setRange(constants::channel_min,constants::channel_max);
@@ -67,16 +67,16 @@ void SleepAssayController::setup()
 
   modular_server::Property & red_light_power_property = modular_server_.createProperty(constants::red_light_power_property_name,constants::red_light_power_default);
   red_light_power_property.setRange(constants::red_light_power_min,constants::red_light_power_max);
-  red_light_power_property.setUnits(high_power_switch_controller::constants::percent_unit);
+  red_light_power_property.setUnits(high_power_switch_controller::constants::percent_units);
   red_light_power_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updatePowersHandler));
 
   modular_server::Property & red_light_frequency_property = modular_server_.createProperty(constants::red_light_frequency_property_name,constants::red_light_frequency_default);
   red_light_frequency_property.setRange(constants::red_light_frequency_min,constants::red_light_frequency_max);
-  red_light_frequency_property.setUnits(constants::hz_unit);
+  red_light_frequency_property.setUnits(constants::hz_units);
 
   modular_server::Property & red_light_duty_cycle_property = modular_server_.createProperty(constants::red_light_duty_cycle_property_name,constants::red_light_duty_cycle_default);
   red_light_duty_cycle_property.setRange(constants::red_light_duty_cycle_min,constants::red_light_duty_cycle_max);
-  red_light_duty_cycle_property.setUnits(high_power_switch_controller::constants::percent_unit);
+  red_light_duty_cycle_property.setUnits(high_power_switch_controller::constants::percent_units);
 
   modular_server::Property & buzzer_channel_property = modular_server_.createProperty(constants::buzzer_channel_property_name,constants::buzzer_channel_default);
   buzzer_channel_property.setRange(constants::channel_min,constants::channel_max);
@@ -84,46 +84,46 @@ void SleepAssayController::setup()
 
   modular_server::Property & buzzer_power_property = modular_server_.createProperty(constants::buzzer_power_property_name,constants::buzzer_power_default);
   buzzer_power_property.setRange(constants::buzzer_power_min,constants::buzzer_power_max);
-  buzzer_power_property.setUnits(high_power_switch_controller::constants::percent_unit);
+  buzzer_power_property.setUnits(high_power_switch_controller::constants::percent_units);
   buzzer_power_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updatePowersHandler));
 
   modular_server::Property & buzzer_on_duration_property = modular_server_.createProperty(constants::buzzer_on_duration_property_name,constants::buzzer_on_duration_default);
   buzzer_on_duration_property.setRange(constants::buzzer_on_duration_min,constants::buzzer_on_duration_max);
-  buzzer_on_duration_property.setUnits(constants::seconds_unit);
+  buzzer_on_duration_property.setUnits(constants::seconds_units);
 
   modular_server::Property & buzzer_wait_min_property = modular_server_.createProperty(constants::buzzer_wait_min_property_name,constants::buzzer_wait_min_default);
   buzzer_wait_min_property.setRange(constants::buzzer_wait_min_min,constants::buzzer_wait_min_max);
-  buzzer_wait_min_property.setUnits(constants::seconds_unit);
+  buzzer_wait_min_property.setUnits(constants::seconds_units);
 
   modular_server::Property & buzzer_wait_max_property = modular_server_.createProperty(constants::buzzer_wait_max_property_name,constants::buzzer_wait_max_default);
   buzzer_wait_max_property.setRange(constants::buzzer_wait_max_min,constants::buzzer_wait_max_max);
-  buzzer_wait_max_property.setUnits(constants::seconds_unit);
+  buzzer_wait_max_property.setUnits(constants::seconds_units);
 
   modular_server::Property & time_zone_offset_property = modular_server_.createProperty(constants::time_zone_offset_property_name,constants::time_zone_offset_default);
   time_zone_offset_property.setRange(constants::time_zone_offset_min,constants::time_zone_offset_max);
 
   modular_server::Property & entrainment_duration_property = modular_server_.createProperty(constants::entrainment_duration_property_name,constants::entrainment_duration_default);
   entrainment_duration_property.setRange(constants::entrainment_duration_min,constants::entrainment_duration_max);
-  entrainment_duration_property.setUnits(constants::days_unit);
+  entrainment_duration_property.setUnits(constants::days_units);
 
   modular_server::Property & recovery_duration_property = modular_server_.createProperty(constants::recovery_duration_property_name,constants::recovery_duration_default);
   recovery_duration_property.setRange(constants::recovery_duration_min,constants::recovery_duration_max);
-  recovery_duration_property.setUnits(constants::days_unit);
+  recovery_duration_property.setUnits(constants::days_units);
 
   modular_server::Property & testing_day_duration_property = modular_server_.createProperty(constants::testing_day_duration_property_name,constants::testing_day_duration_default);
   testing_day_duration_property.setRange(constants::testing_day_duration_min,constants::testing_day_duration_max);
-  testing_day_duration_property.setUnits(constants::seconds_unit);
+  testing_day_duration_property.setUnits(constants::seconds_units);
 
   updatePowersHandler();
 
   // Parameters
   modular_server::Parameter & epoch_time_parameter = modular_server_.createParameter(constants::epoch_time_parameter_name);
   epoch_time_parameter.setRange(constants::epoch_time_min,constants::epoch_time_max);
-  epoch_time_parameter.setUnits(constants::seconds_unit);
+  epoch_time_parameter.setUnits(constants::seconds_units);
 
   modular_server::Parameter & adjust_time_parameter = modular_server_.createParameter(constants::adjust_time_parameter_name);
   adjust_time_parameter.setTypeLong();
-  adjust_time_parameter.setUnits(constants::seconds_unit);
+  adjust_time_parameter.setUnits(constants::seconds_units);
 
   modular_server::Parameter & experiment_day_parameter = modular_server_.createParameter(constants::experiment_day_parameter_name);
   experiment_day_parameter.setTypeLong();
@@ -137,22 +137,22 @@ void SleepAssayController::setup()
 
   modular_server::Parameter & red_light_delay_parameter = modular_server_.createParameter(constants::red_light_delay_parameter_name);
   red_light_delay_parameter.setRange(constants::red_light_delay_min,constants::red_light_delay_max);
-  red_light_delay_parameter.setUnits(constants::hours_unit);
+  red_light_delay_parameter.setUnits(constants::hours_units);
 
   modular_server::Parameter & red_light_duration_parameter = modular_server_.createParameter(constants::red_light_duration_parameter_name);
   red_light_duration_parameter.setRange(constants::red_light_duration_min,constants::red_light_duration_max);
-  red_light_duration_parameter.setUnits(constants::hours_unit);
+  red_light_duration_parameter.setUnits(constants::hours_units);
 
   modular_server::Parameter & buzzer_parameter = modular_server_.createParameter(constants::buzzer_parameter_name);
   buzzer_parameter.setTypeBool();
 
   modular_server::Parameter & buzzer_delay_parameter = modular_server_.createParameter(constants::buzzer_delay_parameter_name);
   buzzer_delay_parameter.setRange(constants::buzzer_delay_min,constants::buzzer_delay_max);
-  buzzer_delay_parameter.setUnits(constants::hours_unit);
+  buzzer_delay_parameter.setUnits(constants::hours_units);
 
   modular_server::Parameter & buzzer_duration_parameter = modular_server_.createParameter(constants::buzzer_duration_parameter_name);
   buzzer_duration_parameter.setRange(constants::buzzer_duration_min,constants::buzzer_duration_max);
-  buzzer_duration_parameter.setUnits(constants::hours_unit);
+  buzzer_duration_parameter.setUnits(constants::hours_units);
 
   modular_server::Parameter & day_count_parameter = modular_server_.createParameter(constants::day_count_parameter_name);
   day_count_parameter.setRange((long)1,(long)constants::EXPERIMENT_DAY_COUNT_MAX);
@@ -166,7 +166,7 @@ void SleepAssayController::setup()
 
   modular_server::Function & get_time_function = modular_server_.createFunction(constants::get_time_function_name);
   get_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getTimeHandler));
-  get_time_function.setReturnTypeLong();
+  get_time_function.setResultTypeLong();
 
   modular_server::Function & adjust_time_function = modular_server_.createFunction(constants::adjust_time_function_name);
   adjust_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::adjustTimeHandler));
@@ -174,64 +174,67 @@ void SleepAssayController::setup()
 
   modular_server::Function & now_function = modular_server_.createFunction(constants::now_function_name);
   now_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::nowHandler));
-  now_function.setReturnTypeObject();
+  now_function.setResultTypeObject();
 
   modular_server::Function & get_assay_start_function = modular_server_.createFunction(constants::get_assay_start_function_name);
   get_assay_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getAssayStartHandler));
-  get_assay_start_function.setReturnTypeObject();
+  get_assay_start_function.setResultTypeObject();
 
   modular_server::Function & get_assay_end_function = modular_server_.createFunction(constants::get_assay_end_function_name);
   get_assay_end_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getAssayEndHandler));
-  get_assay_end_function.setReturnTypeObject();
+  get_assay_end_function.setResultTypeObject();
 
   modular_server::Function & get_assay_duration_function = modular_server_.createFunction(constants::get_assay_duration_function_name);
   get_assay_duration_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getAssayDurationHandler));
-  get_assay_duration_function.setReturnTypeLong();
+  get_assay_duration_function.setResultTypeLong();
 
   modular_server::Function & get_experiment_start_function = modular_server_.createFunction(constants::get_experiment_start_function_name);
   get_experiment_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getExperimentStartHandler));
-  get_experiment_start_function.setReturnTypeObject();
+  get_experiment_start_function.setResultTypeObject();
 
   modular_server::Function & get_experiment_end_function = modular_server_.createFunction(constants::get_experiment_end_function_name);
   get_experiment_end_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getExperimentEndHandler));
-  get_experiment_end_function.setReturnTypeObject();
+  get_experiment_end_function.setResultTypeObject();
 
   modular_server::Function & get_experiment_duration_function = modular_server_.createFunction(constants::get_experiment_duration_function_name);
   get_experiment_duration_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getExperimentDurationHandler));
-  get_experiment_duration_function.setReturnTypeLong();
+  get_experiment_duration_function.setResultTypeLong();
 
   modular_server::Function & get_entrainment_start_function = modular_server_.createFunction(constants::get_entrainment_start_function_name);
   get_entrainment_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getEntrainmentStartHandler));
-  get_entrainment_start_function.setReturnTypeObject();
+  get_entrainment_start_function.setResultTypeObject();
 
   modular_server::Function & get_experiment_info_function = modular_server_.createFunction(constants::get_experiment_info_function_name);
   get_experiment_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getExperimentInfoHandler));
-  get_experiment_info_function.setReturnTypeArray();
+  get_experiment_info_function.setResultTypeArray();
+  get_experiment_info_function.setResultTypeObject();
 
   modular_server::Function & get_experiment_day_info_function = modular_server_.createFunction(constants::get_experiment_day_info_function_name);
   get_experiment_day_info_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getExperimentDayInfoHandler));
   get_experiment_day_info_function.addParameter(experiment_day_parameter);
-  get_experiment_day_info_function.setReturnTypeObject();
+  get_experiment_day_info_function.setResultTypeObject();
 
   modular_server::Function & add_experiment_day_function = modular_server_.createFunction(constants::add_experiment_day_function_name);
   add_experiment_day_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::addExperimentDayHandler));
-  add_experiment_day_function.setReturnTypeLong();
+  add_experiment_day_function.setResultTypeLong();
 
   modular_server::Function & add_experiment_days_function = modular_server_.createFunction(constants::add_experiment_days_function_name);
   add_experiment_days_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::addExperimentDaysHandler));
   add_experiment_days_function.addParameter(day_count_parameter);
-  add_experiment_days_function.setReturnTypeArray();
+  add_experiment_days_function.setResultTypeArray();
+  add_experiment_days_function.setResultTypeLong();
 
   modular_server::Function & add_experiment_day_copy_function = modular_server_.createFunction(constants::add_experiment_day_copy_function_name);
   add_experiment_day_copy_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::addExperimentDayCopyHandler));
   add_experiment_day_copy_function.addParameter(experiment_day_parameter);
-  add_experiment_day_copy_function.setReturnTypeLong();
+  add_experiment_day_copy_function.setResultTypeLong();
 
   modular_server::Function & add_experiment_day_copies_function = modular_server_.createFunction(constants::add_experiment_day_copies_function_name);
   add_experiment_day_copies_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::addExperimentDayCopiesHandler));
   add_experiment_day_copies_function.addParameter(experiment_day_parameter);
   add_experiment_day_copies_function.addParameter(day_count_parameter);
-  add_experiment_day_copies_function.setReturnTypeArray();
+  add_experiment_day_copies_function.setResultTypeArray();
+  add_experiment_day_copies_function.setResultTypeLong();
 
   modular_server::Function & remove_last_experiment_day_function = modular_server_.createFunction(constants::remove_last_experiment_day_function_name);
   remove_last_experiment_day_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::removeLastExperimentDayHandler));
@@ -243,7 +246,7 @@ void SleepAssayController::setup()
   set_experiment_day_white_light_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setExperimentDayWhiteLightHandler));
   set_experiment_day_white_light_function.addParameter(experiment_day_parameter);
   set_experiment_day_white_light_function.addParameter(white_light_parameter);
-  set_experiment_day_white_light_function.setReturnTypeObject();
+  set_experiment_day_white_light_function.setResultTypeObject();
 
   modular_server::Function & set_experiment_day_red_light_function = modular_server_.createFunction(constants::set_experiment_day_red_light_function_name);
   set_experiment_day_red_light_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setExperimentDayRedLightHandler));
@@ -251,7 +254,7 @@ void SleepAssayController::setup()
   set_experiment_day_red_light_function.addParameter(red_light_parameter);
   set_experiment_day_red_light_function.addParameter(red_light_delay_parameter);
   set_experiment_day_red_light_function.addParameter(red_light_duration_parameter);
-  set_experiment_day_red_light_function.setReturnTypeObject();
+  set_experiment_day_red_light_function.setResultTypeObject();
 
   modular_server::Function & set_experiment_day_buzzer_function = modular_server_.createFunction(constants::set_experiment_day_buzzer_function_name);
   set_experiment_day_buzzer_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setExperimentDayBuzzerHandler));
@@ -259,11 +262,11 @@ void SleepAssayController::setup()
   set_experiment_day_buzzer_function.addParameter(buzzer_parameter);
   set_experiment_day_buzzer_function.addParameter(buzzer_delay_parameter);
   set_experiment_day_buzzer_function.addParameter(buzzer_duration_parameter);
-  set_experiment_day_buzzer_function.setReturnTypeObject();
+  set_experiment_day_buzzer_function.setResultTypeObject();
 
   modular_server::Function & get_assay_status_function = modular_server_.createFunction(constants::get_assay_status_function_name);
   get_assay_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getAssayStatusHandler));
-  get_assay_status_function.setReturnTypeObject();
+  get_assay_status_function.setResultTypeObject();
 
   modular_server::Function & test_white_light_power_function = modular_server_.createFunction(constants::test_white_light_power_function_name);
   test_white_light_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::testWhiteLightPowerHandler));

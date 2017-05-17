@@ -27,80 +27,11 @@ License:
 ## API
 
 ```json
-{
-  "id":"getApi",
-  "result":{
-    "firmware":["SleepAssayController"],
-    "functions":[
-      "setTime",
-      "getTime",
-      "adjustTime",
-      "now",
-      "getAssayStart",
-      "getAssayEnd",
-      "getAssayDuration",
-      "getExperimentStart",
-      "getExperimentEnd",
-      "getExperimentDuration",
-      "getEntrainmentStart",
-      "getExperimentInfo",
-      "getExperimentDayInfo",
-      "addExperimentDay",
-      "addExperimentDays",
-      "addExperimentDayCopy",
-      "addExperimentDayCopies",
-      "removeLastExperimentDay",
-      "removeAllExperimentDays",
-      "setExperimentDayWhiteLight",
-      "setExperimentDayRedLight",
-      "setExperimentDayBuzzer",
-      "getAssayStatus",
-      "testWhiteLightPower",
-      "testRedLightPower",
-      "testBuzzerPower",
-      "stopAllPowerTests"
-    ],
-    "parameters":[
-      "epoch_time",
-      "adjust_time",
-      "experiment_day",
-      "white_light",
-      "red_light",
-      "red_light_delay",
-      "red_light_duration",
-      "buzzer",
-      "buzzer_delay",
-      "buzzer_duration",
-      "day_count"
-    ],
-    "properties":[
-      "cameraTriggerChannel",
-      "cameraTriggerFrequency",
-      "whiteLightChannel",
-      "whiteLightPower",
-      "whiteLightStartTime",
-      "whiteLightOnDuration",
-      "redLightChannel",
-      "redLightPower",
-      "redLightFrequency",
-      "redLightDutyCycle",
-      "buzzerChannel",
-      "buzzerPower",
-      "buzzerOnDuration",
-      "buzzerWaitMin",
-      "buzzerWaitMax",
-      "timeZoneOffset",
-      "entrainmentDuration",
-      "recoveryDuration",
-      "testingDayDuration"
-    ],
-    "callbacks":[
-      "runAssay",
-      "testAssay",
-      "stopAssay"
-    ]
-  }
-}
+```
+
+## API Verbose
+
+```json
 ```
 
 ## Example Usage
@@ -110,12 +41,12 @@ License:
 Open terminal, set baud rate to 115200 and set to append newline to
 each request sent to the device.
 
-First, set properties to defaults.
+First, set all properties to defaults.
 
 request:
 
 ```shell
-setPropertiesToDefaults
+setAllPropertiesToDefaults
 ```
 
 Then get epoch time on the client computer using one of any number of
@@ -459,7 +390,7 @@ from modular_client import ModularClient
 import time
 
 dev = ModularClient()
-dev.set_properties_to_defaults()
+dev.set_all_properties_to_defaults()
 dev.set_time(int(time.time()))
 time_zone_offset = -time.timezone/(60*60)
 t = time.time()
@@ -634,7 +565,7 @@ getAvailableComPorts()
 serial_port = 'COM9' % example
 dev = ModularClient(serial_port);
 dev.open();
-dev.setPropertiesToDefaults();
+dev.setAllPropertiesToDefaults();
 % look up time zone offset for your location
 % taking into account daylight savings time
 % if necessary

@@ -95,11 +95,11 @@ extern ConstantString testing_string;
 // Interrupts
 
 // Units
-extern ConstantString hz_unit;
-extern ConstantString seconds_unit;
-extern ConstantString hours_unit;
-extern ConstantString days_unit;
-extern ConstantString military_time_hours_unit;
+extern ConstantString hz_units;
+extern ConstantString seconds_units;
+extern ConstantString hours_units;
+extern ConstantString days_units;
+extern ConstantString military_time_hours_units;
 
 // Properties
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
