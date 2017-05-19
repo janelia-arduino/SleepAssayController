@@ -28,6 +28,8 @@ const long white_light_indicator_channel_default = 5;
 
 const long red_light_channel_default = 2;
 
+const long red_light_indicator_channel_default = 6;
+
 const long buzzer_channel_default = 3;
 
 // Parameters

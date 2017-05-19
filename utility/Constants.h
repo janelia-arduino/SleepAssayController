@@ -135,6 +135,9 @@ extern const long white_light_on_duration_default;
 extern ConstantString red_light_channel_property_name;
 extern const long red_light_channel_default;
 
+extern ConstantString red_light_indicator_channel_property_name;
+extern const long red_light_indicator_channel_default;
+
 extern ConstantString red_light_power_property_name;
 extern const long red_light_power_min;
 extern const long red_light_power_max;

@@ -105,6 +105,8 @@ const long white_light_on_duration_default = 12;
 
 CONSTANT_STRING(red_light_channel_property_name,"redLightChannel");
 
+CONSTANT_STRING(red_light_indicator_channel_property_name,"redLightIndicatorChannel");
+
 CONSTANT_STRING(red_light_power_property_name,"redLightPower");
 const long red_light_power_min = 10;
 const long red_light_power_max = 100;
