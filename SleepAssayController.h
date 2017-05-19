@@ -117,6 +117,7 @@ private:
 
   bool buzzer_enabled_;
   bool buzzing_;
+  int buzzer_pwm_index_;
 
   experiment_day_info_array_t experiment_day_array_;
 

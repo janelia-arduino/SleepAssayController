@@ -359,6 +359,7 @@ void SleepAssayController::stopAssay()
 
   buzzer_enabled_ = false;
   buzzing_ = false;
+  buzzer_pwm_index_ = -1;
 }
 
 bool SleepAssayController::assayStarted()
@@ -1085,24 +1086,27 @@ void SleepAssayController::buzz(const int experiment_day)
                      buzzer_periods,
                      buzzer_on_durations);
 
-    int pwm_index = addPwm(buzzer_channels,
-                           0,
-                           buzzer_periods.front(),
-                           buzzer_on_durations.front(),
-                           1);
-    addCountCompletedFunctor(pwm_index,
+    buzzer_pwm_index_ = addPwm(buzzer_channels,
+                               0,
+                               buzzer_periods.front(),
+                               buzzer_on_durations.front(),
+                               1);
+    addCountCompletedFunctor(buzzer_pwm_index_,
                              makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::buzz),
                              experiment_day);
   }
   else
   {
     buzzing_ = false;
+    buzzer_pwm_index_ = -1;
   }
 }
 
 void SleepAssayController::disableBuzzer(const int arg)
 {
   buzzer_enabled_ = false;
+  stopPwm(buzzer_pwm_index_);
+  buzzer_pwm_index_ = -1;
 }
 
 void SleepAssayController::writeDateTimeToResponse(const time_t time)
