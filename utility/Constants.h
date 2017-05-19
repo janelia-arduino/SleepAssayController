@@ -16,7 +16,7 @@ namespace sleep_assay_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=19};
+enum{PROPERTY_COUNT_MAX=20};
 enum{PARAMETER_COUNT_MAX=11};
 enum{FUNCTION_COUNT_MAX=27};
 enum{CALLBACK_COUNT_MAX=3};
@@ -155,10 +155,13 @@ extern const long buzzer_power_min;
 extern const long buzzer_power_max;
 extern const long buzzer_power_default;
 
-extern ConstantString buzzer_on_duration_property_name;
+extern ConstantString buzzer_on_duration_min_property_name;
 extern const long buzzer_on_duration_min;
 extern const long buzzer_on_duration_max;
-extern const long buzzer_on_duration_default;
+extern const long buzzer_on_duration_min_default;
+
+extern ConstantString buzzer_on_duration_max_property_name;
+extern const long buzzer_on_duration_max_default;
 
 extern ConstantString buzzer_wait_min_property_name;
 extern const long buzzer_wait_min_min;

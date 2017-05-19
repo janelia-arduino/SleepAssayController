@@ -87,9 +87,13 @@ void SleepAssayController::setup()
   buzzer_power_property.setUnits(high_power_switch_controller::constants::percent_units);
   buzzer_power_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updatePowersHandler));
 
-  modular_server::Property & buzzer_on_duration_property = modular_server_.createProperty(constants::buzzer_on_duration_property_name,constants::buzzer_on_duration_default);
-  buzzer_on_duration_property.setRange(constants::buzzer_on_duration_min,constants::buzzer_on_duration_max);
-  buzzer_on_duration_property.setUnits(constants::seconds_units);
+  modular_server::Property & buzzer_on_duration_min_property = modular_server_.createProperty(constants::buzzer_on_duration_min_property_name,constants::buzzer_on_duration_min_default);
+  buzzer_on_duration_min_property.setRange(constants::buzzer_on_duration_min,constants::buzzer_on_duration_max);
+  buzzer_on_duration_min_property.setUnits(constants::seconds_units);
+
+  modular_server::Property & buzzer_on_duration_max_property = modular_server_.createProperty(constants::buzzer_on_duration_max_property_name,constants::buzzer_on_duration_max_default);
+  buzzer_on_duration_max_property.setRange(constants::buzzer_on_duration_min,constants::buzzer_on_duration_max);
+  buzzer_on_duration_max_property.setUnits(constants::seconds_units);
 
   modular_server::Property & buzzer_wait_min_property = modular_server_.createProperty(constants::buzzer_wait_min_property_name,constants::buzzer_wait_min_default);
   buzzer_wait_min_property.setRange(constants::buzzer_wait_min_min,constants::buzzer_wait_min_max);
@@ -813,9 +817,15 @@ void SleepAssayController::getBuzzerPwmInfo(const size_t experiment_day,
   uint32_t bit = 1;
   channels = bit << channel;
 
-  long on_duration_0;
-  modular_server_.property(constants::buzzer_on_duration_property_name).getValue(on_duration_0);
-  on_duration_0 *= constants::milliseconds_per_second;
+  long on_duration_0_min;
+  modular_server_.property(constants::buzzer_on_duration_min_property_name).getValue(on_duration_0_min);
+  on_duration_0_min *= constants::milliseconds_per_second;
+
+  long on_duration_0_max;
+  modular_server_.property(constants::buzzer_on_duration_max_property_name).getValue(on_duration_0_max);
+  on_duration_0_max *= constants::milliseconds_per_second;
+
+  long on_duration_0 = random(on_duration_0_min,on_duration_0_max);
   on_durations.push_back(on_duration_0);
 
   long buzzer_wait_min;

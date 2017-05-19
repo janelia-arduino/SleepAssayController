@@ -125,10 +125,13 @@ const long buzzer_power_min = 10;
 const long buzzer_power_max = 100;
 const long buzzer_power_default = 50;
 
-CONSTANT_STRING(buzzer_on_duration_property_name,"buzzerOnDuration");
+CONSTANT_STRING(buzzer_on_duration_min_property_name,"buzzerOnDurationMin");
 const long buzzer_on_duration_min = 1;
 const long buzzer_on_duration_max = 10;
-const long buzzer_on_duration_default = 1;
+const long buzzer_on_duration_min_default = 1;
+
+CONSTANT_STRING(buzzer_on_duration_max_property_name,"buzzerOnDurationMax");
+const long buzzer_on_duration_max_default = 4;
 
 CONSTANT_STRING(buzzer_wait_min_property_name,"buzzerWaitMin");
 const long buzzer_wait_min_min = 1;
