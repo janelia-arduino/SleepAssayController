@@ -90,6 +90,10 @@ void SleepAssayController::setup()
   buzzer_channel_property.setRange(constants::channel_min,constants::channel_max);
   buzzer_channel_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updatePowersHandler));
 
+  modular_server::Property & buzzer_indicator_channel_property = modular_server_.createProperty(constants::buzzer_indicator_channel_property_name,constants::buzzer_indicator_channel_default);
+  buzzer_indicator_channel_property.setRange(constants::channel_min,constants::channel_max);
+  buzzer_indicator_channel_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updatePowersHandler));
+
   modular_server::Property & buzzer_power_property = modular_server_.createProperty(constants::buzzer_power_property_name,constants::buzzer_power_default);
   buzzer_power_property.setRange(constants::buzzer_power_min,constants::buzzer_power_max);
   buzzer_power_property.setUnits(high_power_switch_controller::constants::percent_units);
@@ -1031,7 +1035,7 @@ void SleepAssayController::startExperimentDay(const int experiment_day)
       uint32_t bit = 1;
       uint32_t red_light_indicator_channels = bit << red_light_indicator_channel;
       long red_light_indicator_delay = red_light_delay;
-      long red_light_indicator_period = red_light_periods.back();
+      long red_light_indicator_period = red_light_on_durations.back();
       long red_light_indicator_on_duration = red_light_on_durations.back();
       int red_light_indicator_pwm_index = addPwm(red_light_indicator_channels,
                                                  red_light_indicator_delay,
@@ -1063,6 +1067,19 @@ void SleepAssayController::startExperimentDay(const int experiment_day)
       addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::disableBuzzer),
                          buzzer_end_delay,
                          -1);
+
+      long buzzer_indicator_channel;
+      modular_server_.property(constants::buzzer_indicator_channel_property_name).getValue(buzzer_indicator_channel);
+      uint32_t bit = 1;
+      uint32_t buzzer_indicator_channels = bit << buzzer_indicator_channel;
+      long buzzer_indicator_delay = buzzer_delay;
+      long buzzer_indicator_period = buzzer_on_durations.back();
+      long buzzer_indicator_on_duration = buzzer_on_durations.back();
+      int buzzer_indicator_pwm_index = addPwm(buzzer_indicator_channels,
+                                              buzzer_indicator_delay,
+                                              buzzer_indicator_period,
+                                              buzzer_indicator_on_duration,
+                                              1);
     }
   }
   else
@@ -1221,6 +1238,10 @@ void SleepAssayController::updatePowersHandler()
   modular_server_.property(constants::buzzer_channel_property_name).getValue(channel);
   modular_server_.property(constants::buzzer_power_property_name).getValue(power);
   power_max_property.setElementValue(channel,power);
+
+  modular_server_.property(constants::buzzer_indicator_channel_property_name).getValue(channel);
+  power_max_property.setElementValue(channel,constants::buzzer_power_max);
+
 }
 
 void SleepAssayController::setTimeHandler()

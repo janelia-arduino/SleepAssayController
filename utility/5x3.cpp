@@ -32,6 +32,8 @@ const long red_light_indicator_channel_default = 6;
 
 const long buzzer_channel_default = 3;
 
+const long buzzer_indicator_channel_default = 7;
+
 // Parameters
 
 // Functions

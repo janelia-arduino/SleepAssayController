@@ -156,6 +156,9 @@ extern const long red_light_duty_cycle_default;
 extern ConstantString buzzer_channel_property_name;
 extern const long buzzer_channel_default;
 
+extern ConstantString buzzer_indicator_channel_property_name;
+extern const long buzzer_indicator_channel_default;
+
 extern ConstantString buzzer_power_property_name;
 extern const long buzzer_power_min;
 extern const long buzzer_power_max;
