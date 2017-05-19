@@ -48,6 +48,10 @@ void SleepAssayController::setup()
   white_light_channel_property.setRange(constants::channel_min,constants::channel_max);
   white_light_channel_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updatePowersHandler));
 
+  modular_server::Property & white_light_indicator_channel_property = modular_server_.createProperty(constants::white_light_indicator_channel_property_name,constants::white_light_indicator_channel_default);
+  white_light_indicator_channel_property.setRange(constants::channel_min,constants::channel_max);
+  white_light_indicator_channel_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updatePowersHandler));
+
   modular_server::Property & white_light_power_property = modular_server_.createProperty(constants::white_light_power_property_name,constants::white_light_power_default);
   white_light_power_property.setRange(constants::white_light_power_min,constants::white_light_power_max);
   white_light_power_property.setUnits(high_power_switch_controller::constants::percent_units);
@@ -762,6 +766,9 @@ void SleepAssayController::getWhiteLightPwmInfo(uint32_t & channels,
   uint32_t bit = 1;
   channels = bit << channel;
 
+  modular_server_.property(constants::white_light_indicator_channel_property_name).getValue(channel);
+  channels |= bit << channel;
+
   period = scaleDuration(constants::milliseconds_per_day);
 
   long on_duration_hours;
@@ -1184,6 +1191,9 @@ void SleepAssayController::updatePowersHandler()
   modular_server_.property(constants::white_light_channel_property_name).getValue(channel);
   modular_server_.property(constants::white_light_power_property_name).getValue(power);
   power_max_property.setElementValue(channel,power);
+
+  modular_server_.property(constants::white_light_indicator_channel_property_name).getValue(channel);
+  power_max_property.setElementValue(channel,constants::white_light_power_max);
 
   modular_server_.property(constants::red_light_channel_property_name).getValue(channel);
   modular_server_.property(constants::red_light_power_property_name).getValue(power);

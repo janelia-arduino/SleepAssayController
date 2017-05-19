@@ -86,6 +86,8 @@ const double camera_trigger_frequency_default = 0.5;
 
 CONSTANT_STRING(white_light_channel_property_name,"whiteLightChannel");
 
+CONSTANT_STRING(white_light_indicator_channel_property_name,"whiteLightIndicatorChannel");
+
 CONSTANT_STRING(white_light_power_property_name,"whiteLightPower");
 const long white_light_power_min = 10;
 const long white_light_power_max = 100;

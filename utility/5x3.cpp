@@ -24,6 +24,8 @@ const long camera_trigger_channel_default = 0;
 
 const long white_light_channel_default = 1;
 
+const long white_light_indicator_channel_default = 5;
+
 const long red_light_channel_default = 2;
 
 const long buzzer_channel_default = 3;

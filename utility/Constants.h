@@ -16,7 +16,7 @@ namespace sleep_assay_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=20};
+enum{PROPERTY_COUNT_MAX=23};
 enum{PARAMETER_COUNT_MAX=11};
 enum{FUNCTION_COUNT_MAX=27};
 enum{CALLBACK_COUNT_MAX=3};
@@ -113,6 +113,9 @@ extern const double camera_trigger_frequency_default;
 
 extern ConstantString white_light_channel_property_name;
 extern const long white_light_channel_default;
+
+extern ConstantString white_light_indicator_channel_property_name;
+extern const long white_light_indicator_channel_default;
 
 extern ConstantString white_light_power_property_name;
 extern const long white_light_power_min;
