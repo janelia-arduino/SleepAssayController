@@ -139,14 +139,14 @@ Bash:
 date +%s
 ```
 
-Example: epoch_time = 1493391042
+Example: epoch_time = 1496156562
 
 Set the time on the device:
 
 request:
 
 ```shell
-setTime 1493391042
+setTime 1496156562
 ```
 
 Check the date and time make sure this matches the local date and
@@ -165,11 +165,11 @@ response:
   "id":"now",
   "result":{
     "year":2017,
-    "month":4,
-    "day":28,
-    "hour":10,
-    "minute":50,
-    "second":46
+    "month":5,
+    "day":30,
+    "hour":11,
+    "minute":3,
+    "second":4
   }
 }
 ```
@@ -186,32 +186,25 @@ response:
 
 ```json
 {
-  "id":"getPropertyValues",
+  "id":"getpropertyvalues",
   "result":{
-    "serialNumber":0,
-    "powerMax":[
-      100,
-      50,
-      50,
-      50,
-      100,
-      100,
-      100,
-      100
-    ],
     "cameraTriggerChannel":0,
     "cameraTriggerFrequency":0.500000,
     "whiteLightChannel":1,
+    "whiteLightIndicatorChannel":5,
     "whiteLightPower":50,
     "whiteLightStartTime":9,
     "whiteLightOnDuration":12,
     "redLightChannel":2,
+    "redLightIndicatorChannel":6,
     "redLightPower":50,
     "redLightFrequency":10,
     "redLightDutyCycle":50,
     "buzzerChannel":3,
+    "buzzerIndicatorChannel":7,
     "buzzerPower":50,
-    "buzzerOnDuration":1,
+    "buzzerOnDurationMin":1,
+    "buzzerOnDurationMax":4,
     "buzzerWaitMin":1,
     "buzzerWaitMax":3,
     "timeZoneOffset":-4,
@@ -386,6 +379,78 @@ response:
 request:
 
 ```shell
+addExperimentDayCopy 0
+```
+
+response:
+
+```json
+{
+  "id":"addExperimentDayCopy",
+  "result":1
+}
+```
+
+request:
+
+```shell
+setExperimentDayBuzzer 1 true 3 12
+```
+
+response:
+
+```json
+{
+  "id":"setExperimentDayBuzzer",
+  "result":{
+    "white_light":false,
+    "red_light":true,
+    "red_light_delay":0.000000,
+    "red_light_duration":12.000000,
+    "buzzer":true,
+    "buzzer_delay":3.000000,
+    "buzzer_duration":12.000000
+  }
+}
+```
+
+request:
+
+```shell
+getExperimentInfo
+```
+
+response:
+
+```json
+{
+  "id":"getExperimentInfo",
+  "result":[
+    {
+      "white_light":false,
+      "red_light":true,
+      "red_light_delay":0.000000,
+      "red_light_duration":12.000000,
+      "buzzer":false,
+      "buzzer_delay":0.000000,
+      "buzzer_duration":0.000000
+    },
+    {
+      "white_light":false,
+      "red_light":true,
+      "red_light_delay":0.000000,
+      "red_light_duration":12.000000,
+      "buzzer":true,
+      "buzzer_delay":3.000000,
+      "buzzer_duration":12.000000
+    }
+  ]
+}
+```
+
+request:
+
+```shell
 getExperimentDuration
 ```
 
@@ -394,7 +459,7 @@ response:
 ```json
 {
   "id":"getExperimentDuration",
-  "result":1
+  "result":2
 }
 ```
 
@@ -409,7 +474,7 @@ response:
 ```json
 {
   "id":"getAssayDuration",
-  "result":3
+  "result":4
 }
 ```
 
@@ -440,20 +505,21 @@ response:
 {
   "id":"getAssayStatus",
   "result":{
-    "time_now":1493392140,
+    "time_now":1496156923,
     "date_time_now":{
       "year":2017,
-      "month":4,
-      "day":28,
+      "month":5,
+      "day":30,
       "hour":11,
-      "minute":9,
-      "second":0
+      "minute":8,
+      "second":43
     },
-    "assay_day":1.208333,
+    "assay_day":1.083333,
     "phase":"EXPERIMENT",
-    "phase_day":0.208333,
+    "phase_day":0.083333,
     "white_light_on":false,
     "red_light_pulsing":true,
+    "buzzer_enabled":false,
     "buzzing":false,
     "testing":true
   }

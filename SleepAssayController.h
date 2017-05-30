@@ -95,6 +95,7 @@ public:
 
   bool whiteLightOn();
   bool redLightPulsing();
+  bool buzzingPossible();
   bool buzzing();
 
   void testWhiteLightPower(const long power);
@@ -116,7 +117,7 @@ private:
   time_t time_experiment_start_;
 
   bool buzzer_enabled_;
-  bool buzzing_;
+  bool buzzing_possible_;
   int buzzer_pwm_index_;
 
   experiment_day_info_array_t experiment_day_array_;

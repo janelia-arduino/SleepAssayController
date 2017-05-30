@@ -68,6 +68,7 @@ struct AssayStatus
   double phase_day;
   bool white_light_on;
   bool red_light_pulsing;
+  bool buzzing_possible;
   bool buzzing;
   bool testing;
 };
@@ -89,6 +90,7 @@ extern ConstantString phase_recovery_string;
 extern ConstantString phase_assay_finished_string;
 extern ConstantString white_light_on_string;
 extern ConstantString red_light_pulsing_string;
+extern ConstantString buzzing_possible_string;
 extern ConstantString buzzing_string;
 extern ConstantString testing_string;
 
