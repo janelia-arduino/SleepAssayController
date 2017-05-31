@@ -363,7 +363,7 @@ void SleepAssayController::testAssay()
 
 void SleepAssayController::stopAssay()
 {
-  // stopAllPwm();
+  stopAllPwm();
   setAllChannelsOff();
 
   assay_started_ = false;
@@ -1168,7 +1168,7 @@ void SleepAssayController::disableBuzzer(const int arg)
 {
   buzzer_enabled_ = false;
   buzzing_possible_ = false;
-  // stopPwm(buzzer_pwm_index_);
+  stopPwm(buzzer_pwm_index_);
   buzzer_pwm_index_ = -1;
 }
 
