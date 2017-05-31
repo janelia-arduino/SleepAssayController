@@ -714,8 +714,37 @@ n = dev.now();
 t = clock;
 dev.adjustTime((t(4) - n.hour)*60*60);
 dev.now()
+      year: 2017
+     month: 5
+       day: 31
+      hour: 14
+    minute: 41
+    second: 54
 % check to make sure this matches the local date and time
 dev.getPropertyValues()
+          cameraTriggerChannel: 0
+        cameraTriggerFrequency: 0.5000
+             whiteLightChannel: 1
+    whiteLightIndicatorChannel: 5
+               whiteLightPower: 50
+           whiteLightStartTime: 9
+          whiteLightOnDuration: 12
+               redLightChannel: 2
+      redLightIndicatorChannel: 6
+                 redLightPower: 50
+             redLightFrequency: 10
+             redLightDutyCycle: 50
+                 buzzerChannel: 3
+        buzzerIndicatorChannel: 7
+                   buzzerPower: 50
+           buzzerOnDurationMin: 1
+           buzzerOnDurationMax: 4
+                 buzzerWaitMin: 1
+                 buzzerWaitMax: 3
+                timeZoneOffset: -4
+           entrainmentDuration: 2
+              recoveryDuration: 2
+            testingDayDuration: 24
 dev.getAssayDuration()
     4
 dev.entrainmentDuration('setValue',1);
@@ -728,18 +757,72 @@ dev.addExperimentDay()
      0
 info = dev.getExperimentInfo();
 info{1}
+           white_light: 1
+             red_light: 0
+       red_light_delay: 0
+    red_light_duration: 0
+                buzzer: 0
+          buzzer_delay: 0
+       buzzer_duration: 0
 dev.setExperimentDayRedLight(0,1,0,12)
+           white_light: 1
+             red_light: 1
+       red_light_delay: 0
+    red_light_duration: 12.0000
+                buzzer: 0
+          buzzer_delay: 0
+       buzzer_duration: 0
 dev.addExperimentDayCopy(0)
+     1
 dev.setExperimentDayWhiteLight(1,0)
+           white_light: 0
+             red_light: 1
+       red_light_delay: 0
+    red_light_duration: 12.0000
+                buzzer: 0
+          buzzer_delay: 0
+       buzzer_duration: 0
 dev.setExperimentDayBuzzer(1,1,3,12)
+           white_light: 0
+             red_light: 1
+       red_light_delay: 0
+    red_light_duration: 12.0000
+                buzzer: 1
+          buzzer_delay: 3
+       buzzer_duration: 12.0000
 info = dev.getExperimentInfo();
 info{2}
-dev.getExperimentDuration();
-dev.getAssayDuration();
+           white_light: 0
+             red_light: 1
+       red_light_delay: 0
+    red_light_duration: 12.0000
+                buzzer: 1
+          buzzer_delay: 3
+       buzzer_duration: 12.0000
+dev.getExperimentDuration()
+     2
+dev.getAssayDuration()
+     4
 dev.testAssay();
 dev.getAssayStatus()
+             time_now: 1.4963e+09
+        date_time_now: [1x1 struct]
+            assay_day: 0.7500
+                phase: 'ENTRAINMENT'
+            phase_day: 0.7500
+       white_light_on: 0
+    red_light_pulsing: 0
+     buzzing_possible: 0
+              buzzing: 0
+              testing: 1
 dev.runAssay();
-dev.getAssayEnd();
+dev.getAssayEnd()
+      year: 2017
+     month: 6
+       day: 4
+      hour: 9
+    minute: 0
+    second: 0
 ```
 
 ## More Detailed Modular Device Information
