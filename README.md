@@ -109,7 +109,7 @@ License:
 
 ## API Verbose
 
-[API Verbose](./api.json)
+[API Verbose](./api/)
 
 ## Example Usage
 
