@@ -24,13 +24,14 @@ License:
 
 [high_power_switch_controller](https://github.com/janelia-modular-devices/high_power_switch_controller.git)
 
-## API
+## API NAMES
 
 ```json
 {
   "id":"getApi",
   "result":{
     "firmware":["SleepAssayController"],
+    "verbosity":"NAMES",
     "functions":[
       "setTime",
       "getTime",
@@ -107,9 +108,9 @@ License:
 }
 ```
 
-## API Verbose
+## API GENERAL
 
-[API Verbose](./api/)
+[API GENERAL](./api/)
 
 ## Example Usage
 
