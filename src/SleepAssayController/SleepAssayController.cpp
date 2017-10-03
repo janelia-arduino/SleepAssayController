@@ -5,7 +5,7 @@
 // Authors:
 // Peter Polidoro polidorop@janelia.hhmi.org
 // ----------------------------------------------------------------------------
-#include "SleepAssayController.h"
+#include "../SleepAssayController.h"
 
 
 using namespace sleep_assay_controller;
