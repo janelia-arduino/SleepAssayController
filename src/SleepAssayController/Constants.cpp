@@ -20,8 +20,8 @@ const modular_server::FirmwareInfo firmware_info =
   {
     .name_ptr=&firmware_name,
     .version_major=1,
-    .version_minor=0,
-    .version_patch=1,
+    .version_minor=1,
+    .version_patch=0,
   };
 
 const long channel_min = 0;
@@ -114,9 +114,9 @@ const long red_light_power_max = 100;
 const long red_light_power_default = 50;
 
 CONSTANT_STRING(red_light_frequency_property_name,"redLightFrequency");
-const long red_light_frequency_min = 1;
-const long red_light_frequency_max = 100;
-const long red_light_frequency_default = 10;
+const double red_light_frequency_min = 0.01;
+const double red_light_frequency_max = 100;
+const double red_light_frequency_default = 10;
 
 CONSTANT_STRING(red_light_duty_cycle_property_name,"redLightDutyCycle");
 const long red_light_duty_cycle_min = 0;

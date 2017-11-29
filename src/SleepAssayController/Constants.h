@@ -146,9 +146,9 @@ extern const long red_light_power_max;
 extern const long red_light_power_default;
 
 extern ConstantString red_light_frequency_property_name;
-extern const long red_light_frequency_min;
-extern const long red_light_frequency_max;
-extern const long red_light_frequency_default;
+extern const double red_light_frequency_min;
+extern const double red_light_frequency_max;
+extern const double red_light_frequency_default;
 
 extern ConstantString red_light_duty_cycle_property_name;
 extern const long red_light_duty_cycle_min;

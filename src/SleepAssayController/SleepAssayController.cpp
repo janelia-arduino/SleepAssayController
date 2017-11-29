@@ -807,9 +807,9 @@ void SleepAssayController::getRedLightPwmInfo(const size_t experiment_day,
   uint32_t bit = 1;
   channels = bit << channel;
 
-  long frequency;
+  double frequency;
   modular_server_.property(constants::red_light_frequency_property_name).getValue(frequency);
-  long period_0 = (1.0/(double)frequency)*constants::milliseconds_per_second;
+  long period_0 = (1.0/frequency)*constants::milliseconds_per_second;
   periods.push_back(period_0);
 
   long duty_cycle;
@@ -998,7 +998,7 @@ void SleepAssayController::startEntrainment(const int entrainment_duration)
 
 void SleepAssayController::startExperimentDay(const int experiment_day)
 {
-  if (experiment_day < experiment_day_array_.size())
+  if (experiment_day < (int)experiment_day_array_.size())
   {
     uint32_t white_light_channels;
     long white_light_period;
