@@ -28,11 +28,13 @@ License:
 
 ```json
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["SleepAssayController"],
-    "verbosity":"NAMES",
-    "functions":[
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "SleepAssayController"
+    ],
+    "verbosity": "NAMES",
+    "functions": [
       "setTime",
       "getTime",
       "adjustTime",
@@ -61,7 +63,7 @@ License:
       "testBuzzerPower",
       "stopAllPowerTests"
     ],
-    "parameters":[
+    "parameters": [
       "epoch_time",
       "adjust_time",
       "experiment_day",
@@ -74,7 +76,7 @@ License:
       "buzzer_duration",
       "day_count"
     ],
-    "properties":[
+    "properties": [
       "cameraTriggerChannel",
       "cameraTriggerFrequency",
       "whiteLightChannel",
@@ -99,7 +101,7 @@ License:
       "recoveryDuration",
       "testingDayDuration"
     ],
-    "callbacks":[
+    "callbacks": [
       "runAssay",
       "testAssay",
       "stopAssay"

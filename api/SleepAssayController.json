@@ -1,1240 +1,1242 @@
 {
-  "id":"getApi",
-  "result":{
-    "firmware":["SleepAssayController"],
-    "verbosity":"GENERAL",
-    "functions":[
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "SleepAssayController"
+    ],
+    "verbosity": "GENERAL",
+    "functions": [
       {
-        "name":"setTime",
-        "parameters":[
+        "name": "setTime",
+        "parameters": [
           "epoch_time"
         ]
       },
       {
-        "name":"getTime",
-        "result_info":{
-          "type":"long"
+        "name": "getTime",
+        "result_info": {
+          "type": "long"
         }
       },
       {
-        "name":"adjustTime",
-        "parameters":[
+        "name": "adjustTime",
+        "parameters": [
           "adjust_time"
         ]
       },
       {
-        "name":"now",
-        "result_info":{
-          "type":"object"
+        "name": "now",
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"getAssayStart",
-        "result_info":{
-          "type":"object"
+        "name": "getAssayStart",
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"getAssayEnd",
-        "result_info":{
-          "type":"object"
+        "name": "getAssayEnd",
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"getAssayDuration",
-        "result_info":{
-          "type":"long"
+        "name": "getAssayDuration",
+        "result_info": {
+          "type": "long"
         }
       },
       {
-        "name":"getExperimentStart",
-        "result_info":{
-          "type":"object"
+        "name": "getExperimentStart",
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"getExperimentEnd",
-        "result_info":{
-          "type":"object"
+        "name": "getExperimentEnd",
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"getExperimentDuration",
-        "result_info":{
-          "type":"long"
+        "name": "getExperimentDuration",
+        "result_info": {
+          "type": "long"
         }
       },
       {
-        "name":"getEntrainmentStart",
-        "result_info":{
-          "type":"object"
+        "name": "getEntrainmentStart",
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"getExperimentInfo",
-        "result_info":{
-          "type":"array",
-          "array_element_type":"object"
+        "name": "getExperimentInfo",
+        "result_info": {
+          "type": "array",
+          "array_element_type": "object"
         }
       },
       {
-        "name":"getExperimentDayInfo",
-        "parameters":[
+        "name": "getExperimentDayInfo",
+        "parameters": [
           "experiment_day"
         ],
-        "result_info":{
-          "type":"object"
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"addExperimentDay",
-        "result_info":{
-          "type":"long"
+        "name": "addExperimentDay",
+        "result_info": {
+          "type": "long"
         }
       },
       {
-        "name":"addExperimentDays",
-        "parameters":[
+        "name": "addExperimentDays",
+        "parameters": [
           "day_count"
         ],
-        "result_info":{
-          "type":"array",
-          "array_element_type":"long"
+        "result_info": {
+          "type": "array",
+          "array_element_type": "long"
         }
       },
       {
-        "name":"addExperimentDayCopy",
-        "parameters":[
+        "name": "addExperimentDayCopy",
+        "parameters": [
           "experiment_day"
         ],
-        "result_info":{
-          "type":"long"
+        "result_info": {
+          "type": "long"
         }
       },
       {
-        "name":"addExperimentDayCopies",
-        "parameters":[
+        "name": "addExperimentDayCopies",
+        "parameters": [
           "experiment_day",
           "day_count"
         ],
-        "result_info":{
-          "type":"array",
-          "array_element_type":"long"
+        "result_info": {
+          "type": "array",
+          "array_element_type": "long"
         }
       },
       {
-        "name":"removeLastExperimentDay"
+        "name": "removeLastExperimentDay"
       },
       {
-        "name":"removeAllExperimentDays"
+        "name": "removeAllExperimentDays"
       },
       {
-        "name":"setExperimentDayWhiteLight",
-        "parameters":[
+        "name": "setExperimentDayWhiteLight",
+        "parameters": [
           "experiment_day",
           "white_light"
         ],
-        "result_info":{
-          "type":"object"
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"setExperimentDayRedLight",
-        "parameters":[
+        "name": "setExperimentDayRedLight",
+        "parameters": [
           "experiment_day",
           "red_light",
           "red_light_delay",
           "red_light_duration"
         ],
-        "result_info":{
-          "type":"object"
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"setExperimentDayBuzzer",
-        "parameters":[
+        "name": "setExperimentDayBuzzer",
+        "parameters": [
           "experiment_day",
           "buzzer",
           "buzzer_delay",
           "buzzer_duration"
         ],
-        "result_info":{
-          "type":"object"
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"getAssayStatus",
-        "result_info":{
-          "type":"object"
+        "name": "getAssayStatus",
+        "result_info": {
+          "type": "object"
         }
       },
       {
-        "name":"testWhiteLightPower",
-        "parameters":[
+        "name": "testWhiteLightPower",
+        "parameters": [
           "power"
         ]
       },
       {
-        "name":"testRedLightPower",
-        "parameters":[
+        "name": "testRedLightPower",
+        "parameters": [
           "power"
         ]
       },
       {
-        "name":"testBuzzerPower",
-        "parameters":[
+        "name": "testBuzzerPower",
+        "parameters": [
           "power"
         ]
       },
       {
-        "name":"stopAllPowerTests"
+        "name": "stopAllPowerTests"
       }
     ],
-    "parameters":[
+    "parameters": [
       {
-        "name":"epoch_time",
-        "type":"long"
+        "name": "epoch_time",
+        "type": "long"
       },
       {
-        "name":"adjust_time",
-        "type":"long"
+        "name": "adjust_time",
+        "type": "long"
       },
       {
-        "name":"experiment_day",
-        "type":"long"
+        "name": "experiment_day",
+        "type": "long"
       },
       {
-        "name":"white_light",
-        "type":"bool"
+        "name": "white_light",
+        "type": "bool"
       },
       {
-        "name":"red_light",
-        "type":"bool"
+        "name": "red_light",
+        "type": "bool"
       },
       {
-        "name":"red_light_delay",
-        "type":"double"
+        "name": "red_light_delay",
+        "type": "double"
       },
       {
-        "name":"red_light_duration",
-        "type":"double"
+        "name": "red_light_duration",
+        "type": "double"
       },
       {
-        "name":"buzzer",
-        "type":"bool"
+        "name": "buzzer",
+        "type": "bool"
       },
       {
-        "name":"buzzer_delay",
-        "type":"double"
+        "name": "buzzer_delay",
+        "type": "double"
       },
       {
-        "name":"buzzer_duration",
-        "type":"double"
+        "name": "buzzer_duration",
+        "type": "double"
       },
       {
-        "name":"day_count",
-        "type":"long"
+        "name": "day_count",
+        "type": "long"
       }
     ],
-    "properties":[
+    "properties": [
       {
-        "name":"cameraTriggerChannel",
-        "type":"long",
-        "functions":[
+        "name": "cameraTriggerChannel",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"cameraTriggerFrequency",
-        "type":"double",
-        "functions":[
+        "name": "cameraTriggerFrequency",
+        "type": "double",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"double"
+            "name": "getValue",
+            "result_info": {
+              "type": "double"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"double"
+            "result_info": {
+              "type": "double"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"double"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "double"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"double"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "double"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"double"
+            "name": "value",
+            "type": "double"
           }
         ]
       },
       {
-        "name":"whiteLightChannel",
-        "type":"long",
-        "functions":[
+        "name": "whiteLightChannel",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"whiteLightIndicatorChannel",
-        "type":"long",
-        "functions":[
+        "name": "whiteLightIndicatorChannel",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"whiteLightPower",
-        "type":"long",
-        "functions":[
+        "name": "whiteLightPower",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"whiteLightStartTime",
-        "type":"long",
-        "functions":[
+        "name": "whiteLightStartTime",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"whiteLightOnDuration",
-        "type":"long",
-        "functions":[
+        "name": "whiteLightOnDuration",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"redLightChannel",
-        "type":"long",
-        "functions":[
+        "name": "redLightChannel",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"redLightIndicatorChannel",
-        "type":"long",
-        "functions":[
+        "name": "redLightIndicatorChannel",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"redLightPower",
-        "type":"long",
-        "functions":[
+        "name": "redLightPower",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"redLightFrequency",
-        "type":"long",
-        "functions":[
+        "name": "redLightFrequency",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"redLightDutyCycle",
-        "type":"long",
-        "functions":[
+        "name": "redLightDutyCycle",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"buzzerChannel",
-        "type":"long",
-        "functions":[
+        "name": "buzzerChannel",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"buzzerIndicatorChannel",
-        "type":"long",
-        "functions":[
+        "name": "buzzerIndicatorChannel",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"buzzerPower",
-        "type":"long",
-        "functions":[
+        "name": "buzzerPower",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"buzzerOnDurationMin",
-        "type":"long",
-        "functions":[
+        "name": "buzzerOnDurationMin",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"buzzerOnDurationMax",
-        "type":"long",
-        "functions":[
+        "name": "buzzerOnDurationMax",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"buzzerWaitMin",
-        "type":"long",
-        "functions":[
+        "name": "buzzerWaitMin",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"buzzerWaitMax",
-        "type":"long",
-        "functions":[
+        "name": "buzzerWaitMax",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"timeZoneOffset",
-        "type":"long",
-        "functions":[
+        "name": "timeZoneOffset",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"entrainmentDuration",
-        "type":"long",
-        "functions":[
+        "name": "entrainmentDuration",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"recoveryDuration",
-        "type":"long",
-        "functions":[
+        "name": "recoveryDuration",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       },
       {
-        "name":"testingDayDuration",
-        "type":"long",
-        "functions":[
+        "name": "testingDayDuration",
+        "type": "long",
+        "functions": [
           {
-            "name":"getValue",
-            "result_info":{
-              "type":"long"
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValue",
-            "parameters":[
+            "name": "setValue",
+            "parameters": [
               "value"
             ],
-            "result_info":{
-              "type":"long"
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"getDefaultValue",
-            "result_info":{
-              "type":"long"
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
             }
           },
           {
-            "name":"setValueToDefault",
-            "result_info":{
-              "type":"long"
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
             }
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"value",
-            "type":"long"
+            "name": "value",
+            "type": "long"
           }
         ]
       }
     ],
-    "callbacks":[
+    "callbacks": [
       {
-        "name":"runAssay",
-        "functions":[
+        "name": "runAssay",
+        "functions": [
           {
-            "name":"trigger"
+            "name": "trigger"
           },
           {
-            "name":"attachTo",
-            "parameters":[
+            "name": "attachTo",
+            "parameters": [
               "interrupt",
               "mode"
             ]
           },
           {
-            "name":"detachFrom",
-            "parameters":[
+            "name": "detachFrom",
+            "parameters": [
               "interrupt"
             ]
           },
           {
-            "name":"detachFromAll"
+            "name": "detachFromAll"
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"interrupt",
-            "type":"string"
+            "name": "interrupt",
+            "type": "string"
           },
           {
-            "name":"mode",
-            "type":"string"
+            "name": "mode",
+            "type": "string"
           }
         ]
       },
       {
-        "name":"testAssay",
-        "functions":[
+        "name": "testAssay",
+        "functions": [
           {
-            "name":"trigger"
+            "name": "trigger"
           },
           {
-            "name":"attachTo",
-            "parameters":[
+            "name": "attachTo",
+            "parameters": [
               "interrupt",
               "mode"
             ]
           },
           {
-            "name":"detachFrom",
-            "parameters":[
+            "name": "detachFrom",
+            "parameters": [
               "interrupt"
             ]
           },
           {
-            "name":"detachFromAll"
+            "name": "detachFromAll"
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"interrupt",
-            "type":"string"
+            "name": "interrupt",
+            "type": "string"
           },
           {
-            "name":"mode",
-            "type":"string"
+            "name": "mode",
+            "type": "string"
           }
         ]
       },
       {
-        "name":"stopAssay",
-        "functions":[
+        "name": "stopAssay",
+        "functions": [
           {
-            "name":"trigger"
+            "name": "trigger"
           },
           {
-            "name":"attachTo",
-            "parameters":[
+            "name": "attachTo",
+            "parameters": [
               "interrupt",
               "mode"
             ]
           },
           {
-            "name":"detachFrom",
-            "parameters":[
+            "name": "detachFrom",
+            "parameters": [
               "interrupt"
             ]
           },
           {
-            "name":"detachFromAll"
+            "name": "detachFromAll"
           }
         ],
-        "parameters":[
+        "parameters": [
           {
-            "name":"interrupt",
-            "type":"string"
+            "name": "interrupt",
+            "type": "string"
           },
           {
-            "name":"mode",
-            "type":"string"
+            "name": "mode",
+            "type": "string"
           }
         ]
       }
