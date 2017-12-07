@@ -19,6 +19,9 @@ void SleepAssayController::setup()
   // Parent Setup
   HighPowerSwitchController::setup();
 
+  // Reset Watchdog
+  resetWatchdog();
+
   // Variable Setup
   stopAssay();
 
