@@ -23,7 +23,6 @@ void SleepAssayController::setup()
   resetWatchdog();
 
   // Variable Setup
-  stopAssay();
 
   // Set Device ID
   modular_server_.setDeviceName(constants::device_name);
@@ -312,6 +311,7 @@ void SleepAssayController::setup()
   modular_server::Callback & stop_assay_callback = modular_server_.createCallback(constants::stop_assay_callback_name);
   stop_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&SleepAssayController::stopAssayHandler));
 
+  initializeAssay();
 }
 
 void SleepAssayController::setTime(const time_t epoch_time)
@@ -366,19 +366,7 @@ void SleepAssayController::testAssay()
 
 void SleepAssayController::stopAssay()
 {
-  stopAllPwm();
-  setAllChannelsOff();
-
-  assay_started_ = false;
-  assay_finished_ = false;
-  testing_ = false;
-
-  time_assay_start_ = 0;
-  time_experiment_start_ = 0;
-
-  buzzer_enabled_ = false;
-  buzzing_possible_ = false;
-  buzzer_pwm_index_ = -1;
+  initializeAssay();
 }
 
 bool SleepAssayController::assayStarted()
@@ -887,6 +875,25 @@ void SleepAssayController::getBuzzerPwmInfo(const size_t experiment_day,
 
 }
 
+void SleepAssayController::initializeAssay()
+{
+  stopAllPwm();
+  setAllChannelsOff();
+  enableAll();
+  startCameraTrigger();
+
+  assay_started_ = false;
+  assay_finished_ = false;
+  testing_ = false;
+
+  time_assay_start_ = 0;
+  time_experiment_start_ = 0;
+
+  buzzer_enabled_ = false;
+  buzzing_possible_ = false;
+  buzzer_pwm_index_ = -1;
+}
+
 void SleepAssayController::startCameraTrigger()
 {
   uint32_t channels;
@@ -900,10 +907,7 @@ void SleepAssayController::startCameraTrigger()
 
 void SleepAssayController::startAssay()
 {
-  stopAllPwm();
-  setAllChannelsOff();
-  enableAll();
-  startCameraTrigger();
+  initializeAssay();
 
   assay_started_ = true;
   assay_finished_ = false;

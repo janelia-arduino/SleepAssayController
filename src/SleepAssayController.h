@@ -140,6 +140,7 @@ private:
                         HighPowerSwitchController::RecursivePwmValues & periods,
                         HighPowerSwitchController::RecursivePwmValues & on_durations);
 
+  void initializeAssay();
   void startCameraTrigger();
   void startAssay();
   void startEntrainment(const int entrainment_duration);
