@@ -23,6 +23,7 @@ void SleepAssayController::setup()
   resetWatchdog();
 
   // Variable Setup
+  initializeVariables();
 
   // Set Device ID
   modular_server_.setDeviceName(constants::device_name);
@@ -45,6 +46,7 @@ void SleepAssayController::setup()
   modular_server::Property & camera_trigger_frequency_property = modular_server_.createProperty(constants::camera_trigger_frequency_property_name,constants::camera_trigger_frequency_default);
   camera_trigger_frequency_property.setRange(constants::camera_trigger_frequency_min,constants::camera_trigger_frequency_max);
   camera_trigger_frequency_property.setUnits(constants::hz_units);
+  camera_trigger_frequency_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updateCameraTriggerHandler));
 
   modular_server::Property & white_light_channel_property = modular_server_.createProperty(constants::white_light_channel_property_name,constants::white_light_channel_default);
   white_light_channel_property.setRange(constants::channel_min,constants::channel_max);
@@ -311,7 +313,7 @@ void SleepAssayController::setup()
   modular_server::Callback & stop_assay_callback = modular_server_.createCallback(constants::stop_assay_callback_name);
   stop_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&SleepAssayController::stopAssayHandler));
 
-  initializeAssay();
+  initializeChannels();
 }
 
 void SleepAssayController::setTime(const time_t epoch_time)
@@ -366,7 +368,8 @@ void SleepAssayController::testAssay()
 
 void SleepAssayController::stopAssay()
 {
-  initializeAssay();
+  initializeVariables();
+  initializeChannels();
 }
 
 bool SleepAssayController::assayStarted()
@@ -875,13 +878,8 @@ void SleepAssayController::getBuzzerPwmInfo(const size_t experiment_day,
 
 }
 
-void SleepAssayController::initializeAssay()
+void SleepAssayController::initializeVariables()
 {
-  stopAllPwm();
-  setAllChannelsOff();
-  enableAll();
-  startCameraTrigger();
-
   assay_started_ = false;
   assay_finished_ = false;
   testing_ = false;
@@ -892,22 +890,56 @@ void SleepAssayController::initializeAssay()
   buzzer_enabled_ = false;
   buzzing_possible_ = false;
   buzzer_pwm_index_ = -1;
+
+  camera_trigger_running_ = false;
+  camera_trigger_pwm_index_ = -1;
+}
+
+void SleepAssayController::initializeChannels()
+{
+  stopAllAssayPwm();
+  enableAll();
+  startCameraTrigger();
+}
+
+void SleepAssayController::stopAllAssayPwm()
+{
+  stopCameraTrigger();
+  disableBuzzer(-1);
+  stopAllPwm();
+  setAllChannelsOff();
 }
 
 void SleepAssayController::startCameraTrigger()
 {
+  if (camera_trigger_running_)
+  {
+    stopCameraTrigger();
+  }
   uint32_t channels;
   long period;
   long on_duration;
   getCameraTriggerPwmInfo(channels,period,on_duration);
 
   long delay = 0;
-  startPwm(channels,delay,period,on_duration);
+  camera_trigger_pwm_index_ = startPwm(channels,delay,period,on_duration);
+
+  camera_trigger_running_ = true;
+}
+
+void SleepAssayController::stopCameraTrigger()
+{
+  if (camera_trigger_running_)
+  {
+    stopPwm(camera_trigger_pwm_index_);
+  }
+  camera_trigger_running_ = false;
+  camera_trigger_pwm_index_ = -1;
 }
 
 void SleepAssayController::startAssay()
 {
-  initializeAssay();
+  initializeChannels();
 
   assay_started_ = true;
   assay_finished_ = false;
@@ -1132,12 +1164,9 @@ void SleepAssayController::startRecovery()
 
 void SleepAssayController::endAssay(const int arg)
 {
-  stopAllPwm();
+  stopAllAssayPwm();
 
   assay_finished_ = true;
-
-  buzzer_enabled_ = false;
-  buzzing_possible_ = false;
 }
 
 void SleepAssayController::buzz(const int experiment_day)
@@ -1234,6 +1263,15 @@ void SleepAssayController::writeExperimentDayInfoToResponse(const size_t experim
 // modular_server_.property(property_name).setValue(value) value type must match the property default type
 // modular_server_.property(property_name).getElementValue(element_index,value) value type must match the property array element default type
 // modular_server_.property(property_name).setElementValue(element_index,value) value type must match the property array element default type
+
+void SleepAssayController::updateCameraTriggerHandler()
+{
+  if (camera_trigger_running_)
+  {
+    stopCameraTrigger();
+    startCameraTrigger();
+  }
+}
 
 void SleepAssayController::updatePowersHandler()
 {

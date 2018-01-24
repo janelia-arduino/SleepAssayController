@@ -17,12 +17,12 @@ CONSTANT_STRING(device_name,"sleep_assay_controller");
 CONSTANT_STRING(firmware_name,"SleepAssayController");
 // Use semantic versioning http://semver.org/
 const modular_server::FirmwareInfo firmware_info =
-  {
-    .name_ptr=&firmware_name,
-    .version_major=1,
-    .version_minor=2,
-    .version_patch=0,
-  };
+{
+  .name_ptr=&firmware_name,
+  .version_major=1,
+  .version_minor=2,
+  .version_patch=1,
+};
 
 const long channel_min = 0;
 const long channel_max = high_power_switch_controller::constants::CHANNEL_COUNT;

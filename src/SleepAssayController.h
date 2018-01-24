@@ -121,6 +121,9 @@ private:
   bool buzzing_possible_;
   int buzzer_pwm_index_;
 
+  bool camera_trigger_running_;
+  int camera_trigger_pwm_index_;
+
   experiment_day_info_array_t experiment_day_array_;
 
   void getCameraTriggerPwmInfo(uint32_t & channels,
@@ -140,8 +143,11 @@ private:
                         HighPowerSwitchController::RecursivePwmValues & periods,
                         HighPowerSwitchController::RecursivePwmValues & on_durations);
 
-  void initializeAssay();
+  void initializeVariables();
+  void initializeChannels();
+  void stopAllAssayPwm();
   void startCameraTrigger();
+  void stopCameraTrigger();
   void startAssay();
   void startEntrainment(const int entrainment_duration);
   void startExperimentDay(const int experiment_day);
@@ -154,6 +160,7 @@ private:
   void writeExperimentDayInfoToResponse(const size_t experiment_day);
 
   // Handlers
+  void updateCameraTriggerHandler();
   void updatePowersHandler();
   void setTimeHandler();
   void getTimeHandler();
