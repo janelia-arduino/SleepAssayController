@@ -1164,7 +1164,7 @@ void SleepAssayController::startRecovery()
 
 void SleepAssayController::endAssay(const int arg)
 {
-  stopAllAssayPwm();
+  initializeChannels();
 
   assay_finished_ = true;
 }
