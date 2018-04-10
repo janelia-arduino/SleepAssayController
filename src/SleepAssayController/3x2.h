@@ -17,7 +17,7 @@ namespace sleep_assay_controller
 namespace constants
 {
 
-// Interrupts
+// Pins
 
 // Units
 

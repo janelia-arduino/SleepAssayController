@@ -30,7 +30,7 @@ void SleepAssayController::setup()
 
   // Add Hardware
 
-  // Interrupts
+  // Pins
 
   // Add Firmware
   modular_server_.addFirmware(constants::firmware_info,
@@ -305,13 +305,13 @@ void SleepAssayController::setup()
 
   // Callbacks
   modular_server::Callback & run_assay_callback = modular_server_.createCallback(constants::run_assay_callback_name);
-  run_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&SleepAssayController::runAssayHandler));
+  run_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::runAssayHandler));
 
   modular_server::Callback & test_assay_callback = modular_server_.createCallback(constants::test_assay_callback_name);
-  test_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&SleepAssayController::testAssayHandler));
+  test_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::testAssayHandler));
 
   modular_server::Callback & stop_assay_callback = modular_server_.createCallback(constants::stop_assay_callback_name);
-  stop_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Interrupt *> *)0,*this,&SleepAssayController::stopAssayHandler));
+  stop_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::stopAssayHandler));
 
   initializeChannels();
 }
@@ -1694,7 +1694,7 @@ void SleepAssayController::stopAllPowerTestsHandler()
   stopAllPowerTests();
 }
 
-void SleepAssayController::runAssayHandler(modular_server::Interrupt * interrupt_ptr)
+void SleepAssayController::runAssayHandler(modular_server::Pin * pin_ptr)
 {
   if (!timeIsSet())
   {
@@ -1704,7 +1704,7 @@ void SleepAssayController::runAssayHandler(modular_server::Interrupt * interrupt
   runAssay();
 }
 
-void SleepAssayController::testAssayHandler(modular_server::Interrupt * interrupt_ptr)
+void SleepAssayController::testAssayHandler(modular_server::Pin * pin_ptr)
 {
   if (!timeIsSet())
   {
@@ -1714,7 +1714,7 @@ void SleepAssayController::testAssayHandler(modular_server::Interrupt * interrup
   testAssay();
 }
 
-void SleepAssayController::stopAssayHandler(modular_server::Interrupt * interrupt_ptr)
+void SleepAssayController::stopAssayHandler(modular_server::Pin * pin_ptr)
 {
   stopAssay();
 }

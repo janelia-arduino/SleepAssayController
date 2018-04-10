@@ -177,9 +177,9 @@ private:
   void testRedLightPowerHandler();
   void testBuzzerPowerHandler();
   void stopAllPowerTestsHandler();
-  void runAssayHandler(modular_server::Interrupt * interrupt_ptr);
-  void testAssayHandler(modular_server::Interrupt * interrupt_ptr);
-  void stopAssayHandler(modular_server::Interrupt * interrupt_ptr);
+  void runAssayHandler(modular_server::Pin * pin_ptr);
+  void testAssayHandler(modular_server::Pin * pin_ptr);
+  void stopAssayHandler(modular_server::Pin * pin_ptr);
 
 };
 

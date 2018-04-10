@@ -68,7 +68,7 @@ CONSTANT_STRING(buzzing_possible_string,"buzzing_possible");
 CONSTANT_STRING(buzzing_string,"buzzing");
 CONSTANT_STRING(testing_string,"testing");
 
-// Interrupts
+// Pins
 
 // Units
 CONSTANT_STRING(hz_units,"Hz");

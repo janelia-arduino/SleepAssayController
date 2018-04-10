@@ -94,7 +94,7 @@ extern ConstantString buzzing_possible_string;
 extern ConstantString buzzing_string;
 extern ConstantString testing_string;
 
-// Interrupts
+// Pins
 
 // Units
 extern ConstantString hz_units;

@@ -18,7 +18,7 @@ namespace constants
 {
 enum{EXPERIMENT_DAY_COUNT_MAX=20};
 
-// Interrupts
+// Pins
 
 // Units
 
