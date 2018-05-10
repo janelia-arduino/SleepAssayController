@@ -16,9 +16,9 @@ namespace sleep_assay_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=23};
-enum{PARAMETER_COUNT_MAX=11};
-enum{FUNCTION_COUNT_MAX=27};
+enum{PROPERTY_COUNT_MAX=22};
+enum{PARAMETER_COUNT_MAX=9};
+enum{FUNCTION_COUNT_MAX=23};
 enum{CALLBACK_COUNT_MAX=3};
 
 extern ConstantString device_name;
@@ -28,23 +28,6 @@ extern const modular_server::FirmwareInfo firmware_info;
 
 extern const long channel_min;
 extern const long channel_max;
-
-extern const long seconds_per_minute;
-extern const long minutes_per_hour;
-extern const long hours_per_day;
-extern const long milliseconds_per_second;
-extern const long milliseconds_per_minute;
-extern const long milliseconds_per_hour;
-extern const long milliseconds_per_day;
-extern const long seconds_per_hour;
-extern const long seconds_per_day;
-
-extern ConstantString year_string;
-extern ConstantString month_string;
-extern ConstantString day_string;
-extern ConstantString hour_string;
-extern ConstantString minute_string;
-extern ConstantString second_string;
 
 extern const double camera_trigger_duty_cycle;
 extern const double camera_trigger_duty_cycle_max;
@@ -98,7 +81,6 @@ extern ConstantString testing_string;
 
 // Units
 extern ConstantString hz_units;
-extern ConstantString seconds_units;
 extern ConstantString hours_units;
 extern ConstantString days_units;
 extern ConstantString military_time_hours_units;
@@ -184,11 +166,6 @@ extern const long buzzer_wait_max_min;
 extern const long buzzer_wait_max_max;
 extern const long buzzer_wait_max_default;
 
-extern ConstantString time_zone_offset_property_name;
-extern const long time_zone_offset_min;
-extern const long time_zone_offset_max;
-extern const long time_zone_offset_default;
-
 extern ConstantString entrainment_duration_property_name;
 extern const long entrainment_duration_min;
 extern const long entrainment_duration_max;
@@ -205,12 +182,6 @@ extern const long testing_day_duration_max;
 extern const long testing_day_duration_default;
 
 // Parameters
-extern ConstantString epoch_time_parameter_name;
-extern const long epoch_time_min;
-extern const long epoch_time_max;
-
-extern ConstantString adjust_time_parameter_name;
-
 extern ConstantString experiment_day_parameter_name;
 
 extern ConstantString white_light_parameter_name;
@@ -238,10 +209,6 @@ extern const double buzzer_duration_max;
 extern ConstantString day_count_parameter_name;
 
 // Functions
-extern ConstantString set_time_function_name;
-extern ConstantString get_time_function_name;
-extern ConstantString adjust_time_function_name;
-extern ConstantString now_function_name;
 extern ConstantString get_assay_start_function_name;
 extern ConstantString get_assay_end_function_name;
 extern ConstantString get_assay_duration_function_name;
@@ -272,7 +239,6 @@ extern ConstantString test_assay_callback_name;
 extern ConstantString stop_assay_callback_name;
 
 // Errors
-extern ConstantString time_not_set_error;
 extern ConstantString assay_not_started_error;
 extern ConstantString experiment_day_does_not_exist_error;
 }

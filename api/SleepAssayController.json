@@ -7,30 +7,6 @@
     "verbosity": "GENERAL",
     "functions": [
       {
-        "name": "setTime",
-        "parameters": [
-          "epoch_time"
-        ]
-      },
-      {
-        "name": "getTime",
-        "result_info": {
-          "type": "long"
-        }
-      },
-      {
-        "name": "adjustTime",
-        "parameters": [
-          "adjust_time"
-        ]
-      },
-      {
-        "name": "now",
-        "result_info": {
-          "type": "object"
-        }
-      },
-      {
         "name": "getAssayStart",
         "result_info": {
           "type": "object"
@@ -193,14 +169,6 @@
       }
     ],
     "parameters": [
-      {
-        "name": "epoch_time",
-        "type": "long"
-      },
-      {
-        "name": "adjust_time",
-        "type": "long"
-      },
       {
         "name": "experiment_day",
         "type": "long"
@@ -943,45 +911,6 @@
       },
       {
         "name": "buzzerWaitMax",
-        "type": "long",
-        "functions": [
-          {
-            "name": "getValue",
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "setValue",
-            "parameters": [
-              "value"
-            ],
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "getDefaultValue",
-            "result_info": {
-              "type": "long"
-            }
-          },
-          {
-            "name": "setValueToDefault",
-            "result_info": {
-              "type": "long"
-            }
-          }
-        ],
-        "parameters": [
-          {
-            "name": "value",
-            "type": "long"
-          }
-        ]
-      },
-      {
-        "name": "timeZoneOffset",
         "type": "long",
         "functions": [
           {

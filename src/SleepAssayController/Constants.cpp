@@ -20,29 +20,12 @@ const modular_server::FirmwareInfo firmware_info =
 {
   .name_ptr=&firmware_name,
   .version_major=1,
-  .version_minor=2,
-  .version_patch=2,
+  .version_minor=3,
+  .version_patch=0,
 };
 
 const long channel_min = 0;
 const long channel_max = high_power_switch_controller::constants::CHANNEL_COUNT;
-
-const long seconds_per_minute = 60;
-const long minutes_per_hour = 60;
-const long hours_per_day = 24;
-const long milliseconds_per_second = 1000;
-const long milliseconds_per_minute = milliseconds_per_second*seconds_per_minute;
-const long milliseconds_per_hour = milliseconds_per_second*seconds_per_minute*minutes_per_hour;
-const long milliseconds_per_day = milliseconds_per_hour*hours_per_day;
-const long seconds_per_hour = seconds_per_minute*minutes_per_hour;
-const long seconds_per_day = seconds_per_hour*hours_per_day;
-
-CONSTANT_STRING(year_string,"year");
-CONSTANT_STRING(month_string,"month");
-CONSTANT_STRING(day_string,"day");
-CONSTANT_STRING(hour_string,"hour");
-CONSTANT_STRING(minute_string,"minute");
-CONSTANT_STRING(second_string,"second");
 
 const double camera_trigger_duty_cycle = 50.0;
 const double camera_trigger_duty_cycle_max = 100.0;
@@ -72,7 +55,6 @@ CONSTANT_STRING(testing_string,"testing");
 
 // Units
 CONSTANT_STRING(hz_units,"Hz");
-CONSTANT_STRING(seconds_units,"s");
 CONSTANT_STRING(hours_units,"hours");
 CONSTANT_STRING(days_units,"days");
 CONSTANT_STRING(military_time_hours_units,"military_time_hours");
@@ -150,11 +132,6 @@ const long buzzer_wait_max_min = 1;
 const long buzzer_wait_max_max = 3600;
 const long buzzer_wait_max_default = 3;
 
-CONSTANT_STRING(time_zone_offset_property_name,"timeZoneOffset");
-const long time_zone_offset_min = -12;
-const long time_zone_offset_max = 14;
-const long time_zone_offset_default = -4;
-
 CONSTANT_STRING(entrainment_duration_property_name,"entrainmentDuration");
 const long entrainment_duration_min = 1;
 const long entrainment_duration_max = 10;
@@ -171,12 +148,6 @@ const long testing_day_duration_max = 240;
 const long testing_day_duration_default = 24;
 
 // Parameters
-CONSTANT_STRING(epoch_time_parameter_name,"epoch_time");
-const long epoch_time_min = 1490000000;
-const long epoch_time_max = 2147483647;
-
-CONSTANT_STRING(adjust_time_parameter_name,"adjust_time");
-
 CONSTANT_STRING(experiment_day_parameter_name,"experiment_day");
 
 CONSTANT_STRING(white_light_parameter_name,"white_light");
@@ -204,10 +175,6 @@ const double buzzer_duration_max = 24.0;
 CONSTANT_STRING(day_count_parameter_name,"day_count");
 
 // Functions
-CONSTANT_STRING(set_time_function_name,"setTime");
-CONSTANT_STRING(get_time_function_name,"getTime");
-CONSTANT_STRING(adjust_time_function_name,"adjustTime");
-CONSTANT_STRING(now_function_name,"now");
 CONSTANT_STRING(get_assay_start_function_name,"getAssayStart");
 CONSTANT_STRING(get_assay_end_function_name,"getAssayEnd");
 CONSTANT_STRING(get_assay_duration_function_name,"getAssayDuration");
@@ -238,7 +205,6 @@ CONSTANT_STRING(test_assay_callback_name,"testAssay");
 CONSTANT_STRING(stop_assay_callback_name,"stopAssay");
 
 // Errors
-CONSTANT_STRING(time_not_set_error,"Time is not set! Must use setTime method. To get epoch time manually, you can visit https://www.epochconverter.com/ or use bash: date +%s");
 CONSTANT_STRING(assay_not_started_error,"Assay not started!");
 CONSTANT_STRING(experiment_day_does_not_exist_error,"Experiment day does not exist!");
 

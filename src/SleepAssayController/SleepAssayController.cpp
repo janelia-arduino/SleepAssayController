@@ -105,22 +105,19 @@ void SleepAssayController::setup()
 
   modular_server::Property & buzzer_on_duration_min_property = modular_server_.createProperty(constants::buzzer_on_duration_min_property_name,constants::buzzer_on_duration_min_default);
   buzzer_on_duration_min_property.setRange(constants::buzzer_on_duration_min,constants::buzzer_on_duration_max);
-  buzzer_on_duration_min_property.setUnits(constants::seconds_units);
+  buzzer_on_duration_min_property.setUnits(modular_device_base::constants::seconds_units);
 
   modular_server::Property & buzzer_on_duration_max_property = modular_server_.createProperty(constants::buzzer_on_duration_max_property_name,constants::buzzer_on_duration_max_default);
   buzzer_on_duration_max_property.setRange(constants::buzzer_on_duration_min,constants::buzzer_on_duration_max);
-  buzzer_on_duration_max_property.setUnits(constants::seconds_units);
+  buzzer_on_duration_max_property.setUnits(modular_device_base::constants::seconds_units);
 
   modular_server::Property & buzzer_wait_min_property = modular_server_.createProperty(constants::buzzer_wait_min_property_name,constants::buzzer_wait_min_default);
   buzzer_wait_min_property.setRange(constants::buzzer_wait_min_min,constants::buzzer_wait_min_max);
-  buzzer_wait_min_property.setUnits(constants::seconds_units);
+  buzzer_wait_min_property.setUnits(modular_device_base::constants::seconds_units);
 
   modular_server::Property & buzzer_wait_max_property = modular_server_.createProperty(constants::buzzer_wait_max_property_name,constants::buzzer_wait_max_default);
   buzzer_wait_max_property.setRange(constants::buzzer_wait_max_min,constants::buzzer_wait_max_max);
-  buzzer_wait_max_property.setUnits(constants::seconds_units);
-
-  modular_server::Property & time_zone_offset_property = modular_server_.createProperty(constants::time_zone_offset_property_name,constants::time_zone_offset_default);
-  time_zone_offset_property.setRange(constants::time_zone_offset_min,constants::time_zone_offset_max);
+  buzzer_wait_max_property.setUnits(modular_device_base::constants::seconds_units);
 
   modular_server::Property & entrainment_duration_property = modular_server_.createProperty(constants::entrainment_duration_property_name,constants::entrainment_duration_default);
   entrainment_duration_property.setRange(constants::entrainment_duration_min,constants::entrainment_duration_max);
@@ -132,19 +129,11 @@ void SleepAssayController::setup()
 
   modular_server::Property & testing_day_duration_property = modular_server_.createProperty(constants::testing_day_duration_property_name,constants::testing_day_duration_default);
   testing_day_duration_property.setRange(constants::testing_day_duration_min,constants::testing_day_duration_max);
-  testing_day_duration_property.setUnits(constants::seconds_units);
+  testing_day_duration_property.setUnits(modular_device_base::constants::seconds_units);
 
   updatePowersHandler();
 
   // Parameters
-  modular_server::Parameter & epoch_time_parameter = modular_server_.createParameter(constants::epoch_time_parameter_name);
-  epoch_time_parameter.setRange(constants::epoch_time_min,constants::epoch_time_max);
-  epoch_time_parameter.setUnits(constants::seconds_units);
-
-  modular_server::Parameter & adjust_time_parameter = modular_server_.createParameter(constants::adjust_time_parameter_name);
-  adjust_time_parameter.setTypeLong();
-  adjust_time_parameter.setUnits(constants::seconds_units);
-
   modular_server::Parameter & experiment_day_parameter = modular_server_.createParameter(constants::experiment_day_parameter_name);
   experiment_day_parameter.setTypeLong();
   experiment_day_parameter.setRange((long)0,(long)constants::EXPERIMENT_DAY_COUNT_MAX - 1);
@@ -180,22 +169,6 @@ void SleepAssayController::setup()
   modular_server::Parameter & power_parameter = modular_server_.parameter(high_power_switch_controller::constants::power_parameter_name);
 
   // Functions
-  modular_server::Function & set_time_function = modular_server_.createFunction(constants::set_time_function_name);
-  set_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setTimeHandler));
-  set_time_function.addParameter(epoch_time_parameter);
-
-  modular_server::Function & get_time_function = modular_server_.createFunction(constants::get_time_function_name);
-  get_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getTimeHandler));
-  get_time_function.setResultTypeLong();
-
-  modular_server::Function & adjust_time_function = modular_server_.createFunction(constants::adjust_time_function_name);
-  adjust_time_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::adjustTimeHandler));
-  adjust_time_function.addParameter(adjust_time_parameter);
-
-  modular_server::Function & now_function = modular_server_.createFunction(constants::now_function_name);
-  now_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::nowHandler));
-  now_function.setResultTypeObject();
-
   modular_server::Function & get_assay_start_function = modular_server_.createFunction(constants::get_assay_start_function_name);
   get_assay_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getAssayStartHandler));
   get_assay_start_function.setResultTypeObject();
@@ -316,36 +289,6 @@ void SleepAssayController::setup()
   initializeChannels();
 }
 
-void SleepAssayController::setTime(const time_t epoch_time)
-{
-  ::setTime(epoch_time);
-}
-
-time_t SleepAssayController::getTime()
-{
-  return ::now();
-}
-
-void SleepAssayController::adjustTime(const long adjust_time)
-{
-  ::adjustTime(adjust_time);
-}
-
-bool SleepAssayController::timeIsSet()
-{
-  timeStatus_t time_status = timeStatus();
-  return (time_status != timeNotSet);
-}
-
-time_t SleepAssayController::epochTimeToLocalTime(const time_t epoch_time)
-{
-  long time_zone_offset;
-  modular_server_.property(constants::time_zone_offset_property_name).getValue(time_zone_offset);
-
-  return epoch_time + time_zone_offset*constants::seconds_per_hour;
-}
-
-
 void SleepAssayController::runAssay()
 {
   if (!timeIsSet() || (assayStarted() && !assayFinished()))
@@ -393,15 +336,10 @@ long SleepAssayController::scaleDuration(const long duration)
   {
     long testing_day_duration;
     modular_server_.property(constants::testing_day_duration_property_name).getValue(testing_day_duration);
-    double scale_factor = (double)testing_day_duration/(double)constants::seconds_per_day;
+    double scale_factor = (double)testing_day_duration/(double)modular_device_base::constants::seconds_per_day;
     return (double)duration*scale_factor;
   }
   return duration;
-}
-
-time_t SleepAssayController::now()
-{
-  return ::now();
 }
 
 time_t SleepAssayController::getAssayStart()
@@ -419,7 +357,7 @@ time_t SleepAssayController::getAssayEnd()
   modular_server_.property(constants::recovery_duration_property_name).getValue(recovery_duration);
 
   time_t time_assay_end = getExperimentEnd();
-  time_assay_end += scaleDuration(recovery_duration*constants::seconds_per_day);
+  time_assay_end += scaleDuration(recovery_duration*modular_device_base::constants::seconds_per_day);
   return time_assay_end;
 }
 
@@ -448,7 +386,7 @@ time_t SleepAssayController::getExperimentEnd()
     return 0;
   }
   time_t time_experiment_end = getExperimentStart();
-  time_experiment_end += scaleDuration(experiment_day_array_.size()*constants::seconds_per_day);
+  time_experiment_end += scaleDuration(experiment_day_array_.size()*modular_device_base::constants::seconds_per_day);
   return time_experiment_end;
 }
 
@@ -468,7 +406,7 @@ time_t SleepAssayController::getEntrainmentStart()
   modular_server_.property(constants::entrainment_duration_property_name).getValue(entrainment_duration);
 
   time_t time_entrainment_start = getExperimentStart();
-  time_entrainment_start -= scaleDuration(entrainment_duration*constants::seconds_per_day);
+  time_entrainment_start -= scaleDuration(entrainment_duration*modular_device_base::constants::seconds_per_day);
 
   return time_entrainment_start;
 }
@@ -619,11 +557,11 @@ sleep_assay_controller::constants::AssayStatus SleepAssayController::getAssaySta
   if (assayStarted())
   {
     time_t time_entrainment_start = getEntrainmentStart();
-    time_t time_assay_start = getAssayStart();
+    // time_t time_assay_start = getAssayStart();
     time_t time_experiment_start = getExperimentStart();
     time_t time_experiment_end = getExperimentEnd();
     time_t time_assay_end = getAssayEnd();
-    double seconds_per_day_scaled = scaleDuration(constants::seconds_per_day);
+    double seconds_per_day_scaled = scaleDuration(modular_device_base::constants::seconds_per_day);
 
     assay_status.assay_day = (time_now - time_entrainment_start)/seconds_per_day_scaled;
 
@@ -767,7 +705,7 @@ void SleepAssayController::getCameraTriggerPwmInfo(uint32_t & channels,
 
   double frequency;
   modular_server_.property(constants::camera_trigger_frequency_property_name).getValue(frequency);
-  period = (1.0/frequency)*constants::milliseconds_per_second;
+  period = (1.0/frequency)*modular_device_base::constants::milliseconds_per_second;
   on_duration = period*constants::camera_trigger_duty_cycle/constants::camera_trigger_duty_cycle_max;
 }
 
@@ -783,11 +721,11 @@ void SleepAssayController::getWhiteLightPwmInfo(uint32_t & channels,
   modular_server_.property(constants::white_light_indicator_channel_property_name).getValue(channel);
   channels |= bit << channel;
 
-  period = scaleDuration(constants::milliseconds_per_day);
+  period = scaleDuration(modular_device_base::constants::milliseconds_per_day);
 
   long on_duration_hours;
   modular_server_.property(constants::white_light_on_duration_property_name).getValue(on_duration_hours);
-  on_duration = scaleDuration(on_duration_hours*constants::milliseconds_per_hour);
+  on_duration = scaleDuration(on_duration_hours*modular_device_base::constants::milliseconds_per_hour);
 }
 
 void SleepAssayController::getRedLightPwmInfo(const size_t experiment_day,
@@ -803,7 +741,7 @@ void SleepAssayController::getRedLightPwmInfo(const size_t experiment_day,
 
   double frequency;
   modular_server_.property(constants::red_light_frequency_property_name).getValue(frequency);
-  long period_0 = (1.0/frequency)*constants::milliseconds_per_second;
+  long period_0 = (1.0/frequency)*modular_device_base::constants::milliseconds_per_second;
   periods.push_back(period_0);
 
   long duty_cycle;
@@ -815,10 +753,10 @@ void SleepAssayController::getRedLightPwmInfo(const size_t experiment_day,
   {
     constants::ExperimentDayInfo & experiment_day_info = experiment_day_array_[experiment_day];
     double red_light_delay_hours = experiment_day_info.red_light_delay_hours;
-    delay = scaleDuration(red_light_delay_hours*constants::milliseconds_per_hour);
+    delay = scaleDuration(red_light_delay_hours*modular_device_base::constants::milliseconds_per_hour);
 
     double red_light_duration_hours = experiment_day_info.red_light_duration_hours;
-    long on_duration_1 = scaleDuration(red_light_duration_hours*constants::milliseconds_per_hour);
+    long on_duration_1 = scaleDuration(red_light_duration_hours*modular_device_base::constants::milliseconds_per_hour);
     on_durations.push_back(on_duration_1);
 
     long period_1 = on_duration_1 + 1;
@@ -840,22 +778,22 @@ void SleepAssayController::getBuzzerPwmInfo(const size_t experiment_day,
 
   long on_duration_0_min;
   modular_server_.property(constants::buzzer_on_duration_min_property_name).getValue(on_duration_0_min);
-  on_duration_0_min *= constants::milliseconds_per_second;
+  on_duration_0_min *= modular_device_base::constants::milliseconds_per_second;
 
   long on_duration_0_max;
   modular_server_.property(constants::buzzer_on_duration_max_property_name).getValue(on_duration_0_max);
-  on_duration_0_max *= constants::milliseconds_per_second;
+  on_duration_0_max *= modular_device_base::constants::milliseconds_per_second;
 
   long on_duration_0 = random(on_duration_0_min,on_duration_0_max);
   on_durations.push_back(on_duration_0);
 
   long buzzer_wait_min;
   modular_server_.property(constants::buzzer_wait_min_property_name).getValue(buzzer_wait_min);
-  buzzer_wait_min *= constants::milliseconds_per_second;
+  buzzer_wait_min *= modular_device_base::constants::milliseconds_per_second;
 
   long buzzer_wait_max;
   modular_server_.property(constants::buzzer_wait_max_property_name).getValue(buzzer_wait_max);
-  buzzer_wait_max *= constants::milliseconds_per_second;
+  buzzer_wait_max *= modular_device_base::constants::milliseconds_per_second;
 
   long off_duration_0 = random(buzzer_wait_min,buzzer_wait_max);
 
@@ -866,10 +804,10 @@ void SleepAssayController::getBuzzerPwmInfo(const size_t experiment_day,
   {
     constants::ExperimentDayInfo & experiment_day_info = experiment_day_array_[experiment_day];
     double buzzer_delay_hours = experiment_day_info.buzzer_delay_hours;
-    delay = scaleDuration(buzzer_delay_hours*constants::milliseconds_per_hour);
+    delay = scaleDuration(buzzer_delay_hours*modular_device_base::constants::milliseconds_per_hour);
 
     double buzzer_duration_hours = experiment_day_info.buzzer_duration_hours;
-    long on_duration_1 = scaleDuration(buzzer_duration_hours*constants::milliseconds_per_hour);
+    long on_duration_1 = scaleDuration(buzzer_duration_hours*modular_device_base::constants::milliseconds_per_hour);
     on_durations.push_back(on_duration_1);
 
     long period_1 = on_duration_1 + 1;
@@ -965,13 +903,13 @@ void SleepAssayController::startAssay()
     modular_server_.property(constants::white_light_start_time_property_name).getValue(start_time);
 
     long time_zone_offset;
-    modular_server_.property(constants::time_zone_offset_property_name).getValue(time_zone_offset);
+    modular_server_.property(modular_device_base::constants::time_zone_offset_property_name).getValue(time_zone_offset);
 
     start_time -= time_zone_offset;
 
-    long offset = (hour(time_now) - start_time)*constants::milliseconds_per_hour;
-    offset += minute(time_now)*constants::milliseconds_per_minute;
-    offset += second(time_now)*constants::milliseconds_per_second;
+    long offset = (hour(time_now) - start_time)*modular_device_base::constants::milliseconds_per_hour;
+    offset += minute(time_now)*modular_device_base::constants::milliseconds_per_minute;
+    offset += second(time_now)*modular_device_base::constants::milliseconds_per_second;
     offset = scaleDuration(offset);
 
     if ((offset > 0) && (offset < on_duration))
@@ -985,8 +923,8 @@ void SleepAssayController::startAssay()
       addCountCompletedFunctor(pwm_index,
                                makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
                                entrainment_duration2);
-      time_experiment_start_ += scaleDuration(entrainment_duration2*constants::seconds_per_day);
-      time_experiment_start_ += period/constants::milliseconds_per_second;
+      time_experiment_start_ += scaleDuration(entrainment_duration2*modular_device_base::constants::seconds_per_day);
+      time_experiment_start_ += period/modular_device_base::constants::milliseconds_per_second;
     }
     else if (offset >= on_duration)
     {
@@ -995,8 +933,8 @@ void SleepAssayController::startAssay()
       addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
                          delay,
                          entrainment_duration2);
-      time_experiment_start_ += scaleDuration(entrainment_duration2*constants::seconds_per_day);
-      time_experiment_start_ += delay/constants::milliseconds_per_second;
+      time_experiment_start_ += scaleDuration(entrainment_duration2*modular_device_base::constants::seconds_per_day);
+      time_experiment_start_ += delay/modular_device_base::constants::milliseconds_per_second;
     }
     else if (offset <= 0)
     {
@@ -1005,8 +943,8 @@ void SleepAssayController::startAssay()
       addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
                          delay,
                          entrainment_duration2);
-      time_experiment_start_ += scaleDuration(entrainment_duration2*constants::seconds_per_day);
-      time_experiment_start_ += delay/constants::milliseconds_per_second;
+      time_experiment_start_ += scaleDuration(entrainment_duration2*modular_device_base::constants::seconds_per_day);
+      time_experiment_start_ += delay/modular_device_base::constants::milliseconds_per_second;
     }
   }
   else
@@ -1208,22 +1146,6 @@ void SleepAssayController::disableBuzzer(const int arg)
   buzzer_pwm_index_ = -1;
 }
 
-void SleepAssayController::writeDateTimeToResponse(const time_t time)
-{
-  time_t local_time = epochTimeToLocalTime(time);
-
-  modular_server_.response().beginObject();
-
-  modular_server_.response().write(constants::year_string,year(local_time));
-  modular_server_.response().write(constants::month_string,month(local_time));
-  modular_server_.response().write(constants::day_string,day(local_time));
-  modular_server_.response().write(constants::hour_string,hour(local_time));
-  modular_server_.response().write(constants::minute_string,minute(local_time));
-  modular_server_.response().write(constants::second_string,second(local_time));
-
-  modular_server_.response().endObject();
-}
-
 void SleepAssayController::writeExperimentDayInfoToResponse(const size_t experiment_day)
 {
   modular_server_.response().beginObject();
@@ -1303,48 +1225,11 @@ void SleepAssayController::updatePowersHandler()
 
 }
 
-void SleepAssayController::setTimeHandler()
-{
-  long epoch_time;
-  modular_server_.parameter(constants::epoch_time_parameter_name).getValue(epoch_time);
-  SleepAssayController::setTime(epoch_time);
-}
-
-void SleepAssayController::getTimeHandler()
-{
-  if (!timeIsSet())
-  {
-    modular_server_.response().returnError(constants::time_not_set_error);
-    return;
-  }
-  time_t epoch_time = getTime();
-  modular_server_.response().returnResult(epoch_time);
-}
-
-void SleepAssayController::adjustTimeHandler()
-{
-  long adjust_time;
-  modular_server_.parameter(constants::adjust_time_parameter_name).getValue(adjust_time);
-  SleepAssayController::adjustTime(adjust_time);
-}
-
-void SleepAssayController::nowHandler()
-{
-  if (!timeIsSet())
-  {
-    modular_server_.response().returnError(constants::time_not_set_error);
-    return;
-  }
-  time_t time_now = SleepAssayController::now();
-  modular_server_.response().writeResultKey();
-  writeDateTimeToResponse(time_now);
-}
-
 void SleepAssayController::getAssayStartHandler()
 {
   if (!timeIsSet())
   {
-    modular_server_.response().returnError(constants::time_not_set_error);
+    modular_server_.response().returnError(modular_device_base::constants::time_not_set_error);
     return;
   }
   bool assay_started = assayStarted();
@@ -1363,7 +1248,7 @@ void SleepAssayController::getAssayEndHandler()
 {
   if (!timeIsSet())
   {
-    modular_server_.response().returnError(constants::time_not_set_error);
+    modular_server_.response().returnError(modular_device_base::constants::time_not_set_error);
     return;
   }
   bool assay_started = assayStarted();
@@ -1388,7 +1273,7 @@ void SleepAssayController::getExperimentStartHandler()
 {
   if (!timeIsSet())
   {
-    modular_server_.response().returnError(constants::time_not_set_error);
+    modular_server_.response().returnError(modular_device_base::constants::time_not_set_error);
     return;
   }
   bool assay_started = assayStarted();
@@ -1407,7 +1292,7 @@ void SleepAssayController::getExperimentEndHandler()
 {
   if (!timeIsSet())
   {
-    modular_server_.response().returnError(constants::time_not_set_error);
+    modular_server_.response().returnError(modular_device_base::constants::time_not_set_error);
     return;
   }
   bool assay_started = assayStarted();
@@ -1432,7 +1317,7 @@ void SleepAssayController::getEntrainmentStartHandler()
 {
   if (!timeIsSet())
   {
-    modular_server_.response().returnError(constants::time_not_set_error);
+    modular_server_.response().returnError(modular_device_base::constants::time_not_set_error);
     return;
   }
   bool assay_started = assayStarted();
@@ -1698,7 +1583,7 @@ void SleepAssayController::runAssayHandler(modular_server::Pin * pin_ptr)
 {
   if (!timeIsSet())
   {
-    modular_server_.response().returnError(constants::time_not_set_error);
+    modular_server_.response().returnError(modular_device_base::constants::time_not_set_error);
     return;
   }
   runAssay();
@@ -1708,7 +1593,7 @@ void SleepAssayController::testAssayHandler(modular_server::Pin * pin_ptr)
 {
   if (!timeIsSet())
   {
-    modular_server_.response().returnError(constants::time_not_set_error);
+    modular_server_.response().returnError(modular_device_base::constants::time_not_set_error);
     return;
   }
   testAssay();

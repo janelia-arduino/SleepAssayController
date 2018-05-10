@@ -14,8 +14,6 @@
 #include <ConstantVariable.h>
 #include <Functor.h>
 
-#include <Time.h>
-
 #include <ModularServer.h>
 #include <ModularDeviceBase.h>
 #include <HighPowerSwitchController.h>
@@ -29,12 +27,6 @@ public:
   SleepAssayController();
   virtual void setup();
 
-  void setTime(const time_t epoch_time);
-  time_t getTime();
-  void adjustTime(const long adjust_time);
-  bool timeIsSet();
-  time_t epochTimeToLocalTime(const time_t epoch_time);
-
   void runAssay();
   void testAssay();
   void stopAssay();
@@ -44,7 +36,6 @@ public:
 
   long scaleDuration(const long duration);
 
-  time_t now();
   time_t getAssayStart();
   time_t getAssayEnd();
   uint8_t getAssayDuration();
@@ -144,16 +135,11 @@ private:
   void buzz(const int experiment_day);
   void disableBuzzer(const int arg);
 
-  void writeDateTimeToResponse(const time_t time);
   void writeExperimentDayInfoToResponse(const size_t experiment_day);
 
   // Handlers
   void updateCameraTriggerHandler();
   void updatePowersHandler();
-  void setTimeHandler();
-  void getTimeHandler();
-  void adjustTimeHandler();
-  void nowHandler();
   void getAssayStartHandler();
   void getAssayEndHandler();
   void getAssayDurationHandler();

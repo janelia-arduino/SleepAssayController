@@ -25,87 +25,80 @@
 * API NAMES
 
   #+BEGIN_SRC js
-{
-  "id": "getApi",
-  "result": {
-    "firmware": [
-      "SleepAssayController"
-    ],
-    "verbosity": "NAMES",
-    "functions": [
-      "setTime",
-      "getTime",
-      "adjustTime",
-      "now",
-      "getAssayStart",
-      "getAssayEnd",
-      "getAssayDuration",
-      "getExperimentStart",
-      "getExperimentEnd",
-      "getExperimentDuration",
-      "getEntrainmentStart",
-      "getExperimentInfo",
-      "getExperimentDayInfo",
-      "addExperimentDay",
-      "addExperimentDays",
-      "addExperimentDayCopy",
-      "addExperimentDayCopies",
-      "removeLastExperimentDay",
-      "removeAllExperimentDays",
-      "setExperimentDayWhiteLight",
-      "setExperimentDayRedLight",
-      "setExperimentDayBuzzer",
-      "getAssayStatus",
-      "testWhiteLightPower",
-      "testRedLightPower",
-      "testBuzzerPower",
-      "stopAllPowerTests"
-    ],
-    "parameters": [
-      "epoch_time",
-      "adjust_time",
-      "experiment_day",
-      "white_light",
-      "red_light",
-      "red_light_delay",
-      "red_light_duration",
-      "buzzer",
-      "buzzer_delay",
-      "buzzer_duration",
-      "day_count"
-    ],
-    "properties": [
-      "cameraTriggerChannel",
-      "cameraTriggerFrequency",
-      "whiteLightChannel",
-      "whiteLightIndicatorChannel",
-      "whiteLightPower",
-      "whiteLightStartTime",
-      "whiteLightOnDuration",
-      "redLightChannel",
-      "redLightIndicatorChannel",
-      "redLightPower",
-      "redLightFrequency",
-      "redLightDutyCycle",
-      "buzzerChannel",
-      "buzzerIndicatorChannel",
-      "buzzerPower",
-      "buzzerOnDurationMin",
-      "buzzerOnDurationMax",
-      "buzzerWaitMin",
-      "buzzerWaitMax",
-      "timeZoneOffset",
-      "entrainmentDuration",
-      "recoveryDuration",
-      "testingDayDuration"
-    ],
-    "callbacks": [
-      "runAssay",
-      "testAssay",
-      "stopAssay"
-    ]
-  }
-}
+    {
+      "id": "getApi",
+      "result": {
+        "firmware": [
+          "SleepAssayController"
+        ],
+        "verbosity": "NAMES",
+        "functions": [
+          "getAssayStart",
+          "getAssayEnd",
+          "getAssayDuration",
+          "getExperimentStart",
+          "getExperimentEnd",
+          "getExperimentDuration",
+          "getEntrainmentStart",
+          "getExperimentInfo",
+          "getExperimentDayInfo",
+          "addExperimentDay",
+          "addExperimentDays",
+          "addExperimentDayCopy",
+          "addExperimentDayCopies",
+          "removeLastExperimentDay",
+          "removeAllExperimentDays",
+          "setExperimentDayWhiteLight",
+          "setExperimentDayRedLight",
+          "setExperimentDayBuzzer",
+          "getAssayStatus",
+          "testWhiteLightPower",
+          "testRedLightPower",
+          "testBuzzerPower",
+          "stopAllPowerTests"
+        ],
+        "parameters": [
+          "experiment_day",
+          "white_light",
+          "red_light",
+          "red_light_delay",
+          "red_light_duration",
+          "buzzer",
+          "buzzer_delay",
+          "buzzer_duration",
+          "day_count"
+        ],
+        "properties": [
+          "cameraTriggerChannel",
+          "cameraTriggerFrequency",
+          "whiteLightChannel",
+          "whiteLightIndicatorChannel",
+          "whiteLightPower",
+          "whiteLightStartTime",
+          "whiteLightOnDuration",
+          "redLightChannel",
+          "redLightIndicatorChannel",
+          "redLightPower",
+          "redLightFrequency",
+          "redLightDutyCycle",
+          "buzzerChannel",
+          "buzzerIndicatorChannel",
+          "buzzerPower",
+          "buzzerOnDurationMin",
+          "buzzerOnDurationMax",
+          "buzzerWaitMin",
+          "buzzerWaitMax",
+          "entrainmentDuration",
+          "recoveryDuration",
+          "testingDayDuration"
+        ],
+        "callbacks": [
+          "runAssay",
+          "testAssay",
+          "stopAssay"
+        ]
+      }
+    }
   #+END_SRC
 
 * API GENERAL
