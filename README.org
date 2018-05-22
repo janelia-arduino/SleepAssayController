@@ -3,24 +3,16 @@
 #+EMAIL: peterpolidoro@gmail.com
 
 * Library Information
-  - Author :: Peter Polidoro
+  - Name :: SleepAssayController
+  - Version :: 1.3.0
   - License :: BSD
+  - URL :: https://github.com/janelia-arduino/SleepAssayController
+  - Author :: Peter Polidoro
+  - Email :: peterpolidoro@gmail.com
 
-* Ancestors
+** Description
 
-  [[https://github.com/janelia-arduino/ModularServer][ModularServer]]
-
-  [[https://github.com/janelia-arduino/ModularDeviceBase][ModularDeviceBase]]
-
-  [[https://github.com/janelia-arduino/HighPowerSwitchController][HighPowerSwitchController]]
-
-* Clients
-
-* Devices
-
-  [[https://github.com/janelia-modular-devices/modular_device_base.git][modular_device_base]]
-
-  [[https://github.com/janelia-modular-devices/high_power_switch_controller.git][high_power_switch_controller]]
+   Modular device sleep assay controller library.
 
 * API NAMES
 
@@ -103,12 +95,28 @@
 
 * API GENERAL
 
-  [[./api/][API GENERAL]]
+  [[./api/]]
+
+* Ancestors
+
+  [[https://github.com/janelia-arduino/ModularServer]]
+
+  [[https://github.com/janelia-arduino/ModularDeviceBase]]
+
+  [[https://github.com/janelia-arduino/HighPowerSwitchController]]
+
+* Clients
+
+* Devices
+
+  [[https://github.com/janelia-modular-devices/modular_device_base.git]]
+
+  [[https://github.com/janelia-modular-devices/high_power_switch_controller.git]]
 
 * More Detailed Modular Device Information
 
-  [[https://github.com/janelia-modular-devices/modular-devices][modular-devices]]
+  [[https://github.com/janelia-modular-devices/modular-devices]]
 
-* Library Dependencies
+* Installation Instructions
 
-  [[https://github.com/janelia-arduino/arduino-libraries][arduino-libraries]]
+  [[https://github.com/janelia-arduino/arduino-libraries]]
