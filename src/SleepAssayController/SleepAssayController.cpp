@@ -648,13 +648,19 @@ void SleepAssayController::testWhiteLightPower(const long power)
   }
 
   long channel;
-  modular_server_.property(constants::white_light_channel_property_name).getValue(channel);
 
+  modular_server_.property(constants::white_light_channel_property_name).getValue(channel);
   setChannelOnAtPower(channel,power);
 
   modular_server_.property(constants::white_light_indicator_channel_property_name).getValue(channel);
-
-  setChannelOn(channel);
+  if (power > 0)
+  {
+    setChannelOn(channel);
+  }
+  else
+  {
+    setChannelOff(channel);
+  }
 }
 
 void SleepAssayController::testRedLightPower(const long power)
@@ -665,13 +671,19 @@ void SleepAssayController::testRedLightPower(const long power)
   }
 
   long channel;
-  modular_server_.property(constants::red_light_channel_property_name).getValue(channel);
 
+  modular_server_.property(constants::red_light_channel_property_name).getValue(channel);
   setChannelOnAtPower(channel,power);
 
   modular_server_.property(constants::red_light_indicator_channel_property_name).getValue(channel);
-
-  setChannelOn(channel);
+  if (power > 0)
+  {
+    setChannelOn(channel);
+  }
+  else
+  {
+    setChannelOff(channel);
+  }
 }
 
 void SleepAssayController::testBuzzerPower(const long power)
@@ -682,13 +694,19 @@ void SleepAssayController::testBuzzerPower(const long power)
   }
 
   long channel;
-  modular_server_.property(constants::buzzer_channel_property_name).getValue(channel);
 
+  modular_server_.property(constants::buzzer_channel_property_name).getValue(channel);
   setChannelOnAtPower(channel,power);
 
   modular_server_.property(constants::buzzer_indicator_channel_property_name).getValue(channel);
-
-  setChannelOn(channel);
+  if (power > 0)
+  {
+    setChannelOn(channel);
+  }
+  else
+  {
+    setChannelOff(channel);
+  }
 }
 
 void SleepAssayController::stopAllPowerTests()
