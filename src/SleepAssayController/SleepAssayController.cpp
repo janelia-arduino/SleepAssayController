@@ -1235,23 +1235,32 @@ void SleepAssayController::updatePowersHandler()
   modular_server_.property(constants::white_light_channel_property_name).getValue(channel);
   modular_server_.property(constants::white_light_power_property_name).getValue(power);
   power_max_property.setElementValue(channel,power);
+  setPowerWhenOn(channel,power);
 
   modular_server_.property(constants::white_light_indicator_channel_property_name).getValue(channel);
-  power_max_property.setElementValue(channel,constants::white_light_power_max);
+  power = constants::white_light_power_max;
+  power_max_property.setElementValue(channel,power);
+  setPowerWhenOn(channel,power);
 
   modular_server_.property(constants::red_light_channel_property_name).getValue(channel);
   modular_server_.property(constants::red_light_power_property_name).getValue(power);
   power_max_property.setElementValue(channel,power);
+  setPowerWhenOn(channel,power);
 
   modular_server_.property(constants::red_light_indicator_channel_property_name).getValue(channel);
-  power_max_property.setElementValue(channel,constants::red_light_power_max);
+  power = constants::red_light_power_max;
+  power_max_property.setElementValue(channel,power);
+  setPowerWhenOn(channel,power);
 
   modular_server_.property(constants::buzzer_channel_property_name).getValue(channel);
   modular_server_.property(constants::buzzer_power_property_name).getValue(power);
   power_max_property.setElementValue(channel,power);
+  setPowerWhenOn(channel,power);
 
   modular_server_.property(constants::buzzer_indicator_channel_property_name).getValue(channel);
-  power_max_property.setElementValue(channel,constants::buzzer_power_max);
+  power = constants::buzzer_power_max;
+  power_max_property.setElementValue(channel,power);
+  setPowerWhenOn(channel,power);
 
 }
 
