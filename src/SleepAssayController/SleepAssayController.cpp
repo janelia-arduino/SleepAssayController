@@ -34,10 +34,10 @@ void SleepAssayController::setup()
 
   // Add Firmware
   modular_server_.addFirmware(constants::firmware_info,
-                              properties_,
-                              parameters_,
-                              functions_,
-                              callbacks_);
+    properties_,
+    parameters_,
+    functions_,
+    callbacks_);
 
   // Properties
   modular_server::Property & camera_trigger_channel_property = modular_server_.createProperty(constants::camera_trigger_channel_property_name,constants::camera_trigger_channel_default);
@@ -460,7 +460,7 @@ size_t SleepAssayController::addExperimentDayCopy(const size_t experiment_day)
 }
 
 SleepAssayController::experiment_day_array_t SleepAssayController::addExperimentDayCopies(const size_t experiment_day,
-                                                                                          const size_t day_count)
+  const size_t day_count)
 {
   size_t days_to_be_added = day_count;
   size_t days_available = experiment_day_array_.max_size() - experiment_day_array_.size();
@@ -488,7 +488,7 @@ void SleepAssayController::removeAllExperimentDays()
 }
 
 void SleepAssayController::setExperimentDayWhiteLight(const size_t experiment_day,
-                                                      const bool white_light)
+  const bool white_light)
 {
   if (!experimentDayExists(experiment_day))
   {
@@ -498,9 +498,9 @@ void SleepAssayController::setExperimentDayWhiteLight(const size_t experiment_da
 }
 
 void SleepAssayController::setExperimentDayRedLight(const size_t experiment_day,
-                                                    const bool red_light,
-                                                    const double red_light_delay_hours,
-                                                    const double red_light_duration_hours)
+  const bool red_light,
+  const double red_light_delay_hours,
+  const double red_light_duration_hours)
 {
   if (!experimentDayExists(experiment_day))
   {
@@ -519,9 +519,9 @@ void SleepAssayController::setExperimentDayRedLight(const size_t experiment_day,
 }
 
 void SleepAssayController::setExperimentDayBuzzer(const size_t experiment_day,
-                                                  const bool buzzer,
-                                                  const double buzzer_delay_hours,
-                                                  const double buzzer_duration_hours)
+  const bool buzzer,
+  const double buzzer_delay_hours,
+  const double buzzer_duration_hours)
 {
   if (!experimentDayExists(experiment_day))
   {
@@ -725,8 +725,8 @@ bool SleepAssayController::experimentDayExists(const size_t experiment_day)
 }
 
 void SleepAssayController::getCameraTriggerPwmInfo(uint32_t & channels,
-                                                   long & period,
-                                                   long & on_duration)
+  long & period,
+  long & on_duration)
 {
   long channel;
   modular_server_.property(constants::camera_trigger_channel_property_name).getValue(channel);
@@ -740,8 +740,8 @@ void SleepAssayController::getCameraTriggerPwmInfo(uint32_t & channels,
 }
 
 void SleepAssayController::getWhiteLightPwmInfo(uint32_t & channels,
-                                                long & period,
-                                                long & on_duration)
+  long & period,
+  long & on_duration)
 {
   long channel;
   modular_server_.property(constants::white_light_channel_property_name).getValue(channel);
@@ -759,10 +759,10 @@ void SleepAssayController::getWhiteLightPwmInfo(uint32_t & channels,
 }
 
 void SleepAssayController::getRedLightPwmInfo(const size_t experiment_day,
-                                              uint32_t & channels,
-                                              long & delay,
-                                              HighPowerSwitchController::RecursivePwmValues & periods,
-                                              HighPowerSwitchController::RecursivePwmValues & on_durations)
+  uint32_t & channels,
+  long & delay,
+  HighPowerSwitchController::RecursivePwmValues & periods,
+  HighPowerSwitchController::RecursivePwmValues & on_durations)
 {
   long channel;
   modular_server_.property(constants::red_light_channel_property_name).getValue(channel);
@@ -796,10 +796,10 @@ void SleepAssayController::getRedLightPwmInfo(const size_t experiment_day,
 }
 
 void SleepAssayController::getBuzzerPwmInfo(const size_t experiment_day,
-                                            uint32_t & channels,
-                                            long & delay,
-                                            HighPowerSwitchController::RecursivePwmValues & periods,
-                                            HighPowerSwitchController::RecursivePwmValues & on_durations)
+  uint32_t & channels,
+  long & delay,
+  HighPowerSwitchController::RecursivePwmValues & periods,
+  HighPowerSwitchController::RecursivePwmValues & on_durations)
 {
   long channel;
   modular_server_.property(constants::buzzer_channel_property_name).getValue(channel);
@@ -951,8 +951,8 @@ void SleepAssayController::startAssay()
       int pwm_index = addPwm(channels,delay,period,on_duration,count);
       const int entrainment_duration2 = entrainment_duration - 1;
       addCountCompletedFunctor(pwm_index,
-                               makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
-                               entrainment_duration2);
+        makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
+        entrainment_duration2);
       time_experiment_start_ += scaleDuration(entrainment_duration2*modular_device_base::constants::seconds_per_day);
       time_experiment_start_ += period/modular_device_base::constants::milliseconds_per_second;
     }
@@ -961,8 +961,8 @@ void SleepAssayController::startAssay()
       long delay = period - offset;
       const int entrainment_duration2 = entrainment_duration - 1;
       addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
-                         delay,
-                         entrainment_duration2);
+        delay,
+        entrainment_duration2);
       time_experiment_start_ += scaleDuration(entrainment_duration2*modular_device_base::constants::seconds_per_day);
       time_experiment_start_ += delay/modular_device_base::constants::milliseconds_per_second;
     }
@@ -971,8 +971,8 @@ void SleepAssayController::startAssay()
       long delay = abs(offset);
       const int entrainment_duration2 = entrainment_duration;
       addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
-                         delay,
-                         entrainment_duration2);
+        delay,
+        entrainment_duration2);
       time_experiment_start_ += scaleDuration(entrainment_duration2*modular_device_base::constants::seconds_per_day);
       time_experiment_start_ += delay/modular_device_base::constants::milliseconds_per_second;
     }
@@ -994,8 +994,8 @@ void SleepAssayController::startEntrainment(const int entrainment_duration)
 
     int pwm_index = addPwm(channels,0,period,on_duration,entrainment_duration);
     addCountCompletedFunctor(pwm_index,
-                             makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
-                             0);
+      makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
+      0);
   }
   else
   {
@@ -1021,14 +1021,14 @@ void SleepAssayController::startExperimentDay(const int experiment_day)
     {
       int white_light_pwm_index = addPwm(white_light_channels,0,white_light_period,white_light_on_duration,1);
       addCountCompletedFunctor(white_light_pwm_index,
-                               makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
-                               next_experiment_day);
+        makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
+        next_experiment_day);
     }
     else
     {
       addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
-                         white_light_period,
-                         next_experiment_day);
+        white_light_period,
+        next_experiment_day);
     }
 
     bool red_light = experiment_day_info.red_light;
@@ -1039,16 +1039,16 @@ void SleepAssayController::startExperimentDay(const int experiment_day)
       HighPowerSwitchController::RecursivePwmValues red_light_periods;
       HighPowerSwitchController::RecursivePwmValues red_light_on_durations;
       getRedLightPwmInfo(experiment_day,
-                         red_light_channels,
-                         red_light_delay,
-                         red_light_periods,
-                         red_light_on_durations);
+        red_light_channels,
+        red_light_delay,
+        red_light_periods,
+        red_light_on_durations);
 
       int red_light_pwm_index = addRecursivePwm(red_light_channels,
-                                                red_light_delay,
-                                                red_light_periods,
-                                                red_light_on_durations,
-                                                1);
+        red_light_delay,
+        red_light_periods,
+        red_light_on_durations,
+        1);
       long red_light_indicator_channel;
       modular_server_.property(constants::red_light_indicator_channel_property_name).getValue(red_light_indicator_channel);
       uint32_t bit = 1;
@@ -1057,10 +1057,10 @@ void SleepAssayController::startExperimentDay(const int experiment_day)
       long red_light_indicator_period = red_light_on_durations.back();
       long red_light_indicator_on_duration = red_light_on_durations.back();
       int red_light_indicator_pwm_index = addPwm(red_light_indicator_channels,
-                                                 red_light_indicator_delay,
-                                                 red_light_indicator_period,
-                                                 red_light_indicator_on_duration,
-                                                 1);
+        red_light_indicator_delay,
+        red_light_indicator_period,
+        red_light_indicator_on_duration,
+        1);
     }
 
     bool buzzer = experiment_day_info.buzzer;
@@ -1071,21 +1071,21 @@ void SleepAssayController::startExperimentDay(const int experiment_day)
       HighPowerSwitchController::RecursivePwmValues buzzer_periods;
       HighPowerSwitchController::RecursivePwmValues buzzer_on_durations;
       getBuzzerPwmInfo(experiment_day,
-                       buzzer_channels,
-                       buzzer_delay,
-                       buzzer_periods,
-                       buzzer_on_durations);
+        buzzer_channels,
+        buzzer_delay,
+        buzzer_periods,
+        buzzer_on_durations);
 
       buzzer_enabled_ = true;
       long buzzer_start_delay = buzzer_delay;
       addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::buzz),
-                         buzzer_start_delay,
-                         experiment_day);
+        buzzer_start_delay,
+        experiment_day);
 
       long buzzer_end_delay = buzzer_start_delay + buzzer_on_durations.back();
       addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::disableBuzzer),
-                         buzzer_end_delay,
-                         -1);
+        buzzer_end_delay,
+        -1);
 
       long buzzer_indicator_channel;
       modular_server_.property(constants::buzzer_indicator_channel_property_name).getValue(buzzer_indicator_channel);
@@ -1095,10 +1095,10 @@ void SleepAssayController::startExperimentDay(const int experiment_day)
       long buzzer_indicator_period = buzzer_on_durations.back();
       long buzzer_indicator_on_duration = buzzer_on_durations.back();
       int buzzer_indicator_pwm_index = addPwm(buzzer_indicator_channels,
-                                              buzzer_indicator_delay,
-                                              buzzer_indicator_period,
-                                              buzzer_indicator_on_duration,
-                                              1);
+        buzzer_indicator_delay,
+        buzzer_indicator_period,
+        buzzer_indicator_on_duration,
+        1);
     }
   }
   else
@@ -1121,8 +1121,8 @@ void SleepAssayController::startRecovery()
 
     int pwm_index = addPwm(channels,0,period,on_duration,recovery_duration);
     addCountCompletedFunctor(pwm_index,
-                             makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::endAssay),
-                             -1);
+      makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::endAssay),
+      -1);
   }
   else
   {
@@ -1147,19 +1147,19 @@ void SleepAssayController::buzz(const int experiment_day)
     HighPowerSwitchController::RecursivePwmValues buzzer_periods;
     HighPowerSwitchController::RecursivePwmValues buzzer_on_durations;
     getBuzzerPwmInfo(experiment_day,
-                     buzzer_channels,
-                     buzzer_delay,
-                     buzzer_periods,
-                     buzzer_on_durations);
+      buzzer_channels,
+      buzzer_delay,
+      buzzer_periods,
+      buzzer_on_durations);
 
     buzzer_pwm_index_ = addPwm(buzzer_channels,
-                               0,
-                               buzzer_periods.front(),
-                               buzzer_on_durations.front(),
-                               1);
+      0,
+      buzzer_periods.front(),
+      buzzer_on_durations.front(),
+      1);
     addCountCompletedFunctor(buzzer_pwm_index_,
-                             makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::buzz),
-                             experiment_day);
+      makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::buzz),
+      experiment_day);
   }
   else
   {
@@ -1443,7 +1443,7 @@ void SleepAssayController::addExperimentDayCopiesHandler()
   modular_server_.parameter(constants::day_count_parameter_name).getValue(day_count);
 
   experiment_day_array_t days_added = addExperimentDayCopies(experiment_day,
-                                                             day_count);
+    day_count);
 
   modular_server_.response().writeResultKey();
 
