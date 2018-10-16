@@ -330,7 +330,7 @@ bool SleepAssayController::testing()
   return testing_;
 }
 
-long SleepAssayController::scaleDuration(const long duration)
+long SleepAssayController::scaleDuration(long duration)
 {
   if (testing())
   {
@@ -431,7 +431,7 @@ size_t SleepAssayController::addExperimentDay()
   return experiment_day;
 }
 
-SleepAssayController::experiment_day_array_t SleepAssayController::addExperimentDays(const size_t day_count)
+SleepAssayController::experiment_day_array_t SleepAssayController::addExperimentDays(size_t day_count)
 {
   size_t days_to_be_added = day_count;
   size_t days_available = experiment_day_array_.max_size() - experiment_day_array_.size();
@@ -448,7 +448,7 @@ SleepAssayController::experiment_day_array_t SleepAssayController::addExperiment
   return days_added;
 }
 
-size_t SleepAssayController::addExperimentDayCopy(const size_t experiment_day)
+size_t SleepAssayController::addExperimentDayCopy(size_t experiment_day)
 {
   constants::ExperimentDayInfo experiment_day_info;
   if (experimentDayExists(experiment_day))
@@ -459,8 +459,8 @@ size_t SleepAssayController::addExperimentDayCopy(const size_t experiment_day)
   return experiment_day_array_.size() - 1;
 }
 
-SleepAssayController::experiment_day_array_t SleepAssayController::addExperimentDayCopies(const size_t experiment_day,
-  const size_t day_count)
+SleepAssayController::experiment_day_array_t SleepAssayController::addExperimentDayCopies(size_t experiment_day,
+  size_t day_count)
 {
   size_t days_to_be_added = day_count;
   size_t days_available = experiment_day_array_.max_size() - experiment_day_array_.size();
@@ -487,8 +487,8 @@ void SleepAssayController::removeAllExperimentDays()
   experiment_day_array_.clear();
 }
 
-void SleepAssayController::setExperimentDayWhiteLight(const size_t experiment_day,
-  const bool white_light)
+void SleepAssayController::setExperimentDayWhiteLight(size_t experiment_day,
+  bool white_light)
 {
   if (!experimentDayExists(experiment_day))
   {
@@ -497,10 +497,10 @@ void SleepAssayController::setExperimentDayWhiteLight(const size_t experiment_da
   experiment_day_array_[experiment_day].white_light = white_light;
 }
 
-void SleepAssayController::setExperimentDayRedLight(const size_t experiment_day,
-  const bool red_light,
-  const double red_light_delay_hours,
-  const double red_light_duration_hours)
+void SleepAssayController::setExperimentDayRedLight(size_t experiment_day,
+  bool red_light,
+  double red_light_delay_hours,
+  double red_light_duration_hours)
 {
   if (!experimentDayExists(experiment_day))
   {
@@ -518,10 +518,10 @@ void SleepAssayController::setExperimentDayRedLight(const size_t experiment_day,
   }
 }
 
-void SleepAssayController::setExperimentDayBuzzer(const size_t experiment_day,
-  const bool buzzer,
-  const double buzzer_delay_hours,
-  const double buzzer_duration_hours)
+void SleepAssayController::setExperimentDayBuzzer(size_t experiment_day,
+  bool buzzer,
+  double buzzer_delay_hours,
+  double buzzer_duration_hours)
 {
   if (!experimentDayExists(experiment_day))
   {
@@ -640,7 +640,7 @@ bool SleepAssayController::buzzing()
   return buzzing;
 }
 
-void SleepAssayController::testWhiteLightPower(const long power)
+void SleepAssayController::testWhiteLightPower(long power)
 {
   if (assayStarted() && !assayFinished())
   {
@@ -663,7 +663,7 @@ void SleepAssayController::testWhiteLightPower(const long power)
   }
 }
 
-void SleepAssayController::testRedLightPower(const long power)
+void SleepAssayController::testRedLightPower(long power)
 {
   if (assayStarted() && !assayFinished())
   {
@@ -686,7 +686,7 @@ void SleepAssayController::testRedLightPower(const long power)
   }
 }
 
-void SleepAssayController::testBuzzerPower(const long power)
+void SleepAssayController::testBuzzerPower(long power)
 {
   if (assayStarted() && !assayFinished())
   {
@@ -719,7 +719,7 @@ void SleepAssayController::stopAllPowerTests()
   setAllChannelsOff();
 }
 
-bool SleepAssayController::experimentDayExists(const size_t experiment_day)
+bool SleepAssayController::experimentDayExists(size_t experiment_day)
 {
   return (experiment_day < experiment_day_array_.size());
 }
@@ -758,7 +758,7 @@ void SleepAssayController::getWhiteLightPwmInfo(uint32_t & channels,
   on_duration = scaleDuration(on_duration_hours*modular_device_base::constants::milliseconds_per_hour);
 }
 
-void SleepAssayController::getRedLightPwmInfo(const size_t experiment_day,
+void SleepAssayController::getRedLightPwmInfo(size_t experiment_day,
   uint32_t & channels,
   long & delay,
   HighPowerSwitchController::RecursivePwmValues & periods,
@@ -795,7 +795,7 @@ void SleepAssayController::getRedLightPwmInfo(const size_t experiment_day,
 
 }
 
-void SleepAssayController::getBuzzerPwmInfo(const size_t experiment_day,
+void SleepAssayController::getBuzzerPwmInfo(size_t experiment_day,
   uint32_t & channels,
   long & delay,
   HighPowerSwitchController::RecursivePwmValues & periods,
@@ -983,7 +983,7 @@ void SleepAssayController::startAssay()
   }
 }
 
-void SleepAssayController::startEntrainment(const int entrainment_duration)
+void SleepAssayController::startEntrainment(int entrainment_duration)
 {
   if (entrainment_duration > 0)
   {
@@ -1003,7 +1003,7 @@ void SleepAssayController::startEntrainment(const int entrainment_duration)
   }
 }
 
-void SleepAssayController::startExperimentDay(const int experiment_day)
+void SleepAssayController::startExperimentDay(int experiment_day)
 {
   if (experiment_day < (int)experiment_day_array_.size())
   {
@@ -1130,14 +1130,14 @@ void SleepAssayController::startRecovery()
   }
 }
 
-void SleepAssayController::endAssay(const int arg)
+void SleepAssayController::endAssay(int arg)
 {
   initializeChannels();
 
   assay_finished_ = true;
 }
 
-void SleepAssayController::buzz(const int experiment_day)
+void SleepAssayController::buzz(int experiment_day)
 {
   if (buzzer_enabled_)
   {
@@ -1168,7 +1168,7 @@ void SleepAssayController::buzz(const int experiment_day)
   }
 }
 
-void SleepAssayController::disableBuzzer(const int arg)
+void SleepAssayController::disableBuzzer(int arg)
 {
   buzzer_enabled_ = false;
   buzzing_possible_ = false;
@@ -1176,7 +1176,7 @@ void SleepAssayController::disableBuzzer(const int arg)
   buzzer_pwm_index_ = -1;
 }
 
-void SleepAssayController::writeExperimentDayInfoToResponse(const size_t experiment_day)
+void SleepAssayController::writeExperimentDayInfoToResponse(size_t experiment_day)
 {
   modular_server_.response().beginObject();
 

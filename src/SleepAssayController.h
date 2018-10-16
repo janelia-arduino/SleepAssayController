@@ -34,7 +34,7 @@ public:
   bool assayFinished();
   bool testing();
 
-  long scaleDuration(const long duration);
+  long scaleDuration(long duration);
 
   time_t getAssayStart();
   time_t getAssayEnd();
@@ -50,26 +50,26 @@ public:
     sleep_assay_controller::constants::EXPERIMENT_DAY_COUNT_MAX> experiment_day_array_t;
 
   experiment_day_info_array_t getExperimentInfo();
-  bool experimentDayExists(const size_t experiment_day);
+  bool experimentDayExists(size_t experiment_day);
 
   size_t addExperimentDay();
-  experiment_day_array_t addExperimentDays(const size_t experiment_day_count);
-  size_t addExperimentDayCopy(const size_t experiment_day);
-  experiment_day_array_t addExperimentDayCopies(const size_t experiment_day,
-    const size_t experiment_day_count);
+  experiment_day_array_t addExperimentDays(size_t experiment_day_count);
+  size_t addExperimentDayCopy(size_t experiment_day);
+  experiment_day_array_t addExperimentDayCopies(size_t experiment_day,
+    size_t experiment_day_count);
   void removeLastExperimentDay();
   void removeAllExperimentDays();
 
-  void setExperimentDayWhiteLight(const size_t experiment_day,
-    const bool white_light);
-  void setExperimentDayRedLight(const size_t experiment_day,
-    const bool red_light,
-    const double red_light_delay_hours,
-    const double red_light_duration_hours);
-  void setExperimentDayBuzzer(const size_t experiment_day,
-    const bool buzzer,
-    const double buzzer_delay_hours,
-    const double buzzer_duration_hours);
+  void setExperimentDayWhiteLight(size_t experiment_day,
+    bool white_light);
+  void setExperimentDayRedLight(size_t experiment_day,
+    bool red_light,
+    double red_light_delay_hours,
+    double red_light_duration_hours);
+  void setExperimentDayBuzzer(size_t experiment_day,
+    bool buzzer,
+    double buzzer_delay_hours,
+    double buzzer_duration_hours);
 
   sleep_assay_controller::constants::AssayStatus getAssayStatus();
 
@@ -78,9 +78,9 @@ public:
   bool buzzingPossible();
   bool buzzing();
 
-  void testWhiteLightPower(const long power);
-  void testRedLightPower(const long power);
-  void testBuzzerPower(const long power);
+  void testWhiteLightPower(long power);
+  void testRedLightPower(long power);
+  void testBuzzerPower(long power);
   void stopAllPowerTests();
 
 private:
@@ -111,12 +111,12 @@ private:
   void getWhiteLightPwmInfo(uint32_t & channels,
     long & period,
     long & on_duration);
-  void getRedLightPwmInfo(const size_t experiment_day,
+  void getRedLightPwmInfo(size_t experiment_day,
     uint32_t & channels,
     long & delay,
     HighPowerSwitchController::RecursivePwmValues & periods,
     HighPowerSwitchController::RecursivePwmValues & on_durations);
-  void getBuzzerPwmInfo(const size_t experiment_day,
+  void getBuzzerPwmInfo(size_t experiment_day,
     uint32_t & channels,
     long & delay,
     HighPowerSwitchController::RecursivePwmValues & periods,
@@ -128,14 +128,14 @@ private:
   void startCameraTrigger();
   void stopCameraTrigger();
   void startAssay();
-  void startEntrainment(const int entrainment_duration);
-  void startExperimentDay(const int experiment_day);
+  void startEntrainment(int entrainment_duration);
+  void startExperimentDay(int experiment_day);
   void startRecovery();
-  void endAssay(const int arg);
-  void buzz(const int experiment_day);
-  void disableBuzzer(const int arg);
+  void endAssay(int arg);
+  void buzz(int experiment_day);
+  void disableBuzzer(int arg);
 
-  void writeExperimentDayInfoToResponse(const size_t experiment_day);
+  void writeExperimentDayInfoToResponse(size_t experiment_day);
 
   // Handlers
   void updateCameraTriggerHandler();
