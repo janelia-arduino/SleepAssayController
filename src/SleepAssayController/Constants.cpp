@@ -19,9 +19,9 @@ CONSTANT_STRING(firmware_name,"SleepAssayController");
 const modular_server::FirmwareInfo firmware_info =
 {
   .name_ptr=&firmware_name,
-  .version_major=1,
-  .version_minor=3,
-  .version_patch=3,
+  .version_major=2,
+  .version_minor=0,
+  .version_patch=0,
 };
 
 const long channel_min = 0;
