@@ -16,6 +16,7 @@
 
 #include <ModularServer.h>
 #include <ModularDeviceBase.h>
+#include <DigitalController.h>
 #include <BacklightController.h>
 
 #include "SleepAssayController/Constants.h"
