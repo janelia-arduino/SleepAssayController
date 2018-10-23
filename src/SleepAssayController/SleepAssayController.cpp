@@ -17,7 +17,7 @@ SleepAssayController::SleepAssayController()
 void SleepAssayController::setup()
 {
   // Parent Setup
-  HighPowerSwitchController::setup();
+  BacklightController::setup();
 
   // Reset Watchdog
   resetWatchdog();
@@ -761,8 +761,8 @@ void SleepAssayController::getWhiteLightPwmInfo(uint32_t & channels,
 void SleepAssayController::getRedLightPwmInfo(size_t experiment_day,
   uint32_t & channels,
   long & delay,
-  HighPowerSwitchController::RecursivePwmValues & periods,
-  HighPowerSwitchController::RecursivePwmValues & on_durations)
+  DigitalController::RecursivePwmValues & periods,
+  DigitalController::RecursivePwmValues & on_durations)
 {
   long channel;
   modular_server_.property(constants::red_light_channel_property_name).getValue(channel);
@@ -798,8 +798,8 @@ void SleepAssayController::getRedLightPwmInfo(size_t experiment_day,
 void SleepAssayController::getBuzzerPwmInfo(size_t experiment_day,
   uint32_t & channels,
   long & delay,
-  HighPowerSwitchController::RecursivePwmValues & periods,
-  HighPowerSwitchController::RecursivePwmValues & on_durations)
+  DigitalController::RecursivePwmValues & periods,
+  DigitalController::RecursivePwmValues & on_durations)
 {
   long channel;
   modular_server_.property(constants::buzzer_channel_property_name).getValue(channel);
@@ -1036,8 +1036,8 @@ void SleepAssayController::startExperimentDay(int experiment_day)
     {
       uint32_t red_light_channels;
       long red_light_delay;
-      HighPowerSwitchController::RecursivePwmValues red_light_periods;
-      HighPowerSwitchController::RecursivePwmValues red_light_on_durations;
+      DigitalController::RecursivePwmValues red_light_periods;
+      DigitalController::RecursivePwmValues red_light_on_durations;
       getRedLightPwmInfo(experiment_day,
         red_light_channels,
         red_light_delay,
@@ -1068,8 +1068,8 @@ void SleepAssayController::startExperimentDay(int experiment_day)
     {
       uint32_t buzzer_channels;
       long buzzer_delay;
-      HighPowerSwitchController::RecursivePwmValues buzzer_periods;
-      HighPowerSwitchController::RecursivePwmValues buzzer_on_durations;
+      DigitalController::RecursivePwmValues buzzer_periods;
+      DigitalController::RecursivePwmValues buzzer_on_durations;
       getBuzzerPwmInfo(experiment_day,
         buzzer_channels,
         buzzer_delay,
@@ -1144,8 +1144,8 @@ void SleepAssayController::buzz(int experiment_day)
     buzzing_possible_ = true;
     uint32_t buzzer_channels;
     long buzzer_delay;
-    HighPowerSwitchController::RecursivePwmValues buzzer_periods;
-    HighPowerSwitchController::RecursivePwmValues buzzer_on_durations;
+    DigitalController::RecursivePwmValues buzzer_periods;
+    DigitalController::RecursivePwmValues buzzer_on_durations;
     getBuzzerPwmInfo(experiment_day,
       buzzer_channels,
       buzzer_delay,

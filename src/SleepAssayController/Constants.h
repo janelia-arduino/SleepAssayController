@@ -8,7 +8,7 @@
 #ifndef SLEEP_ASSAY_CONTROLLER_CONSTANTS_H
 #define SLEEP_ASSAY_CONTROLLER_CONSTANTS_H
 #include <ConstantVariable.h>
-#include <HighPowerSwitchController.h>
+#include <BacklightController.h>
 
 
 namespace sleep_assay_controller

@@ -16,12 +16,12 @@
 
 #include <ModularServer.h>
 #include <ModularDeviceBase.h>
-#include <HighPowerSwitchController.h>
+#include <BacklightController.h>
 
 #include "SleepAssayController/Constants.h"
 
 
-class SleepAssayController : public HighPowerSwitchController
+class SleepAssayController : public BacklightController
 {
 public:
   SleepAssayController();
@@ -114,13 +114,13 @@ private:
   void getRedLightPwmInfo(size_t experiment_day,
     uint32_t & channels,
     long & delay,
-    HighPowerSwitchController::RecursivePwmValues & periods,
-    HighPowerSwitchController::RecursivePwmValues & on_durations);
+    DigitalController::RecursivePwmValues & periods,
+    DigitalController::RecursivePwmValues & on_durations);
   void getBuzzerPwmInfo(size_t experiment_day,
     uint32_t & channels,
     long & delay,
-    HighPowerSwitchController::RecursivePwmValues & periods,
-    HighPowerSwitchController::RecursivePwmValues & on_durations);
+    DigitalController::RecursivePwmValues & periods,
+    DigitalController::RecursivePwmValues & on_durations);
 
   void initializeVariables();
   void initializeChannels();
