@@ -67,10 +67,10 @@ public:
 
   void setExperimentDayWhiteLight(size_t experiment_day,
     bool white_light);
-  void setExperimentDayRedLight(size_t experiment_day,
-    bool red_light,
-    double red_light_delay_hours,
-    double red_light_duration_hours);
+  void setExperimentDayVisibleBacklight(size_t experiment_day,
+    bool visible_backlight,
+    double visible_backlight_delay_hours,
+    double visible_backlight_duration_hours);
   void setExperimentDayBuzzer(size_t experiment_day,
     bool buzzer,
     double buzzer_delay_hours,
@@ -79,12 +79,12 @@ public:
   sleep_assay_controller::constants::AssayStatus getAssayStatus();
 
   bool whiteLightOn();
-  bool redLightPulsing();
+  bool visibleBacklightPulsing();
   bool buzzingPossible();
   bool buzzing();
 
   void testWhiteLightPower(long power);
-  void testRedLightPower(long power);
+  void testVisibleBacklightPower(long power);
   void testBuzzerPower(long power);
   void stopAllPowerTests();
 
@@ -125,7 +125,7 @@ private:
   void getWhiteLightPwmInfo(uint32_t & channels,
     long & period,
     long & on_duration);
-  void getRedLightPwmInfo(size_t experiment_day,
+  void getVisibleBacklightPwmInfo(size_t experiment_day,
     uint32_t & channels,
     long & delay,
     DigitalController::RecursivePwmValues & periods,
@@ -170,11 +170,11 @@ private:
   void removeLastExperimentDayHandler();
   void removeAllExperimentDaysHandler();
   void setExperimentDayWhiteLightHandler();
-  void setExperimentDayRedLightHandler();
+  void setExperimentDayVisibleBacklightHandler();
   void setExperimentDayBuzzerHandler();
   void getAssayStatusHandler();
   void testWhiteLightPowerHandler();
-  void testRedLightPowerHandler();
+  void testVisibleBacklightPowerHandler();
   void testBuzzerPowerHandler();
   void stopAllPowerTestsHandler();
   void runAssayHandler(modular_server::Pin * pin_ptr);

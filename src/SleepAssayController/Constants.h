@@ -32,9 +32,9 @@ extern const double camera_trigger_duty_cycle_max;
 struct ExperimentDayInfo
 {
   bool white_light;
-  bool red_light;
-  double red_light_delay_hours;
-  double red_light_duration_hours;
+  bool visible_backlight;
+  double visible_backlight_delay_hours;
+  double visible_backlight_duration_hours;
   bool buzzer;
   double buzzer_delay_hours;
   double buzzer_duration_hours;
@@ -47,7 +47,7 @@ struct AssayStatus
   const ConstantString * phase_ptr;
   double phase_day;
   bool white_light_on;
-  bool red_light_pulsing;
+  bool visible_backlight_pulsing;
   bool buzzing_possible;
   bool buzzing;
   bool testing;
@@ -69,7 +69,7 @@ extern ConstantString phase_experiment_string;
 extern ConstantString phase_recovery_string;
 extern ConstantString phase_assay_finished_string;
 extern ConstantString white_light_on_string;
-extern ConstantString red_light_pulsing_string;
+extern ConstantString visible_backlight_pulsing_string;
 extern ConstantString buzzing_possible_string;
 extern ConstantString buzzing_string;
 extern ConstantString testing_string;
@@ -104,20 +104,20 @@ extern const long white_light_on_duration_min;
 extern const long white_light_on_duration_max;
 extern const long white_light_on_duration_default;
 
-extern ConstantString red_light_power_property_name;
-extern const long red_light_power_min;
-extern const long red_light_power_max;
-extern const long red_light_power_default;
+extern ConstantString visible_backlight_power_property_name;
+extern const long visible_backlight_power_min;
+extern const long visible_backlight_power_max;
+extern const long visible_backlight_power_default;
 
-extern ConstantString red_light_frequency_property_name;
-extern const double red_light_frequency_min;
-extern const double red_light_frequency_max;
-extern const double red_light_frequency_default;
+extern ConstantString visible_backlight_frequency_property_name;
+extern const double visible_backlight_frequency_min;
+extern const double visible_backlight_frequency_max;
+extern const double visible_backlight_frequency_default;
 
-extern ConstantString red_light_duty_cycle_property_name;
-extern const long red_light_duty_cycle_min;
-extern const long red_light_duty_cycle_max;
-extern const long red_light_duty_cycle_default;
+extern ConstantString visible_backlight_duty_cycle_property_name;
+extern const long visible_backlight_duty_cycle_min;
+extern const long visible_backlight_duty_cycle_max;
+extern const long visible_backlight_duty_cycle_default;
 
 extern ConstantString buzzer_power_property_name;
 extern const long buzzer_power_min;
@@ -162,15 +162,15 @@ extern ConstantString experiment_day_parameter_name;
 
 extern ConstantString white_light_parameter_name;
 
-extern ConstantString red_light_parameter_name;
+extern ConstantString visible_backlight_parameter_name;
 
-extern ConstantString red_light_delay_parameter_name;
-extern const double red_light_delay_min;
-extern const double red_light_delay_max;
+extern ConstantString visible_backlight_delay_parameter_name;
+extern const double visible_backlight_delay_min;
+extern const double visible_backlight_delay_max;
 
-extern ConstantString red_light_duration_parameter_name;
-extern const double red_light_duration_min;
-extern const double red_light_duration_max;
+extern ConstantString visible_backlight_duration_parameter_name;
+extern const double visible_backlight_duration_min;
+extern const double visible_backlight_duration_max;
 
 extern ConstantString buzzer_parameter_name;
 
@@ -201,11 +201,11 @@ extern ConstantString add_experiment_day_copies_function_name;
 extern ConstantString remove_last_experiment_day_function_name;
 extern ConstantString remove_all_experiment_days_function_name;
 extern ConstantString set_experiment_day_white_light_function_name;
-extern ConstantString set_experiment_day_red_light_function_name;
+extern ConstantString set_experiment_day_visible_backlight_function_name;
 extern ConstantString set_experiment_day_buzzer_function_name;
 extern ConstantString get_assay_status_function_name;
 extern ConstantString test_white_light_power_function_name;
-extern ConstantString test_red_light_power_function_name;
+extern ConstantString test_visible_backlight_power_function_name;
 extern ConstantString test_buzzer_power_function_name;
 extern ConstantString stop_all_power_tests_function_name;
 

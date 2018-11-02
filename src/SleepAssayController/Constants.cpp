@@ -43,7 +43,7 @@ CONSTANT_STRING(phase_experiment_string,"EXPERIMENT");
 CONSTANT_STRING(phase_recovery_string,"RECOVERY");
 CONSTANT_STRING(phase_assay_finished_string,"ASSAY_FINISHED");
 CONSTANT_STRING(white_light_on_string,"white_light_on");
-CONSTANT_STRING(red_light_pulsing_string,"red_light_pulsing");
+CONSTANT_STRING(visible_backlight_pulsing_string,"visible_backlight_pulsing");
 CONSTANT_STRING(buzzing_possible_string,"buzzing_possible");
 CONSTANT_STRING(buzzing_string,"buzzing");
 CONSTANT_STRING(testing_string,"testing");
@@ -77,20 +77,20 @@ const long white_light_on_duration_min = 1;
 const long white_light_on_duration_max = 23;
 const long white_light_on_duration_default = 12;
 
-CONSTANT_STRING(red_light_power_property_name,"redLightPower");
-const long red_light_power_min = 10;
-const long red_light_power_max = 100;
-const long red_light_power_default = 50;
+CONSTANT_STRING(visible_backlight_power_property_name,"visibleBacklightPower");
+const long visible_backlight_power_min = 10;
+const long visible_backlight_power_max = 100;
+const long visible_backlight_power_default = 50;
 
-CONSTANT_STRING(red_light_frequency_property_name,"redLightFrequency");
-const double red_light_frequency_min = 0.01;
-const double red_light_frequency_max = 100;
-const double red_light_frequency_default = 10;
+CONSTANT_STRING(visible_backlight_frequency_property_name,"visibleBacklightFrequency");
+const double visible_backlight_frequency_min = 0.01;
+const double visible_backlight_frequency_max = 100;
+const double visible_backlight_frequency_default = 10;
 
-CONSTANT_STRING(red_light_duty_cycle_property_name,"redLightDutyCycle");
-const long red_light_duty_cycle_min = 0;
-const long red_light_duty_cycle_max = 100;
-const long red_light_duty_cycle_default = 50;
+CONSTANT_STRING(visible_backlight_duty_cycle_property_name,"visibleBacklightDutyCycle");
+const long visible_backlight_duty_cycle_min = 0;
+const long visible_backlight_duty_cycle_max = 100;
+const long visible_backlight_duty_cycle_default = 50;
 
 CONSTANT_STRING(buzzer_power_property_name,"buzzerPower");
 const long buzzer_power_min = 10;
@@ -135,15 +135,15 @@ CONSTANT_STRING(experiment_day_parameter_name,"experiment_day");
 
 CONSTANT_STRING(white_light_parameter_name,"white_light");
 
-CONSTANT_STRING(red_light_parameter_name,"red_light");
+CONSTANT_STRING(visible_backlight_parameter_name,"visible_backlight");
 
-CONSTANT_STRING(red_light_delay_parameter_name,"red_light_delay");
-const double red_light_delay_min = 0.0;
-const double red_light_delay_max = 24.0;
+CONSTANT_STRING(visible_backlight_delay_parameter_name,"visible_backlight_delay");
+const double visible_backlight_delay_min = 0.0;
+const double visible_backlight_delay_max = 24.0;
 
-CONSTANT_STRING(red_light_duration_parameter_name,"red_light_duration");
-const double red_light_duration_min = 0.0;
-const double red_light_duration_max = 24.0;
+CONSTANT_STRING(visible_backlight_duration_parameter_name,"visible_backlight_duration");
+const double visible_backlight_duration_min = 0.0;
+const double visible_backlight_duration_max = 24.0;
 
 CONSTANT_STRING(buzzer_parameter_name,"buzzer");
 
@@ -174,11 +174,11 @@ CONSTANT_STRING(add_experiment_day_copies_function_name,"addExperimentDayCopies"
 CONSTANT_STRING(remove_last_experiment_day_function_name,"removeLastExperimentDay");
 CONSTANT_STRING(remove_all_experiment_days_function_name,"removeAllExperimentDays");
 CONSTANT_STRING(set_experiment_day_white_light_function_name,"setExperimentDayWhiteLight");
-CONSTANT_STRING(set_experiment_day_red_light_function_name,"setExperimentDayRedLight");
+CONSTANT_STRING(set_experiment_day_visible_backlight_function_name,"setExperimentDayVisibleBacklight");
 CONSTANT_STRING(set_experiment_day_buzzer_function_name,"setExperimentDayBuzzer");
 CONSTANT_STRING(get_assay_status_function_name,"getAssayStatus");
 CONSTANT_STRING(test_white_light_power_function_name,"testWhiteLightPower");
-CONSTANT_STRING(test_red_light_power_function_name,"testRedLightPower");
+CONSTANT_STRING(test_visible_backlight_power_function_name,"testVisibleBacklightPower");
 CONSTANT_STRING(test_buzzer_power_function_name,"testBuzzerPower");
 CONSTANT_STRING(stop_all_power_tests_function_name,"stopAllPowerTests");
 

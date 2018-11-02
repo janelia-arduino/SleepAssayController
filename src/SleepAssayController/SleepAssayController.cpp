@@ -58,18 +58,18 @@ void SleepAssayController::setup()
   white_light_on_duration_property.setRange(constants::white_light_on_duration_min,constants::white_light_on_duration_max);
   white_light_on_duration_property.setUnits(constants::hours_units);
 
-  modular_server::Property & red_light_power_property = modular_server_.createProperty(constants::red_light_power_property_name,constants::red_light_power_default);
-  red_light_power_property.setRange(constants::red_light_power_min,constants::red_light_power_max);
-  red_light_power_property.setUnits(high_power_switch_controller::constants::percent_units);
-  red_light_power_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updatePowersHandler));
+  modular_server::Property & visible_backlight_power_property = modular_server_.createProperty(constants::visible_backlight_power_property_name,constants::visible_backlight_power_default);
+  visible_backlight_power_property.setRange(constants::visible_backlight_power_min,constants::visible_backlight_power_max);
+  visible_backlight_power_property.setUnits(high_power_switch_controller::constants::percent_units);
+  visible_backlight_power_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updatePowersHandler));
 
-  modular_server::Property & red_light_frequency_property = modular_server_.createProperty(constants::red_light_frequency_property_name,constants::red_light_frequency_default);
-  red_light_frequency_property.setRange(constants::red_light_frequency_min,constants::red_light_frequency_max);
-  red_light_frequency_property.setUnits(constants::hz_units);
+  modular_server::Property & visible_backlight_frequency_property = modular_server_.createProperty(constants::visible_backlight_frequency_property_name,constants::visible_backlight_frequency_default);
+  visible_backlight_frequency_property.setRange(constants::visible_backlight_frequency_min,constants::visible_backlight_frequency_max);
+  visible_backlight_frequency_property.setUnits(constants::hz_units);
 
-  modular_server::Property & red_light_duty_cycle_property = modular_server_.createProperty(constants::red_light_duty_cycle_property_name,constants::red_light_duty_cycle_default);
-  red_light_duty_cycle_property.setRange(constants::red_light_duty_cycle_min,constants::red_light_duty_cycle_max);
-  red_light_duty_cycle_property.setUnits(high_power_switch_controller::constants::percent_units);
+  modular_server::Property & visible_backlight_duty_cycle_property = modular_server_.createProperty(constants::visible_backlight_duty_cycle_property_name,constants::visible_backlight_duty_cycle_default);
+  visible_backlight_duty_cycle_property.setRange(constants::visible_backlight_duty_cycle_min,constants::visible_backlight_duty_cycle_max);
+  visible_backlight_duty_cycle_property.setUnits(high_power_switch_controller::constants::percent_units);
 
   modular_server::Property & buzzer_power_property = modular_server_.createProperty(constants::buzzer_power_property_name,constants::buzzer_power_default);
   buzzer_power_property.setRange(constants::buzzer_power_min,constants::buzzer_power_max);
@@ -114,16 +114,16 @@ void SleepAssayController::setup()
   modular_server::Parameter & white_light_parameter = modular_server_.createParameter(constants::white_light_parameter_name);
   white_light_parameter.setTypeBool();
 
-  modular_server::Parameter & red_light_parameter = modular_server_.createParameter(constants::red_light_parameter_name);
-  red_light_parameter.setTypeBool();
+  modular_server::Parameter & visible_backlight_parameter = modular_server_.createParameter(constants::visible_backlight_parameter_name);
+  visible_backlight_parameter.setTypeBool();
 
-  modular_server::Parameter & red_light_delay_parameter = modular_server_.createParameter(constants::red_light_delay_parameter_name);
-  red_light_delay_parameter.setRange(constants::red_light_delay_min,constants::red_light_delay_max);
-  red_light_delay_parameter.setUnits(constants::hours_units);
+  modular_server::Parameter & visible_backlight_delay_parameter = modular_server_.createParameter(constants::visible_backlight_delay_parameter_name);
+  visible_backlight_delay_parameter.setRange(constants::visible_backlight_delay_min,constants::visible_backlight_delay_max);
+  visible_backlight_delay_parameter.setUnits(constants::hours_units);
 
-  modular_server::Parameter & red_light_duration_parameter = modular_server_.createParameter(constants::red_light_duration_parameter_name);
-  red_light_duration_parameter.setRange(constants::red_light_duration_min,constants::red_light_duration_max);
-  red_light_duration_parameter.setUnits(constants::hours_units);
+  modular_server::Parameter & visible_backlight_duration_parameter = modular_server_.createParameter(constants::visible_backlight_duration_parameter_name);
+  visible_backlight_duration_parameter.setRange(constants::visible_backlight_duration_min,constants::visible_backlight_duration_max);
+  visible_backlight_duration_parameter.setUnits(constants::hours_units);
 
   modular_server::Parameter & buzzer_parameter = modular_server_.createParameter(constants::buzzer_parameter_name);
   buzzer_parameter.setTypeBool();
@@ -214,13 +214,13 @@ void SleepAssayController::setup()
   set_experiment_day_white_light_function.addParameter(white_light_parameter);
   set_experiment_day_white_light_function.setResultTypeObject();
 
-  modular_server::Function & set_experiment_day_red_light_function = modular_server_.createFunction(constants::set_experiment_day_red_light_function_name);
-  set_experiment_day_red_light_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setExperimentDayRedLightHandler));
-  set_experiment_day_red_light_function.addParameter(experiment_day_parameter);
-  set_experiment_day_red_light_function.addParameter(red_light_parameter);
-  set_experiment_day_red_light_function.addParameter(red_light_delay_parameter);
-  set_experiment_day_red_light_function.addParameter(red_light_duration_parameter);
-  set_experiment_day_red_light_function.setResultTypeObject();
+  modular_server::Function & set_experiment_day_visible_backlight_function = modular_server_.createFunction(constants::set_experiment_day_visible_backlight_function_name);
+  set_experiment_day_visible_backlight_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setExperimentDayVisibleBacklightHandler));
+  set_experiment_day_visible_backlight_function.addParameter(experiment_day_parameter);
+  set_experiment_day_visible_backlight_function.addParameter(visible_backlight_parameter);
+  set_experiment_day_visible_backlight_function.addParameter(visible_backlight_delay_parameter);
+  set_experiment_day_visible_backlight_function.addParameter(visible_backlight_duration_parameter);
+  set_experiment_day_visible_backlight_function.setResultTypeObject();
 
   modular_server::Function & set_experiment_day_buzzer_function = modular_server_.createFunction(constants::set_experiment_day_buzzer_function_name);
   set_experiment_day_buzzer_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setExperimentDayBuzzerHandler));
@@ -238,9 +238,9 @@ void SleepAssayController::setup()
   test_white_light_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::testWhiteLightPowerHandler));
   test_white_light_power_function.addParameter(power_parameter);
 
-  modular_server::Function & test_red_light_power_function = modular_server_.createFunction(constants::test_red_light_power_function_name);
-  test_red_light_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::testRedLightPowerHandler));
-  test_red_light_power_function.addParameter(power_parameter);
+  modular_server::Function & test_visible_backlight_power_function = modular_server_.createFunction(constants::test_visible_backlight_power_function_name);
+  test_visible_backlight_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::testVisibleBacklightPowerHandler));
+  test_visible_backlight_power_function.addParameter(power_parameter);
 
   modular_server::Function & test_buzzer_power_function = modular_server_.createFunction(constants::test_buzzer_power_function_name);
   test_buzzer_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::testBuzzerPowerHandler));
@@ -411,9 +411,9 @@ size_t SleepAssayController::addExperimentDay()
 {
   constants::ExperimentDayInfo experiment_day_info;
   experiment_day_info.white_light = true;
-  experiment_day_info.red_light = false;
-  experiment_day_info.red_light_delay_hours = 0.0;
-  experiment_day_info.red_light_duration_hours = 0.0;
+  experiment_day_info.visible_backlight = false;
+  experiment_day_info.visible_backlight_delay_hours = 0.0;
+  experiment_day_info.visible_backlight_duration_hours = 0.0;
   experiment_day_info.buzzer = false;
   experiment_day_info.buzzer_delay_hours = 0.0;
   experiment_day_info.buzzer_duration_hours = 0.0;
@@ -488,24 +488,24 @@ void SleepAssayController::setExperimentDayWhiteLight(size_t experiment_day,
   experiment_day_array_[experiment_day].white_light = white_light;
 }
 
-void SleepAssayController::setExperimentDayRedLight(size_t experiment_day,
-  bool red_light,
-  double red_light_delay_hours,
-  double red_light_duration_hours)
+void SleepAssayController::setExperimentDayVisibleBacklight(size_t experiment_day,
+  bool visible_backlight,
+  double visible_backlight_delay_hours,
+  double visible_backlight_duration_hours)
 {
   if (!experimentDayExists(experiment_day))
   {
     return;
   }
-  experiment_day_array_[experiment_day].red_light = red_light;
-  experiment_day_array_[experiment_day].red_light_delay_hours = red_light_delay_hours;
-  if ((red_light_duration_hours + red_light_delay_hours) < constants::red_light_duration_max)
+  experiment_day_array_[experiment_day].visible_backlight = visible_backlight;
+  experiment_day_array_[experiment_day].visible_backlight_delay_hours = visible_backlight_delay_hours;
+  if ((visible_backlight_duration_hours + visible_backlight_delay_hours) < constants::visible_backlight_duration_max)
   {
-    experiment_day_array_[experiment_day].red_light_duration_hours = red_light_duration_hours;
+    experiment_day_array_[experiment_day].visible_backlight_duration_hours = visible_backlight_duration_hours;
   }
   else
   {
-    experiment_day_array_[experiment_day].red_light_duration_hours = constants::red_light_duration_max - red_light_delay_hours;
+    experiment_day_array_[experiment_day].visible_backlight_duration_hours = constants::visible_backlight_duration_max - visible_backlight_delay_hours;
   }
 }
 
@@ -540,7 +540,7 @@ sleep_assay_controller::constants::AssayStatus SleepAssayController::getAssaySta
   assay_status.phase_ptr = &constants::phase_assay_not_started_string;
   assay_status.phase_day = -1;
   assay_status.white_light_on = false;
-  assay_status.red_light_pulsing = false;
+  assay_status.visible_backlight_pulsing = false;
   assay_status.buzzing_possible = false;
   assay_status.buzzing = false;
   assay_status.testing = testing();
@@ -565,7 +565,7 @@ sleep_assay_controller::constants::AssayStatus SleepAssayController::getAssaySta
     {
       assay_status.phase_ptr = &constants::phase_experiment_string;
       assay_status.phase_day = (double)(time_now - time_experiment_start)/seconds_per_day_scaled;
-      assay_status.red_light_pulsing = redLightPulsing();
+      assay_status.visible_backlight_pulsing = visibleBacklightPulsing();
       assay_status.buzzing_possible = buzzingPossible();
       assay_status.buzzing = buzzing();
     }
@@ -595,25 +595,25 @@ bool SleepAssayController::whiteLightOn()
   return channelIsOn(channel);
 }
 
-bool SleepAssayController::redLightPulsing()
+bool SleepAssayController::visibleBacklightPulsing()
 {
   long channel;
-  modular_server_.property(constants::red_light_channel_property_name).getValue(channel);
+  modular_server_.property(constants::visible_backlight_channel_property_name).getValue(channel);
 
   ChannelsPwmIndexes channels_pwm_indexes = getChannelsPwmIndexes();
   RecursivePwmValues channel_pwm_indexes = channels_pwm_indexes[channel];
 
-  bool red_light_pulsing = false;
+  bool visible_backlight_pulsing = false;
 
   for (size_t i=0; i<channel_pwm_indexes.size(); ++i)
   {
     if (channel_pwm_indexes[i] >= 0)
     {
-      red_light_pulsing = true;
+      visible_backlight_pulsing = true;
       break;
     }
   }
-  return red_light_pulsing;
+  return visible_backlight_pulsing;
 }
 
 bool SleepAssayController::buzzingPossible()
@@ -654,7 +654,7 @@ void SleepAssayController::testWhiteLightPower(long power)
   }
 }
 
-void SleepAssayController::testRedLightPower(long power)
+void SleepAssayController::testVisibleBacklightPower(long power)
 {
   if (assayStarted() && !assayFinished())
   {
@@ -663,10 +663,10 @@ void SleepAssayController::testRedLightPower(long power)
 
   long channel;
 
-  modular_server_.property(constants::red_light_channel_property_name).getValue(channel);
+  modular_server_.property(constants::visible_backlight_channel_property_name).getValue(channel);
   setChannelOnAtPower(channel,power);
 
-  modular_server_.property(constants::red_light_indicator_channel_property_name).getValue(channel);
+  modular_server_.property(constants::visible_backlight_indicator_channel_property_name).getValue(channel);
   if (power > 0)
   {
     setChannelOn(channel);
@@ -789,35 +789,35 @@ void SleepAssayController::getWhiteLightPwmInfo(uint32_t & channels,
   on_duration = scaleDuration(on_duration_hours*modular_device_base::constants::milliseconds_per_hour);
 }
 
-void SleepAssayController::getRedLightPwmInfo(size_t experiment_day,
+void SleepAssayController::getVisibleBacklightPwmInfo(size_t experiment_day,
   uint32_t & channels,
   long & delay,
   DigitalController::RecursivePwmValues & periods,
   DigitalController::RecursivePwmValues & on_durations)
 {
   long channel;
-  modular_server_.property(constants::red_light_channel_property_name).getValue(channel);
+  modular_server_.property(constants::visible_backlight_channel_property_name).getValue(channel);
   uint32_t bit = 1;
   channels = bit << channel;
 
   double frequency;
-  modular_server_.property(constants::red_light_frequency_property_name).getValue(frequency);
+  modular_server_.property(constants::visible_backlight_frequency_property_name).getValue(frequency);
   long period_0 = (1.0/frequency)*modular_device_base::constants::milliseconds_per_second;
   periods.push_back(period_0);
 
   long duty_cycle;
-  modular_server_.property(constants::red_light_duty_cycle_property_name).getValue(duty_cycle);
-  long on_duration_0 = period_0*(double)duty_cycle/(double)constants::red_light_duty_cycle_max;
+  modular_server_.property(constants::visible_backlight_duty_cycle_property_name).getValue(duty_cycle);
+  long on_duration_0 = period_0*(double)duty_cycle/(double)constants::visible_backlight_duty_cycle_max;
   on_durations.push_back(on_duration_0);
 
   if (experimentDayExists(experiment_day))
   {
     constants::ExperimentDayInfo & experiment_day_info = experiment_day_array_[experiment_day];
-    double red_light_delay_hours = experiment_day_info.red_light_delay_hours;
-    delay = scaleDuration(red_light_delay_hours*modular_device_base::constants::milliseconds_per_hour);
+    double visible_backlight_delay_hours = experiment_day_info.visible_backlight_delay_hours;
+    delay = scaleDuration(visible_backlight_delay_hours*modular_device_base::constants::milliseconds_per_hour);
 
-    double red_light_duration_hours = experiment_day_info.red_light_duration_hours;
-    long on_duration_1 = scaleDuration(red_light_duration_hours*modular_device_base::constants::milliseconds_per_hour);
+    double visible_backlight_duration_hours = experiment_day_info.visible_backlight_duration_hours;
+    long on_duration_1 = scaleDuration(visible_backlight_duration_hours*modular_device_base::constants::milliseconds_per_hour);
     on_durations.push_back(on_duration_1);
 
     long period_1 = on_duration_1 + 1;
@@ -1062,35 +1062,35 @@ void SleepAssayController::startExperimentDay(int experiment_day)
         next_experiment_day);
     }
 
-    bool red_light = experiment_day_info.red_light;
-    if (red_light)
+    bool visible_backlight = experiment_day_info.visible_backlight;
+    if (visible_backlight)
     {
-      uint32_t red_light_channels;
-      long red_light_delay;
-      DigitalController::RecursivePwmValues red_light_periods;
-      DigitalController::RecursivePwmValues red_light_on_durations;
-      getRedLightPwmInfo(experiment_day,
-        red_light_channels,
-        red_light_delay,
-        red_light_periods,
-        red_light_on_durations);
+      uint32_t visible_backlight_channels;
+      long visible_backlight_delay;
+      DigitalController::RecursivePwmValues visible_backlight_periods;
+      DigitalController::RecursivePwmValues visible_backlight_on_durations;
+      getVisibleBacklightPwmInfo(experiment_day,
+        visible_backlight_channels,
+        visible_backlight_delay,
+        visible_backlight_periods,
+        visible_backlight_on_durations);
 
-      int red_light_pwm_index = addRecursivePwm(red_light_channels,
-        red_light_delay,
-        red_light_periods,
-        red_light_on_durations,
+      int visible_backlight_pwm_index = addRecursivePwm(visible_backlight_channels,
+        visible_backlight_delay,
+        visible_backlight_periods,
+        visible_backlight_on_durations,
         1);
-      long red_light_indicator_channel;
-      modular_server_.property(constants::red_light_indicator_channel_property_name).getValue(red_light_indicator_channel);
+      long visible_backlight_indicator_channel;
+      modular_server_.property(constants::visible_backlight_indicator_channel_property_name).getValue(visible_backlight_indicator_channel);
       uint32_t bit = 1;
-      uint32_t red_light_indicator_channels = bit << red_light_indicator_channel;
-      long red_light_indicator_delay = red_light_delay;
-      long red_light_indicator_period = red_light_on_durations.back();
-      long red_light_indicator_on_duration = red_light_on_durations.back();
-      int red_light_indicator_pwm_index = addPwm(red_light_indicator_channels,
-        red_light_indicator_delay,
-        red_light_indicator_period,
-        red_light_indicator_on_duration,
+      uint32_t visible_backlight_indicator_channels = bit << visible_backlight_indicator_channel;
+      long visible_backlight_indicator_delay = visible_backlight_delay;
+      long visible_backlight_indicator_period = visible_backlight_on_durations.back();
+      long visible_backlight_indicator_on_duration = visible_backlight_on_durations.back();
+      int visible_backlight_indicator_pwm_index = addPwm(visible_backlight_indicator_channels,
+        visible_backlight_indicator_delay,
+        visible_backlight_indicator_period,
+        visible_backlight_indicator_on_duration,
         1);
     }
 
@@ -1220,9 +1220,9 @@ void SleepAssayController::writeExperimentDayInfoToResponse(size_t experiment_da
   constants::ExperimentDayInfo experiment_day_info = experiment_day_array_[experiment_day];
 
   modular_server_.response().write(constants::white_light_parameter_name,experiment_day_info.white_light);
-  modular_server_.response().write(constants::red_light_parameter_name,experiment_day_info.red_light);
-  modular_server_.response().write(constants::red_light_delay_parameter_name,experiment_day_info.red_light_delay_hours);
-  modular_server_.response().write(constants::red_light_duration_parameter_name,experiment_day_info.red_light_duration_hours);
+  modular_server_.response().write(constants::visible_backlight_parameter_name,experiment_day_info.visible_backlight);
+  modular_server_.response().write(constants::visible_backlight_delay_parameter_name,experiment_day_info.visible_backlight_delay_hours);
+  modular_server_.response().write(constants::visible_backlight_duration_parameter_name,experiment_day_info.visible_backlight_duration_hours);
   modular_server_.response().write(constants::buzzer_parameter_name,experiment_day_info.buzzer);
   modular_server_.response().write(constants::buzzer_delay_parameter_name,experiment_day_info.buzzer_delay_hours);
   modular_server_.response().write(constants::buzzer_duration_parameter_name,experiment_day_info.buzzer_duration_hours);
@@ -1273,13 +1273,13 @@ void SleepAssayController::updatePowersHandler()
   power_max_property.setElementValue(channel,power);
   setPowerWhenOn(channel,power);
 
-  modular_server_.property(constants::red_light_channel_property_name).getValue(channel);
-  modular_server_.property(constants::red_light_power_property_name).getValue(power);
+  modular_server_.property(constants::visible_backlight_channel_property_name).getValue(channel);
+  modular_server_.property(constants::visible_backlight_power_property_name).getValue(power);
   power_max_property.setElementValue(channel,power);
   setPowerWhenOn(channel,power);
 
-  modular_server_.property(constants::red_light_indicator_channel_property_name).getValue(channel);
-  power = constants::red_light_power_max;
+  modular_server_.property(constants::visible_backlight_indicator_channel_property_name).getValue(channel);
+  power = constants::visible_backlight_power_max;
   power_max_property.setElementValue(channel,power);
   setPowerWhenOn(channel,power);
 
@@ -1518,7 +1518,7 @@ void SleepAssayController::setExperimentDayWhiteLightHandler()
   writeExperimentDayInfoToResponse(experiment_day);
 }
 
-void SleepAssayController::setExperimentDayRedLightHandler()
+void SleepAssayController::setExperimentDayVisibleBacklightHandler()
 {
   long experiment_day;
   modular_server_.parameter(constants::experiment_day_parameter_name).getValue(experiment_day);
@@ -1529,16 +1529,16 @@ void SleepAssayController::setExperimentDayRedLightHandler()
     return;
   }
 
-  bool red_light;
-  modular_server_.parameter(constants::red_light_parameter_name).getValue(red_light);
+  bool visible_backlight;
+  modular_server_.parameter(constants::visible_backlight_parameter_name).getValue(visible_backlight);
 
-  double red_light_delay;
-  modular_server_.parameter(constants::red_light_delay_parameter_name).getValue(red_light_delay);
+  double visible_backlight_delay;
+  modular_server_.parameter(constants::visible_backlight_delay_parameter_name).getValue(visible_backlight_delay);
 
-  double red_light_duration;
-  modular_server_.parameter(constants::red_light_duration_parameter_name).getValue(red_light_duration);
+  double visible_backlight_duration;
+  modular_server_.parameter(constants::visible_backlight_duration_parameter_name).getValue(visible_backlight_duration);
 
-  setExperimentDayRedLight(experiment_day,red_light,red_light_delay,red_light_duration);
+  setExperimentDayVisibleBacklight(experiment_day,visible_backlight,visible_backlight_delay,visible_backlight_duration);
 
   modular_server_.response().writeResultKey();
   writeExperimentDayInfoToResponse(experiment_day);
@@ -1609,7 +1609,7 @@ void SleepAssayController::getAssayStatusHandler()
 
   modular_server_.response().write(constants::white_light_on_string,assay_status.white_light_on);
 
-  modular_server_.response().write(constants::red_light_pulsing_string,assay_status.red_light_pulsing);
+  modular_server_.response().write(constants::visible_backlight_pulsing_string,assay_status.visible_backlight_pulsing);
 
   modular_server_.response().write(constants::buzzing_possible_string,assay_status.buzzing_possible);
 
@@ -1628,12 +1628,12 @@ void SleepAssayController::testWhiteLightPowerHandler()
   testWhiteLightPower(power);
 }
 
-void SleepAssayController::testRedLightPowerHandler()
+void SleepAssayController::testVisibleBacklightPowerHandler()
 {
   size_t power;
   modular_server_.parameter(high_power_switch_controller::constants::power_parameter_name).getValue(power);
 
-  testRedLightPower(power);
+  testVisibleBacklightPower(power);
 }
 
 void SleepAssayController::testBuzzerPowerHandler()
