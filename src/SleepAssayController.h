@@ -152,6 +152,9 @@ private:
   void writeExperimentDayInfoToResponse(size_t experiment_day);
 
   // Handlers
+  void setIrBacklightOnAtPowerHandler();
+  void setIrBacklightOnHandler(modular_server::Pin * pin_ptr);
+  void setIrBacklightOffHandler(modular_server::Pin * pin_ptr);
   void updateCameraTriggerHandler();
   void updatePowersHandler();
   void getAssayStartHandler();

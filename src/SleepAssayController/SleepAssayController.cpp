@@ -47,7 +47,7 @@ void SleepAssayController::setup()
 
   modular_server::Property & white_light_power_property = modular_server_.createProperty(constants::white_light_power_property_name,constants::white_light_power_default);
   white_light_power_property.setRange(constants::white_light_power_min,constants::white_light_power_max);
-  white_light_power_property.setUnits(high_power_switch_controller::constants::percent_units);
+  white_light_power_property.setUnits(digital_controller::constants::percent_units);
   white_light_power_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updatePowersHandler));
 
   modular_server::Property & white_light_start_time_property = modular_server_.createProperty(constants::white_light_start_time_property_name,constants::white_light_start_time_default);
@@ -60,7 +60,7 @@ void SleepAssayController::setup()
 
   modular_server::Property & visible_backlight_power_property = modular_server_.createProperty(constants::visible_backlight_power_property_name,constants::visible_backlight_power_default);
   visible_backlight_power_property.setRange(constants::visible_backlight_power_min,constants::visible_backlight_power_max);
-  visible_backlight_power_property.setUnits(high_power_switch_controller::constants::percent_units);
+  visible_backlight_power_property.setUnits(digital_controller::constants::percent_units);
   visible_backlight_power_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updatePowersHandler));
 
   modular_server::Property & visible_backlight_frequency_property = modular_server_.createProperty(constants::visible_backlight_frequency_property_name,constants::visible_backlight_frequency_default);
@@ -69,11 +69,11 @@ void SleepAssayController::setup()
 
   modular_server::Property & visible_backlight_duty_cycle_property = modular_server_.createProperty(constants::visible_backlight_duty_cycle_property_name,constants::visible_backlight_duty_cycle_default);
   visible_backlight_duty_cycle_property.setRange(constants::visible_backlight_duty_cycle_min,constants::visible_backlight_duty_cycle_max);
-  visible_backlight_duty_cycle_property.setUnits(high_power_switch_controller::constants::percent_units);
+  visible_backlight_duty_cycle_property.setUnits(digital_controller::constants::percent_units);
 
   modular_server::Property & buzzer_power_property = modular_server_.createProperty(constants::buzzer_power_property_name,constants::buzzer_power_default);
   buzzer_power_property.setRange(constants::buzzer_power_min,constants::buzzer_power_max);
-  buzzer_power_property.setUnits(high_power_switch_controller::constants::percent_units);
+  buzzer_power_property.setUnits(digital_controller::constants::percent_units);
   buzzer_power_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updatePowersHandler));
 
   modular_server::Property & buzzer_on_duration_min_property = modular_server_.createProperty(constants::buzzer_on_duration_min_property_name,constants::buzzer_on_duration_min_default);
@@ -139,9 +139,13 @@ void SleepAssayController::setup()
   modular_server::Parameter & day_count_parameter = modular_server_.createParameter(constants::day_count_parameter_name);
   day_count_parameter.setRange((long)1,(long)constants::EXPERIMENT_DAY_COUNT_MAX);
 
-  modular_server::Parameter & power_parameter = modular_server_.parameter(high_power_switch_controller::constants::power_parameter_name);
+  modular_server::Parameter & power_parameter = modular_server_.parameter(digital_controller::constants::power_parameter_name);
 
   // Functions
+  modular_server::Function & set_ir_backlight_on_at_power_function = modular_server_.createFunction(constants::set_ir_backlight_on_at_power_function_name);
+  set_ir_backlight_on_at_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setIrBacklightOnAtPowerHandler));
+  set_ir_backlight_on_at_power_function.addParameter(power_parameter);
+
   modular_server::Function & get_assay_start_function = modular_server_.createFunction(constants::get_assay_start_function_name);
   get_assay_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getAssayStartHandler));
   get_assay_start_function.setResultTypeObject();
@@ -589,19 +593,17 @@ sleep_assay_controller::constants::AssayStatus SleepAssayController::getAssaySta
 
 bool SleepAssayController::whiteLightOn()
 {
-  long channel;
-  modular_server_.property(constants::white_light_channel_property_name).getValue(channel);
+  const size_t white_light_channel = highVoltageToDigitalChannel(constants::white_light_high_voltage);
 
-  return channelIsOn(channel);
+  return channelIsOn(white_light_channel);
 }
 
 bool SleepAssayController::visibleBacklightPulsing()
 {
-  long channel;
-  modular_server_.property(constants::visible_backlight_channel_property_name).getValue(channel);
+  const size_t visible_backlight_channel = visibleBacklightToDigitalChannel(constants::visible_backlight);
 
   ChannelsPwmIndexes channels_pwm_indexes = getChannelsPwmIndexes();
-  RecursivePwmValues channel_pwm_indexes = channels_pwm_indexes[channel];
+  RecursivePwmValues channel_pwm_indexes = channels_pwm_indexes[visible_backlight_channel];
 
   bool visible_backlight_pulsing = false;
 
@@ -623,10 +625,9 @@ bool SleepAssayController::buzzingPossible()
 
 bool SleepAssayController::buzzing()
 {
-  long channel;
-  modular_server_.property(constants::buzzer_channel_property_name).getValue(channel);
+  const size_t buzzer_channel = highVoltageToDigitalChannel(constants::buzzer_high_voltage);
 
-  bool buzzing = channelIsOn(channel);
+  bool buzzing = channelIsOn(buzzer_channel);
 
   return buzzing;
 }
@@ -638,19 +639,17 @@ void SleepAssayController::testWhiteLightPower(long power)
     return;
   }
 
-  long channel;
+  const size_t white_light_channel = highVoltageToDigitalChannel(constants::white_light_high_voltage);
+  setChannelOnAtPower(white_light_channel,power);
 
-  modular_server_.property(constants::white_light_channel_property_name).getValue(channel);
-  setChannelOnAtPower(channel,power);
-
-  modular_server_.property(constants::white_light_indicator_channel_property_name).getValue(channel);
+  const size_t white_light_indicator_channel = lowVoltageToDigitalChannel(constants::white_light_indicator_low_voltage);
   if (power > 0)
   {
-    setChannelOn(channel);
+    setChannelOn(white_light_indicator_channel);
   }
   else
   {
-    setChannelOff(channel);
+    setChannelOff(white_light_indicator_channel);
   }
 }
 
@@ -661,19 +660,17 @@ void SleepAssayController::testVisibleBacklightPower(long power)
     return;
   }
 
-  long channel;
+  const size_t visible_backlight_channel = visibleBacklightToDigitalChannel(constants::visible_backlight);
+  setChannelOnAtPower(visible_backlight_channel,power);
 
-  modular_server_.property(constants::visible_backlight_channel_property_name).getValue(channel);
-  setChannelOnAtPower(channel,power);
-
-  modular_server_.property(constants::visible_backlight_indicator_channel_property_name).getValue(channel);
+  const size_t visible_backlight_indicator_channel = lowVoltageToDigitalChannel(constants::visible_backlight_indicator_low_voltage);
   if (power > 0)
   {
-    setChannelOn(channel);
+    setChannelOn(visible_backlight_indicator_channel);
   }
   else
   {
-    setChannelOff(channel);
+    setChannelOff(visible_backlight_indicator_channel);
   }
 }
 
@@ -684,19 +681,17 @@ void SleepAssayController::testBuzzerPower(long power)
     return;
   }
 
-  long channel;
+  const size_t buzzer_channel = highVoltageToDigitalChannel(constants::buzzer_high_voltage);
+  setChannelOnAtPower(buzzer_channel,power);
 
-  modular_server_.property(constants::buzzer_channel_property_name).getValue(channel);
-  setChannelOnAtPower(channel,power);
-
-  modular_server_.property(constants::buzzer_indicator_channel_property_name).getValue(channel);
+  const size_t buzzer_indicator_channel = lowVoltageToDigitalChannel(constants::buzzer_indicator_low_voltage);
   if (power > 0)
   {
-    setChannelOn(channel);
+    setChannelOn(buzzer_indicator_channel);
   }
   else
   {
-    setChannelOff(channel);
+    setChannelOff(buzzer_indicator_channel);
   }
 }
 
@@ -759,10 +754,9 @@ void SleepAssayController::getCameraTriggerPwmInfo(uint32_t & channels,
   long & period,
   long & on_duration)
 {
-  long channel;
-  modular_server_.property(constants::camera_trigger_channel_property_name).getValue(channel);
-  uint32_t bit = 1;
-  channels = bit << channel;
+  const size_t camera_trigger_channel = lowVoltageToDigitalChannel(constants::camera_trigger_low_voltage);
+  const uint32_t bit = 1;
+  channels = bit << camera_trigger_channel;
 
   double frequency;
   modular_server_.property(constants::camera_trigger_frequency_property_name).getValue(frequency);
@@ -774,13 +768,12 @@ void SleepAssayController::getWhiteLightPwmInfo(uint32_t & channels,
   long & period,
   long & on_duration)
 {
-  long channel;
-  modular_server_.property(constants::white_light_channel_property_name).getValue(channel);
-  uint32_t bit = 1;
-  channels = bit << channel;
+  const size_t white_light_channel = highVoltageToDigitalChannel(constants::white_light_high_voltage);
+  const uint32_t bit = 1;
+  channels = bit << white_light_channel;
 
-  modular_server_.property(constants::white_light_indicator_channel_property_name).getValue(channel);
-  channels |= bit << channel;
+  const size_t white_light_indicator_channel = lowVoltageToDigitalChannel(constants::white_light_indicator_low_voltage);
+  channels |= bit << white_light_indicator_channel;
 
   period = scaleDuration(modular_device_base::constants::milliseconds_per_day);
 
@@ -795,10 +788,9 @@ void SleepAssayController::getVisibleBacklightPwmInfo(size_t experiment_day,
   DigitalController::RecursivePwmValues & periods,
   DigitalController::RecursivePwmValues & on_durations)
 {
-  long channel;
-  modular_server_.property(constants::visible_backlight_channel_property_name).getValue(channel);
-  uint32_t bit = 1;
-  channels = bit << channel;
+  const size_t visible_backlight_channel = visibleBacklightToDigitalChannel(constants::visible_backlight);
+  const uint32_t bit = 1;
+  channels = bit << visible_backlight_channel;
 
   double frequency;
   modular_server_.property(constants::visible_backlight_frequency_property_name).getValue(frequency);
@@ -832,10 +824,9 @@ void SleepAssayController::getBuzzerPwmInfo(size_t experiment_day,
   DigitalController::RecursivePwmValues & periods,
   DigitalController::RecursivePwmValues & on_durations)
 {
-  long channel;
-  modular_server_.property(constants::buzzer_channel_property_name).getValue(channel);
-  uint32_t bit = 1;
-  channels = bit << channel;
+  const size_t buzzer_channel = highVoltageToDigitalChannel(constants::buzzer_high_voltage);
+  const uint32_t bit = 1;
+  channels = bit << buzzer_channel;
 
   long on_duration_0_min;
   modular_server_.property(constants::buzzer_on_duration_min_property_name).getValue(on_duration_0_min);
@@ -1248,6 +1239,24 @@ void SleepAssayController::writeExperimentDayInfoToResponse(size_t experiment_da
 // modular_server_.property(property_name).getElementValue(element_index,value) value type must match the property array element default type
 // modular_server_.property(property_name).setElementValue(element_index,value) value type must match the property array element default type
 
+void SleepAssayController::setIrBacklightOnAtPowerHandler()
+{
+  long power;
+  modular_server_.parameter(digital_controller::constants::power_parameter_name).getValue(power);
+
+  setIrBacklightOnAtPower(power);
+}
+
+void SleepAssayController::setIrBacklightOnHandler(modular_server::Pin * pin_ptr)
+{
+  setIrBacklightOn();
+}
+
+void SleepAssayController::setIrBacklightOffHandler(modular_server::Pin * pin_ptr)
+{
+  setIrBacklightOff();
+}
+
 void SleepAssayController::updateCameraTriggerHandler()
 {
   if (camera_trigger_running_)
@@ -1261,7 +1270,7 @@ void SleepAssayController::updatePowersHandler()
 {
   long channel;
   long power;
-  modular_server::Property & power_max_property = modular_server_.property(high_power_switch_controller::constants::power_max_property_name);
+  modular_server::Property & power_max_property = modular_server_.property(digital_controller::constants::power_max_property_name);
 
   modular_server_.property(constants::white_light_channel_property_name).getValue(channel);
   modular_server_.property(constants::white_light_power_property_name).getValue(power);
@@ -1623,7 +1632,7 @@ void SleepAssayController::getAssayStatusHandler()
 void SleepAssayController::testWhiteLightPowerHandler()
 {
   size_t power;
-  modular_server_.parameter(high_power_switch_controller::constants::power_parameter_name).getValue(power);
+  modular_server_.parameter(digital_controller::constants::power_parameter_name).getValue(power);
 
   testWhiteLightPower(power);
 }
@@ -1631,7 +1640,7 @@ void SleepAssayController::testWhiteLightPowerHandler()
 void SleepAssayController::testVisibleBacklightPowerHandler()
 {
   size_t power;
-  modular_server_.parameter(high_power_switch_controller::constants::power_parameter_name).getValue(power);
+  modular_server_.parameter(digital_controller::constants::power_parameter_name).getValue(power);
 
   testVisibleBacklightPower(power);
 }
@@ -1639,7 +1648,7 @@ void SleepAssayController::testVisibleBacklightPowerHandler()
 void SleepAssayController::testBuzzerPowerHandler()
 {
   size_t power;
-  modular_server_.parameter(high_power_switch_controller::constants::power_parameter_name).getValue(power);
+  modular_server_.parameter(digital_controller::constants::power_parameter_name).getValue(power);
 
   testBuzzerPower(power);
 }

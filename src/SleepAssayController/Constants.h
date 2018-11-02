@@ -18,8 +18,8 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=15};
 enum{PARAMETER_COUNT_MAX=9};
-enum{FUNCTION_COUNT_MAX=23};
-enum{CALLBACK_COUNT_MAX=3};
+enum{FUNCTION_COUNT_MAX=24};
+enum{CALLBACK_COUNT_MAX=5};
 
 extern ConstantString device_name;
 
@@ -185,6 +185,7 @@ extern const double buzzer_duration_max;
 extern ConstantString day_count_parameter_name;
 
 // Functions
+extern ConstantString set_ir_backlight_on_at_power_function_name;
 extern ConstantString get_assay_start_function_name;
 extern ConstantString get_assay_end_function_name;
 extern ConstantString get_assay_duration_function_name;
@@ -210,6 +211,8 @@ extern ConstantString test_buzzer_power_function_name;
 extern ConstantString stop_all_power_tests_function_name;
 
 // Callbacks
+extern ConstantString set_ir_backlight_on_callback_name;
+extern ConstantString set_ir_backlight_off_callback_name;
 extern ConstantString run_assay_callback_name;
 extern ConstantString test_assay_callback_name;
 extern ConstantString stop_assay_callback_name;

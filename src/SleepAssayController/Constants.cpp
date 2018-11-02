@@ -158,6 +158,7 @@ const double buzzer_duration_max = 24.0;
 CONSTANT_STRING(day_count_parameter_name,"day_count");
 
 // Functions
+CONSTANT_STRING(set_ir_backlight_on_at_power_function_name,"setIrBacklightOnAtPower");
 CONSTANT_STRING(get_assay_start_function_name,"getAssayStart");
 CONSTANT_STRING(get_assay_end_function_name,"getAssayEnd");
 CONSTANT_STRING(get_assay_duration_function_name,"getAssayDuration");
@@ -183,6 +184,8 @@ CONSTANT_STRING(test_buzzer_power_function_name,"testBuzzerPower");
 CONSTANT_STRING(stop_all_power_tests_function_name,"stopAllPowerTests");
 
 // Callbacks
+CONSTANT_STRING(set_ir_backlight_on_callback_name,"setIrBacklightOn");
+CONSTANT_STRING(set_ir_backlight_off_callback_name,"setIrBacklightOff");
 CONSTANT_STRING(run_assay_callback_name,"runAssay");
 CONSTANT_STRING(test_assay_callback_name,"testAssay");
 CONSTANT_STRING(stop_assay_callback_name,"stopAssay");
