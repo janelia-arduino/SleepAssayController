@@ -16,7 +16,7 @@ namespace sleep_assay_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=22};
+enum{PROPERTY_COUNT_MAX=15};
 enum{PARAMETER_COUNT_MAX=9};
 enum{FUNCTION_COUNT_MAX=23};
 enum{CALLBACK_COUNT_MAX=3};
@@ -25,9 +25,6 @@ extern ConstantString device_name;
 
 extern ConstantString firmware_name;
 extern const modular_server::FirmwareInfo firmware_info;
-
-extern const long channel_min;
-extern const long channel_max;
 
 extern const double camera_trigger_duty_cycle;
 extern const double camera_trigger_duty_cycle_max;
@@ -87,19 +84,10 @@ extern ConstantString military_time_hours_units;
 
 // Properties
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
-extern ConstantString camera_trigger_channel_property_name;
-extern const long camera_trigger_channel_default;
-
 extern ConstantString camera_trigger_frequency_property_name;
 extern const double camera_trigger_frequency_min;
 extern const double camera_trigger_frequency_max;
 extern const double camera_trigger_frequency_default;
-
-extern ConstantString white_light_channel_property_name;
-extern const long white_light_channel_default;
-
-extern ConstantString white_light_indicator_channel_property_name;
-extern const long white_light_indicator_channel_default;
 
 extern ConstantString white_light_power_property_name;
 extern const long white_light_power_min;
@@ -116,12 +104,6 @@ extern const long white_light_on_duration_min;
 extern const long white_light_on_duration_max;
 extern const long white_light_on_duration_default;
 
-extern ConstantString red_light_channel_property_name;
-extern const long red_light_channel_default;
-
-extern ConstantString red_light_indicator_channel_property_name;
-extern const long red_light_indicator_channel_default;
-
 extern ConstantString red_light_power_property_name;
 extern const long red_light_power_min;
 extern const long red_light_power_max;
@@ -136,12 +118,6 @@ extern ConstantString red_light_duty_cycle_property_name;
 extern const long red_light_duty_cycle_min;
 extern const long red_light_duty_cycle_max;
 extern const long red_light_duty_cycle_default;
-
-extern ConstantString buzzer_channel_property_name;
-extern const long buzzer_channel_default;
-
-extern ConstantString buzzer_indicator_channel_property_name;
-extern const long buzzer_indicator_channel_default;
 
 extern ConstantString buzzer_power_property_name;
 extern const long buzzer_power_min;

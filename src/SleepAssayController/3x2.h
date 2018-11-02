@@ -16,6 +16,25 @@ namespace sleep_assay_controller
 {
 namespace constants
 {
+enum{EXPERIMENT_DAY_COUNT_MAX=20};
+
+extern const size_t ir_backlight;
+
+extern const size_t visible_backlight;
+
+extern const size_t fan_high_voltage;
+
+extern const size_t white_light_high_voltage;
+
+extern const size_t buzzer_high_voltage;
+
+extern const size_t camera_trigger_low_voltage;
+
+extern const size_t visible_backlight_indicator_low_voltage;
+
+extern const size_t white_light_indicator_low_voltage;
+
+extern const size_t buzzer_indicator_low_voltage;
 
 // Pins
 

@@ -28,6 +28,10 @@ public:
   SleepAssayController();
   virtual void setup();
 
+  void setIrBacklightOnAtPower(long power);
+  void setIrBacklightOn();
+  void setIrBacklightOff();
+
   void runAssay();
   void testAssay();
   void stopAssay();
@@ -105,6 +109,15 @@ private:
   int camera_trigger_pwm_index_;
 
   experiment_day_info_array_t experiment_day_array_;
+
+  void setFanOn();
+  void setFanOff();
+  void setVisibleBacklightIndicatorOn();
+  void setVisibleBacklightIndicatorOff();
+  void setWhiteLightIndicatorOn();
+  void setWhiteLightIndicatorOff();
+  void setBuzzerIndicatorOn();
+  void setBuzzerIndicatorOff();
 
   void getCameraTriggerPwmInfo(uint32_t & channels,
     long & period,

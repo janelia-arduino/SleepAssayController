@@ -24,9 +24,6 @@ const modular_server::FirmwareInfo firmware_info =
   .version_patch=0,
 };
 
-const long channel_min = 0;
-const long channel_max = high_power_switch_controller::constants::CHANNEL_COUNT;
-
 const double camera_trigger_duty_cycle = 50.0;
 const double camera_trigger_duty_cycle_max = 100.0;
 
@@ -60,16 +57,10 @@ CONSTANT_STRING(days_units,"days");
 CONSTANT_STRING(military_time_hours_units,"military_time_hours");
 
 // Properties
-CONSTANT_STRING(camera_trigger_channel_property_name,"cameraTriggerChannel");
-
 CONSTANT_STRING(camera_trigger_frequency_property_name,"cameraTriggerFrequency");
 const double camera_trigger_frequency_min = 0.01;
 const double camera_trigger_frequency_max = 100;
 const double camera_trigger_frequency_default = 0.5;
-
-CONSTANT_STRING(white_light_channel_property_name,"whiteLightChannel");
-
-CONSTANT_STRING(white_light_indicator_channel_property_name,"whiteLightIndicatorChannel");
 
 CONSTANT_STRING(white_light_power_property_name,"whiteLightPower");
 const long white_light_power_min = 10;
@@ -86,10 +77,6 @@ const long white_light_on_duration_min = 1;
 const long white_light_on_duration_max = 23;
 const long white_light_on_duration_default = 12;
 
-CONSTANT_STRING(red_light_channel_property_name,"redLightChannel");
-
-CONSTANT_STRING(red_light_indicator_channel_property_name,"redLightIndicatorChannel");
-
 CONSTANT_STRING(red_light_power_property_name,"redLightPower");
 const long red_light_power_min = 10;
 const long red_light_power_max = 100;
@@ -104,10 +91,6 @@ CONSTANT_STRING(red_light_duty_cycle_property_name,"redLightDutyCycle");
 const long red_light_duty_cycle_min = 0;
 const long red_light_duty_cycle_max = 100;
 const long red_light_duty_cycle_default = 50;
-
-CONSTANT_STRING(buzzer_channel_property_name,"buzzerChannel");
-
-CONSTANT_STRING(buzzer_indicator_channel_property_name,"buzzerIndicatorChannel");
 
 CONSTANT_STRING(buzzer_power_property_name,"buzzerPower");
 const long buzzer_power_min = 10;
