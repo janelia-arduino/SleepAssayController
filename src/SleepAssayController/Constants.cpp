@@ -24,8 +24,10 @@ const modular_server::FirmwareInfo firmware_info =
   .version_patch=0,
 };
 
+const double fan_power = 100.0;
+const double indicator_power = 100.0;
+const double camera_trigger_power = 100.0;
 const double camera_trigger_duty_cycle = 50.0;
-const double camera_trigger_duty_cycle_max = 100.0;
 
 CONSTANT_STRING(time_now_string,"time_now");
 CONSTANT_STRING(time_entrainment_start_string,"time_entrainment_start");
@@ -47,6 +49,9 @@ CONSTANT_STRING(visible_backlight_pulsing_string,"visible_backlight_pulsing");
 CONSTANT_STRING(buzzing_possible_string,"buzzing_possible");
 CONSTANT_STRING(buzzing_string,"buzzing");
 CONSTANT_STRING(testing_string,"testing");
+CONSTANT_STRING(visible_backlight_intensity_string,"visible_backlight_intensity");
+CONSTANT_STRING(white_light_intensity_string,"white_light_intensity");
+CONSTANT_STRING(buzzer_power_string,"buzzer_power");
 
 // Pins
 
@@ -57,31 +62,6 @@ CONSTANT_STRING(days_units,"days");
 CONSTANT_STRING(military_time_hours_units,"military_time_hours");
 
 // Properties
-CONSTANT_STRING(camera_trigger_frequency_property_name,"cameraTriggerFrequency");
-const double camera_trigger_frequency_min = 0.01;
-const double camera_trigger_frequency_max = 100;
-const double camera_trigger_frequency_default = 0.5;
-
-CONSTANT_STRING(white_light_power_property_name,"whiteLightPower");
-const long white_light_power_min = 10;
-const long white_light_power_max = 100;
-const long white_light_power_default = 50;
-
-CONSTANT_STRING(white_light_start_time_property_name,"whiteLightStartTime");
-const long white_light_start_time_min = 4;
-const long white_light_start_time_max = 12;
-const long white_light_start_time_default = 9;
-
-CONSTANT_STRING(white_light_on_duration_property_name,"whiteLightOnDuration");
-const long white_light_on_duration_min = 1;
-const long white_light_on_duration_max = 23;
-const long white_light_on_duration_default = 12;
-
-CONSTANT_STRING(visible_backlight_power_property_name,"visibleBacklightPower");
-const long visible_backlight_power_min = 10;
-const long visible_backlight_power_max = 100;
-const long visible_backlight_power_default = 50;
-
 CONSTANT_STRING(visible_backlight_frequency_property_name,"visibleBacklightFrequency");
 const double visible_backlight_frequency_min = 0.01;
 const double visible_backlight_frequency_max = 100;
@@ -92,10 +72,15 @@ const long visible_backlight_duty_cycle_min = 0;
 const long visible_backlight_duty_cycle_max = 100;
 const long visible_backlight_duty_cycle_default = 50;
 
-CONSTANT_STRING(buzzer_power_property_name,"buzzerPower");
-const long buzzer_power_min = 10;
-const long buzzer_power_max = 100;
-const long buzzer_power_default = 50;
+CONSTANT_STRING(white_light_start_time_property_name,"whiteLightStartTime");
+const long white_light_start_time_min = 4;
+const long white_light_start_time_max = 12;
+const long white_light_start_time_default = 9;
+
+CONSTANT_STRING(white_light_on_duration_property_name,"whiteLightOnDuration");
+const long white_light_on_duration_min = 1;
+const long white_light_on_duration_max = 23;
+const long white_light_on_duration_default = 12;
 
 CONSTANT_STRING(buzzer_on_duration_min_property_name,"buzzerOnDurationMin");
 const long buzzer_on_duration_min = 1;
@@ -115,6 +100,11 @@ const long buzzer_wait_max_min = 1;
 const long buzzer_wait_max_max = 3600;
 const long buzzer_wait_max_default = 3;
 
+CONSTANT_STRING(camera_trigger_frequency_property_name,"cameraTriggerFrequency");
+const double camera_trigger_frequency_min = 0.01;
+const double camera_trigger_frequency_max = 100;
+const double camera_trigger_frequency_default = 0.5;
+
 CONSTANT_STRING(entrainment_duration_property_name,"entrainmentDuration");
 const long entrainment_duration_min = 1;
 const long entrainment_duration_max = 10;
@@ -133,10 +123,6 @@ const long testing_day_duration_default = 24;
 // Parameters
 CONSTANT_STRING(experiment_day_parameter_name,"experiment_day");
 
-CONSTANT_STRING(white_light_parameter_name,"white_light");
-
-CONSTANT_STRING(visible_backlight_parameter_name,"visible_backlight");
-
 CONSTANT_STRING(visible_backlight_delay_parameter_name,"visible_backlight_delay");
 const double visible_backlight_delay_min = 0.0;
 const double visible_backlight_delay_max = 24.0;
@@ -144,8 +130,6 @@ const double visible_backlight_delay_max = 24.0;
 CONSTANT_STRING(visible_backlight_duration_parameter_name,"visible_backlight_duration");
 const double visible_backlight_duration_min = 0.0;
 const double visible_backlight_duration_max = 24.0;
-
-CONSTANT_STRING(buzzer_parameter_name,"buzzer");
 
 CONSTANT_STRING(buzzer_delay_parameter_name,"buzzer_delay");
 const double buzzer_delay_min = 0.0;
@@ -158,7 +142,11 @@ const double buzzer_duration_max = 24.0;
 CONSTANT_STRING(day_count_parameter_name,"day_count");
 
 // Functions
-CONSTANT_STRING(set_ir_backlight_on_at_power_function_name,"setIrBacklightOnAtPower");
+CONSTANT_STRING(set_ir_backlight_and_fan_on_at_power_function_name,"setIrBacklightAndFanOnAtPower");
+CONSTANT_STRING(set_ir_backlight_and_fan_on_at_intensity_function_name,"setIrBacklightAndFanOnAtIntensity");
+CONSTANT_STRING(set_visible_backlight_and_indicator_on_at_power_function_name,"setVisibleBacklightAndIndicatorOnAtPower");
+CONSTANT_STRING(set_visible_backlight_and_indicator_on_at_intensity_function_name,"setVisibleBacklightAndIndicatorOnAtIntensity");
+
 CONSTANT_STRING(get_assay_start_function_name,"getAssayStart");
 CONSTANT_STRING(get_assay_end_function_name,"getAssayEnd");
 CONSTANT_STRING(get_assay_duration_function_name,"getAssayDuration");
@@ -174,18 +162,14 @@ CONSTANT_STRING(add_experiment_day_copy_function_name,"addExperimentDayCopy");
 CONSTANT_STRING(add_experiment_day_copies_function_name,"addExperimentDayCopies");
 CONSTANT_STRING(remove_last_experiment_day_function_name,"removeLastExperimentDay");
 CONSTANT_STRING(remove_all_experiment_days_function_name,"removeAllExperimentDays");
-CONSTANT_STRING(set_experiment_day_white_light_function_name,"setExperimentDayWhiteLight");
 CONSTANT_STRING(set_experiment_day_visible_backlight_function_name,"setExperimentDayVisibleBacklight");
+CONSTANT_STRING(set_experiment_day_white_light_function_name,"setExperimentDayWhiteLight");
 CONSTANT_STRING(set_experiment_day_buzzer_function_name,"setExperimentDayBuzzer");
 CONSTANT_STRING(get_assay_status_function_name,"getAssayStatus");
-CONSTANT_STRING(test_white_light_power_function_name,"testWhiteLightPower");
-CONSTANT_STRING(test_visible_backlight_power_function_name,"testVisibleBacklightPower");
-CONSTANT_STRING(test_buzzer_power_function_name,"testBuzzerPower");
-CONSTANT_STRING(stop_all_power_tests_function_name,"stopAllPowerTests");
 
 // Callbacks
-CONSTANT_STRING(set_ir_backlight_on_callback_name,"setIrBacklightOn");
-CONSTANT_STRING(set_ir_backlight_off_callback_name,"setIrBacklightOff");
+CONSTANT_STRING(set_ir_backlight_and_fan_on_callback_name,"setIrBacklightAndFanOn");
+CONSTANT_STRING(set_ir_backlight_and_fan_off_callback_name,"setIrBacklightAndFanOff");
 CONSTANT_STRING(run_assay_callback_name,"runAssay");
 CONSTANT_STRING(test_assay_callback_name,"testAssay");
 CONSTANT_STRING(stop_assay_callback_name,"stopAssay");

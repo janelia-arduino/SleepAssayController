@@ -28,9 +28,15 @@ public:
   SleepAssayController();
   virtual void setup();
 
-  void setIrBacklightOnAtPower(long power);
-  void setIrBacklightOn();
-  void setIrBacklightOff();
+  void setIrBacklightAndFanOnAtPower(double power);
+  void setIrBacklightAndFanOnAtIntensity(double intensity);
+  void setIrBacklightAndFanOn();
+  void setIrBacklightAndFanOff();
+
+  void setVisibleBacklightAndIndicatorOnAtPower(double power);
+  void setVisibleBacklightAndIndicatorOnAtIntensity(double intensity);
+  void setVisibleBacklightAndIndicatorOn();
+  void setVisibleBacklightAndIndicatorOff();
 
   void runAssay();
   void testAssay();
@@ -65,14 +71,14 @@ public:
   void removeLastExperimentDay();
   void removeAllExperimentDays();
 
-  void setExperimentDayWhiteLight(size_t experiment_day,
-    bool white_light);
   void setExperimentDayVisibleBacklight(size_t experiment_day,
-    bool visible_backlight,
+    double visible_backlight_intensity,
     double visible_backlight_delay_hours,
     double visible_backlight_duration_hours);
+  void setExperimentDayWhiteLight(size_t experiment_day,
+    double white_light_intensity);
   void setExperimentDayBuzzer(size_t experiment_day,
-    bool buzzer,
+    double buzzer_power,
     double buzzer_delay_hours,
     double buzzer_duration_hours);
 
@@ -82,11 +88,6 @@ public:
   bool visibleBacklightPulsing();
   bool buzzingPossible();
   bool buzzing();
-
-  void testWhiteLightPower(long power);
-  void testVisibleBacklightPower(long power);
-  void testBuzzerPower(long power);
-  void stopAllPowerTests();
 
 private:
   modular_server::Property properties_[sleep_assay_controller::constants::PROPERTY_COUNT_MAX];
@@ -106,7 +107,7 @@ private:
   int buzzer_pwm_index_;
 
   bool camera_trigger_running_;
-  int camera_trigger_pwm_index_;
+  digital_controller::constants::PwmId camera_trigger_pwm_id_;
 
   experiment_day_info_array_t experiment_day_array_;
 
@@ -119,22 +120,22 @@ private:
   void setBuzzerIndicatorOn();
   void setBuzzerIndicatorOff();
 
-  void getCameraTriggerPwmInfo(uint32_t & channels,
-    long & period,
-    long & on_duration);
-  void getWhiteLightPwmInfo(uint32_t & channels,
-    long & period,
-    long & on_duration);
   void getVisibleBacklightPwmInfo(size_t experiment_day,
     uint32_t & channels,
     long & delay,
     DigitalController::RecursivePwmValues & periods,
     DigitalController::RecursivePwmValues & on_durations);
+  void getWhiteLightPwmInfo(uint32_t & channels,
+    long & period,
+    long & on_duration);
   void getBuzzerPwmInfo(size_t experiment_day,
     uint32_t & channels,
     long & delay,
     DigitalController::RecursivePwmValues & periods,
     DigitalController::RecursivePwmValues & on_durations);
+  void getCameraTriggerPwmInfo(uint32_t & channels,
+    long & period,
+    long & on_duration);
 
   void initializeVariables();
   void initializeChannels();
@@ -152,11 +153,15 @@ private:
   void writeExperimentDayInfoToResponse(size_t experiment_day);
 
   // Handlers
-  void setIrBacklightOnAtPowerHandler();
-  void setIrBacklightOnHandler(modular_server::Pin * pin_ptr);
-  void setIrBacklightOffHandler(modular_server::Pin * pin_ptr);
+  void setIrBacklightAndFanOnAtPowerHandler();
+  void setIrBacklightAndFanOnAtIntensityHandler();
+  void setIrBacklightAndFanOnHandler(modular_server::Pin * pin_ptr);
+  void setIrBacklightAndFanOffHandler(modular_server::Pin * pin_ptr);
+
+  void setVisibleBacklightAndIndicatorOnAtPowerHandler();
+  void setVisibleBacklightAndIndicatorOnAtIntensityHandler();
+
   void updateCameraTriggerHandler();
-  void updatePowersHandler();
   void getAssayStartHandler();
   void getAssayEndHandler();
   void getAssayDurationHandler();
@@ -172,14 +177,10 @@ private:
   void addExperimentDayCopiesHandler();
   void removeLastExperimentDayHandler();
   void removeAllExperimentDaysHandler();
-  void setExperimentDayWhiteLightHandler();
   void setExperimentDayVisibleBacklightHandler();
+  void setExperimentDayWhiteLightHandler();
   void setExperimentDayBuzzerHandler();
   void getAssayStatusHandler();
-  void testWhiteLightPowerHandler();
-  void testVisibleBacklightPowerHandler();
-  void testBuzzerPowerHandler();
-  void stopAllPowerTestsHandler();
   void runAssayHandler(modular_server::Pin * pin_ptr);
   void testAssayHandler(modular_server::Pin * pin_ptr);
   void stopAssayHandler(modular_server::Pin * pin_ptr);

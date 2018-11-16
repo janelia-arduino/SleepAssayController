@@ -40,29 +40,6 @@ void SleepAssayController::setup()
     callbacks_);
 
   // Properties
-  modular_server::Property & camera_trigger_frequency_property = modular_server_.createProperty(constants::camera_trigger_frequency_property_name,constants::camera_trigger_frequency_default);
-  camera_trigger_frequency_property.setRange(constants::camera_trigger_frequency_min,constants::camera_trigger_frequency_max);
-  camera_trigger_frequency_property.setUnits(constants::hz_units);
-  camera_trigger_frequency_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updateCameraTriggerHandler));
-
-  modular_server::Property & white_light_power_property = modular_server_.createProperty(constants::white_light_power_property_name,constants::white_light_power_default);
-  white_light_power_property.setRange(constants::white_light_power_min,constants::white_light_power_max);
-  white_light_power_property.setUnits(digital_controller::constants::percent_units);
-  white_light_power_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updatePowersHandler));
-
-  modular_server::Property & white_light_start_time_property = modular_server_.createProperty(constants::white_light_start_time_property_name,constants::white_light_start_time_default);
-  white_light_start_time_property.setRange(constants::white_light_start_time_min,constants::white_light_start_time_max);
-  white_light_start_time_property.setUnits(constants::military_time_hours_units);
-
-  modular_server::Property & white_light_on_duration_property = modular_server_.createProperty(constants::white_light_on_duration_property_name,constants::white_light_on_duration_default);
-  white_light_on_duration_property.setRange(constants::white_light_on_duration_min,constants::white_light_on_duration_max);
-  white_light_on_duration_property.setUnits(constants::hours_units);
-
-  modular_server::Property & visible_backlight_power_property = modular_server_.createProperty(constants::visible_backlight_power_property_name,constants::visible_backlight_power_default);
-  visible_backlight_power_property.setRange(constants::visible_backlight_power_min,constants::visible_backlight_power_max);
-  visible_backlight_power_property.setUnits(digital_controller::constants::percent_units);
-  visible_backlight_power_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updatePowersHandler));
-
   modular_server::Property & visible_backlight_frequency_property = modular_server_.createProperty(constants::visible_backlight_frequency_property_name,constants::visible_backlight_frequency_default);
   visible_backlight_frequency_property.setRange(constants::visible_backlight_frequency_min,constants::visible_backlight_frequency_max);
   visible_backlight_frequency_property.setUnits(constants::hz_units);
@@ -71,10 +48,13 @@ void SleepAssayController::setup()
   visible_backlight_duty_cycle_property.setRange(constants::visible_backlight_duty_cycle_min,constants::visible_backlight_duty_cycle_max);
   visible_backlight_duty_cycle_property.setUnits(digital_controller::constants::percent_units);
 
-  modular_server::Property & buzzer_power_property = modular_server_.createProperty(constants::buzzer_power_property_name,constants::buzzer_power_default);
-  buzzer_power_property.setRange(constants::buzzer_power_min,constants::buzzer_power_max);
-  buzzer_power_property.setUnits(digital_controller::constants::percent_units);
-  buzzer_power_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updatePowersHandler));
+  modular_server::Property & white_light_start_time_property = modular_server_.createProperty(constants::white_light_start_time_property_name,constants::white_light_start_time_default);
+  white_light_start_time_property.setRange(constants::white_light_start_time_min,constants::white_light_start_time_max);
+  white_light_start_time_property.setUnits(constants::military_time_hours_units);
+
+  modular_server::Property & white_light_on_duration_property = modular_server_.createProperty(constants::white_light_on_duration_property_name,constants::white_light_on_duration_default);
+  white_light_on_duration_property.setRange(constants::white_light_on_duration_min,constants::white_light_on_duration_max);
+  white_light_on_duration_property.setUnits(constants::hours_units);
 
   modular_server::Property & buzzer_on_duration_min_property = modular_server_.createProperty(constants::buzzer_on_duration_min_property_name,constants::buzzer_on_duration_min_default);
   buzzer_on_duration_min_property.setRange(constants::buzzer_on_duration_min,constants::buzzer_on_duration_max);
@@ -92,6 +72,11 @@ void SleepAssayController::setup()
   buzzer_wait_max_property.setRange(constants::buzzer_wait_max_min,constants::buzzer_wait_max_max);
   buzzer_wait_max_property.setUnits(modular_device_base::constants::seconds_units);
 
+  modular_server::Property & camera_trigger_frequency_property = modular_server_.createProperty(constants::camera_trigger_frequency_property_name,constants::camera_trigger_frequency_default);
+  camera_trigger_frequency_property.setRange(constants::camera_trigger_frequency_min,constants::camera_trigger_frequency_max);
+  camera_trigger_frequency_property.setUnits(constants::hz_units);
+  camera_trigger_frequency_property.attachPostSetValueFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::updateCameraTriggerHandler));
+
   modular_server::Property & entrainment_duration_property = modular_server_.createProperty(constants::entrainment_duration_property_name,constants::entrainment_duration_default);
   entrainment_duration_property.setRange(constants::entrainment_duration_min,constants::entrainment_duration_max);
   entrainment_duration_property.setUnits(constants::days_units);
@@ -104,18 +89,14 @@ void SleepAssayController::setup()
   testing_day_duration_property.setRange(constants::testing_day_duration_min,constants::testing_day_duration_max);
   testing_day_duration_property.setUnits(modular_device_base::constants::seconds_units);
 
-  updatePowersHandler();
-
   // Parameters
+  modular_server::Parameter & power_parameter = modular_server_.parameter(digital_controller::constants::power_parameter_name);
+
+  modular_server::Parameter & intensity_parameter = modular_server_.parameter(backlight_controller::constants::intensity_parameter_name);
+
   modular_server::Parameter & experiment_day_parameter = modular_server_.createParameter(constants::experiment_day_parameter_name);
   experiment_day_parameter.setTypeLong();
   experiment_day_parameter.setRange((long)0,(long)constants::EXPERIMENT_DAY_COUNT_MAX - 1);
-
-  modular_server::Parameter & white_light_parameter = modular_server_.createParameter(constants::white_light_parameter_name);
-  white_light_parameter.setTypeBool();
-
-  modular_server::Parameter & visible_backlight_parameter = modular_server_.createParameter(constants::visible_backlight_parameter_name);
-  visible_backlight_parameter.setTypeBool();
 
   modular_server::Parameter & visible_backlight_delay_parameter = modular_server_.createParameter(constants::visible_backlight_delay_parameter_name);
   visible_backlight_delay_parameter.setRange(constants::visible_backlight_delay_min,constants::visible_backlight_delay_max);
@@ -124,9 +105,6 @@ void SleepAssayController::setup()
   modular_server::Parameter & visible_backlight_duration_parameter = modular_server_.createParameter(constants::visible_backlight_duration_parameter_name);
   visible_backlight_duration_parameter.setRange(constants::visible_backlight_duration_min,constants::visible_backlight_duration_max);
   visible_backlight_duration_parameter.setUnits(constants::hours_units);
-
-  modular_server::Parameter & buzzer_parameter = modular_server_.createParameter(constants::buzzer_parameter_name);
-  buzzer_parameter.setTypeBool();
 
   modular_server::Parameter & buzzer_delay_parameter = modular_server_.createParameter(constants::buzzer_delay_parameter_name);
   buzzer_delay_parameter.setRange(constants::buzzer_delay_min,constants::buzzer_delay_max);
@@ -139,12 +117,22 @@ void SleepAssayController::setup()
   modular_server::Parameter & day_count_parameter = modular_server_.createParameter(constants::day_count_parameter_name);
   day_count_parameter.setRange((long)1,(long)constants::EXPERIMENT_DAY_COUNT_MAX);
 
-  modular_server::Parameter & power_parameter = modular_server_.parameter(digital_controller::constants::power_parameter_name);
-
   // Functions
-  modular_server::Function & set_ir_backlight_on_at_power_function = modular_server_.createFunction(constants::set_ir_backlight_on_at_power_function_name);
-  set_ir_backlight_on_at_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setIrBacklightOnAtPowerHandler));
-  set_ir_backlight_on_at_power_function.addParameter(power_parameter);
+  modular_server::Function & set_ir_backlight_and_fan_on_at_power_function = modular_server_.createFunction(constants::set_ir_backlight_and_fan_on_at_power_function_name);
+  set_ir_backlight_and_fan_on_at_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setIrBacklightAndFanOnAtPowerHandler));
+  set_ir_backlight_and_fan_on_at_power_function.addParameter(power_parameter);
+
+  modular_server::Function & set_ir_backlight_and_fan_on_at_intensity_function = modular_server_.createFunction(constants::set_ir_backlight_and_fan_on_at_intensity_function_name);
+  set_ir_backlight_and_fan_on_at_intensity_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setIrBacklightAndFanOnAtIntensityHandler));
+  set_ir_backlight_and_fan_on_at_intensity_function.addParameter(intensity_parameter);
+
+  modular_server::Function & set_visible_backlight_and_indicator_on_at_power_function = modular_server_.createFunction(constants::set_visible_backlight_and_indicator_on_at_power_function_name);
+  set_visible_backlight_and_indicator_on_at_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setVisibleBacklightAndIndicatorOnAtPowerHandler));
+  set_visible_backlight_and_indicator_on_at_power_function.addParameter(power_parameter);
+
+  modular_server::Function & set_visible_backlight_and_indicator_on_at_intensity_function = modular_server_.createFunction(constants::set_visible_backlight_and_indicator_on_at_intensity_function_name);
+  set_visible_backlight_and_indicator_on_at_intensity_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setVisibleBacklightAndIndicatorOnAtIntensityHandler));
+  set_visible_backlight_and_indicator_on_at_intensity_function.addParameter(intensity_parameter);
 
   modular_server::Function & get_assay_start_function = modular_server_.createFunction(constants::get_assay_start_function_name);
   get_assay_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getAssayStartHandler));
@@ -212,24 +200,24 @@ void SleepAssayController::setup()
   modular_server::Function & remove_all_experiment_days_function = modular_server_.createFunction(constants::remove_all_experiment_days_function_name);
   remove_all_experiment_days_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::removeAllExperimentDaysHandler));
 
-  modular_server::Function & set_experiment_day_white_light_function = modular_server_.createFunction(constants::set_experiment_day_white_light_function_name);
-  set_experiment_day_white_light_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setExperimentDayWhiteLightHandler));
-  set_experiment_day_white_light_function.addParameter(experiment_day_parameter);
-  set_experiment_day_white_light_function.addParameter(white_light_parameter);
-  set_experiment_day_white_light_function.setResultTypeObject();
-
   modular_server::Function & set_experiment_day_visible_backlight_function = modular_server_.createFunction(constants::set_experiment_day_visible_backlight_function_name);
   set_experiment_day_visible_backlight_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setExperimentDayVisibleBacklightHandler));
   set_experiment_day_visible_backlight_function.addParameter(experiment_day_parameter);
-  set_experiment_day_visible_backlight_function.addParameter(visible_backlight_parameter);
+  set_experiment_day_visible_backlight_function.addParameter(intensity_parameter);
   set_experiment_day_visible_backlight_function.addParameter(visible_backlight_delay_parameter);
   set_experiment_day_visible_backlight_function.addParameter(visible_backlight_duration_parameter);
   set_experiment_day_visible_backlight_function.setResultTypeObject();
 
+  modular_server::Function & set_experiment_day_white_light_function = modular_server_.createFunction(constants::set_experiment_day_white_light_function_name);
+  set_experiment_day_white_light_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setExperimentDayWhiteLightHandler));
+  set_experiment_day_white_light_function.addParameter(experiment_day_parameter);
+  set_experiment_day_white_light_function.addParameter(intensity_parameter);
+  set_experiment_day_white_light_function.setResultTypeObject();
+
   modular_server::Function & set_experiment_day_buzzer_function = modular_server_.createFunction(constants::set_experiment_day_buzzer_function_name);
   set_experiment_day_buzzer_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setExperimentDayBuzzerHandler));
   set_experiment_day_buzzer_function.addParameter(experiment_day_parameter);
-  set_experiment_day_buzzer_function.addParameter(buzzer_parameter);
+  set_experiment_day_buzzer_function.addParameter(power_parameter);
   set_experiment_day_buzzer_function.addParameter(buzzer_delay_parameter);
   set_experiment_day_buzzer_function.addParameter(buzzer_duration_parameter);
   set_experiment_day_buzzer_function.setResultTypeObject();
@@ -237,21 +225,6 @@ void SleepAssayController::setup()
   modular_server::Function & get_assay_status_function = modular_server_.createFunction(constants::get_assay_status_function_name);
   get_assay_status_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getAssayStatusHandler));
   get_assay_status_function.setResultTypeObject();
-
-  modular_server::Function & test_white_light_power_function = modular_server_.createFunction(constants::test_white_light_power_function_name);
-  test_white_light_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::testWhiteLightPowerHandler));
-  test_white_light_power_function.addParameter(power_parameter);
-
-  modular_server::Function & test_visible_backlight_power_function = modular_server_.createFunction(constants::test_visible_backlight_power_function_name);
-  test_visible_backlight_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::testVisibleBacklightPowerHandler));
-  test_visible_backlight_power_function.addParameter(power_parameter);
-
-  modular_server::Function & test_buzzer_power_function = modular_server_.createFunction(constants::test_buzzer_power_function_name);
-  test_buzzer_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::testBuzzerPowerHandler));
-  test_buzzer_power_function.addParameter(power_parameter);
-
-  modular_server::Function & stop_all_power_tests_function = modular_server_.createFunction(constants::stop_all_power_tests_function_name);
-  stop_all_power_tests_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::stopAllPowerTestsHandler));
 
   // Callbacks
   modular_server::Callback & run_assay_callback = modular_server_.createCallback(constants::run_assay_callback_name);
@@ -266,22 +239,96 @@ void SleepAssayController::setup()
   initializeChannels();
 }
 
-void SleepAssayController::setIrBacklightOnAtPower(long power)
+void SleepAssayController::setIrBacklightAndFanOnAtPower(double power)
 {
-  setFanOn();
+  double power_lower_bound = getPowerLowerBound(irBacklightToDigitalChannel(constants::ir_backlight));
+  if (power > power_lower_bound)
+  {
+    setFanOn();
+  }
+  else
+  {
+    setFanOff();
+  }
   BacklightController::setIrBacklightOnAtPower(constants::ir_backlight,power);
 }
 
-void SleepAssayController::setIrBacklightOn()
+void SleepAssayController::setIrBacklightAndFanOnAtIntensity(double intensity)
 {
-  setFanOn();
+  double power = irBacklightIntensityToPower(constants::ir_backlight,intensity);
+  setIrBacklightAndFanOnAtPower(power);
+}
+
+void SleepAssayController::setIrBacklightAndFanOn()
+{
+  double power = getIrBacklightPowerWhenOn(constants::ir_backlight);
+  double power_lower_bound = getPowerLowerBound(irBacklightToDigitalChannel(constants::ir_backlight));
+  if (power > power_lower_bound)
+  {
+    setFanOn();
+  }
+  else
+  {
+    setFanOff();
+  }
   BacklightController::setIrBacklightOn(constants::ir_backlight);
 }
 
-void SleepAssayController::setIrBacklightOff()
+void SleepAssayController::setIrBacklightAndFanOff()
 {
+  if (assayStarted() && !assayFinished())
+  {
+    return;
+  }
+
   BacklightController::setIrBacklightOff(constants::ir_backlight);
   setFanOff();
+}
+
+void SleepAssayController::setVisibleBacklightAndIndicatorOnAtPower(double power)
+{
+  double power_lower_bound = getPowerLowerBound(visibleBacklightToDigitalChannel(constants::visible_backlight));
+  if (power > power_lower_bound)
+  {
+    setVisibleBacklightIndicatorOn();
+  }
+  else
+  {
+    setVisibleBacklightIndicatorOff();
+  }
+  BacklightController::setVisibleBacklightOnAtPower(constants::visible_backlight,power);
+}
+
+void SleepAssayController::setVisibleBacklightAndIndicatorOnAtIntensity(double intensity)
+{
+  double power = visibleBacklightIntensityToPower(constants::visible_backlight,intensity);
+  setVisibleBacklightAndIndicatorOnAtPower(power);
+}
+
+void SleepAssayController::setVisibleBacklightAndIndicatorOn()
+{
+  double power = getVisibleBacklightPowerWhenOn(constants::visible_backlight);
+  double power_lower_bound = getPowerLowerBound(visibleBacklightToDigitalChannel(constants::visible_backlight));
+  if (power > power_lower_bound)
+  {
+    setVisibleBacklightIndicatorOn();
+  }
+  else
+  {
+    setVisibleBacklightIndicatorOff();
+  }
+  BacklightController::setVisibleBacklightOn(constants::visible_backlight);
+}
+
+void SleepAssayController::setVisibleBacklightAndIndicatorOff()
+{
+  if (assayStarted() && !assayFinished())
+  {
+    return;
+  }
+
+  BacklightController::setVisibleBacklightOff(constants::visible_backlight);
+  setVisibleBacklightIndicatorOff();
 }
 
 void SleepAssayController::runAssay()
@@ -414,11 +461,11 @@ SleepAssayController::experiment_day_info_array_t SleepAssayController::getExper
 size_t SleepAssayController::addExperimentDay()
 {
   constants::ExperimentDayInfo experiment_day_info;
-  experiment_day_info.white_light = true;
-  experiment_day_info.visible_backlight = false;
+  experiment_day_info.visible_backlight_intensity = 0.0;
   experiment_day_info.visible_backlight_delay_hours = 0.0;
   experiment_day_info.visible_backlight_duration_hours = 0.0;
-  experiment_day_info.buzzer = false;
+  experiment_day_info.white_light_intensity = 0.0;
+  experiment_day_info.buzzer_power = 0.0;
   experiment_day_info.buzzer_delay_hours = 0.0;
   experiment_day_info.buzzer_duration_hours = 0.0;
   experiment_day_array_.push_back(experiment_day_info);
@@ -482,18 +529,8 @@ void SleepAssayController::removeAllExperimentDays()
   experiment_day_array_.clear();
 }
 
-void SleepAssayController::setExperimentDayWhiteLight(size_t experiment_day,
-  bool white_light)
-{
-  if (!experimentDayExists(experiment_day))
-  {
-    return;
-  }
-  experiment_day_array_[experiment_day].white_light = white_light;
-}
-
 void SleepAssayController::setExperimentDayVisibleBacklight(size_t experiment_day,
-  bool visible_backlight,
+  double visible_backlight_intensity,
   double visible_backlight_delay_hours,
   double visible_backlight_duration_hours)
 {
@@ -501,7 +538,7 @@ void SleepAssayController::setExperimentDayVisibleBacklight(size_t experiment_da
   {
     return;
   }
-  experiment_day_array_[experiment_day].visible_backlight = visible_backlight;
+  experiment_day_array_[experiment_day].visible_backlight_intensity = visible_backlight_intensity;
   experiment_day_array_[experiment_day].visible_backlight_delay_hours = visible_backlight_delay_hours;
   if ((visible_backlight_duration_hours + visible_backlight_delay_hours) < constants::visible_backlight_duration_max)
   {
@@ -513,8 +550,18 @@ void SleepAssayController::setExperimentDayVisibleBacklight(size_t experiment_da
   }
 }
 
+void SleepAssayController::setExperimentDayWhiteLight(size_t experiment_day,
+  double white_light_intensity)
+{
+  if (!experimentDayExists(experiment_day))
+  {
+    return;
+  }
+  experiment_day_array_[experiment_day].white_light_intensity = white_light_intensity;
+}
+
 void SleepAssayController::setExperimentDayBuzzer(size_t experiment_day,
-  bool buzzer,
+  double buzzer_power,
   double buzzer_delay_hours,
   double buzzer_duration_hours)
 {
@@ -522,7 +569,7 @@ void SleepAssayController::setExperimentDayBuzzer(size_t experiment_day,
   {
     return;
   }
-  experiment_day_array_[experiment_day].buzzer = buzzer;
+  experiment_day_array_[experiment_day].buzzer_power = buzzer_power;
   experiment_day_array_[experiment_day].buzzer_delay_hours = buzzer_delay_hours;
   if ((buzzer_duration_hours + buzzer_delay_hours) < constants::buzzer_duration_max)
   {
@@ -632,79 +679,6 @@ bool SleepAssayController::buzzing()
   return buzzing;
 }
 
-void SleepAssayController::testWhiteLightPower(long power)
-{
-  if (assayStarted() && !assayFinished())
-  {
-    return;
-  }
-
-  const size_t white_light_channel = highVoltageToDigitalChannel(constants::white_light_high_voltage);
-  setChannelOnAtPower(white_light_channel,power);
-
-  const size_t white_light_indicator_channel = lowVoltageToDigitalChannel(constants::white_light_indicator_low_voltage);
-  if (power > 0)
-  {
-    setChannelOn(white_light_indicator_channel);
-  }
-  else
-  {
-    setChannelOff(white_light_indicator_channel);
-  }
-}
-
-void SleepAssayController::testVisibleBacklightPower(long power)
-{
-  if (assayStarted() && !assayFinished())
-  {
-    return;
-  }
-
-  const size_t visible_backlight_channel = visibleBacklightToDigitalChannel(constants::visible_backlight);
-  setChannelOnAtPower(visible_backlight_channel,power);
-
-  const size_t visible_backlight_indicator_channel = lowVoltageToDigitalChannel(constants::visible_backlight_indicator_low_voltage);
-  if (power > 0)
-  {
-    setChannelOn(visible_backlight_indicator_channel);
-  }
-  else
-  {
-    setChannelOff(visible_backlight_indicator_channel);
-  }
-}
-
-void SleepAssayController::testBuzzerPower(long power)
-{
-  if (assayStarted() && !assayFinished())
-  {
-    return;
-  }
-
-  const size_t buzzer_channel = highVoltageToDigitalChannel(constants::buzzer_high_voltage);
-  setChannelOnAtPower(buzzer_channel,power);
-
-  const size_t buzzer_indicator_channel = lowVoltageToDigitalChannel(constants::buzzer_indicator_low_voltage);
-  if (power > 0)
-  {
-    setChannelOn(buzzer_indicator_channel);
-  }
-  else
-  {
-    setChannelOff(buzzer_indicator_channel);
-  }
-}
-
-void SleepAssayController::stopAllPowerTests()
-{
-  if (assayStarted() && !assayFinished())
-  {
-    return;
-  }
-
-  setAllChannelsOff();
-}
-
 bool SleepAssayController::experimentDayExists(size_t experiment_day)
 {
   return (experiment_day < experiment_day_array_.size());
@@ -712,7 +686,7 @@ bool SleepAssayController::experimentDayExists(size_t experiment_day)
 
 void SleepAssayController::setFanOn()
 {
-  setHighVoltageOn(constants::fan_high_voltage);
+  setHighVoltageOnAtPower(constants::fan_high_voltage,constants::fan_power);
 }
 
 void SleepAssayController::setFanOff()
@@ -722,64 +696,32 @@ void SleepAssayController::setFanOff()
 
 void SleepAssayController::setVisibleBacklightIndicatorOn()
 {
-  setLowVoltageOn(constants::visible_backlight_low_voltage);
+  setLowVoltageOnAtPower(constants::visible_backlight_indicator_low_voltage,constants::indicator_power);
 }
 
 void SleepAssayController::setVisibleBacklightIndicatorOff()
 {
-  setLowVoltageOff(constants::visible_backlight_low_voltage);
+  setLowVoltageOff(constants::visible_backlight_indicator_low_voltage);
 }
 
 void SleepAssayController::setWhiteLightIndicatorOn()
 {
-  setLowVoltageOn(constants::white_light_low_voltage);
+  setLowVoltageOnAtPower(constants::white_light_indicator_low_voltage,constants::indicator_power);
 }
 
 void SleepAssayController::setWhiteLightIndicatorOff()
 {
-  setLowVoltageOff(constants::white_light_low_voltage);
+  setLowVoltageOff(constants::white_light_indicator_low_voltage);
 }
 
 void SleepAssayController::setBuzzerIndicatorOn()
 {
-  setLowVoltageOn(constants::buzzer_low_voltage);
+  setLowVoltageOnAtPower(constants::buzzer_indicator_low_voltage,constants::indicator_power);
 }
 
 void SleepAssayController::setBuzzerIndicatorOff()
 {
-  setLowVoltageOff(constants::buzzer_low_voltage);
-}
-
-void SleepAssayController::getCameraTriggerPwmInfo(uint32_t & channels,
-  long & period,
-  long & on_duration)
-{
-  const size_t camera_trigger_channel = lowVoltageToDigitalChannel(constants::camera_trigger_low_voltage);
-  const uint32_t bit = 1;
-  channels = bit << camera_trigger_channel;
-
-  double frequency;
-  modular_server_.property(constants::camera_trigger_frequency_property_name).getValue(frequency);
-  period = (1.0/frequency)*modular_device_base::constants::milliseconds_per_second;
-  on_duration = period*constants::camera_trigger_duty_cycle/constants::camera_trigger_duty_cycle_max;
-}
-
-void SleepAssayController::getWhiteLightPwmInfo(uint32_t & channels,
-  long & period,
-  long & on_duration)
-{
-  const size_t white_light_channel = highVoltageToDigitalChannel(constants::white_light_high_voltage);
-  const uint32_t bit = 1;
-  channels = bit << white_light_channel;
-
-  const size_t white_light_indicator_channel = lowVoltageToDigitalChannel(constants::white_light_indicator_low_voltage);
-  channels |= bit << white_light_indicator_channel;
-
-  period = scaleDuration(modular_device_base::constants::milliseconds_per_day);
-
-  long on_duration_hours;
-  modular_server_.property(constants::white_light_on_duration_property_name).getValue(on_duration_hours);
-  on_duration = scaleDuration(on_duration_hours*modular_device_base::constants::milliseconds_per_hour);
+  setLowVoltageOff(constants::buzzer_indicator_low_voltage);
 }
 
 void SleepAssayController::getVisibleBacklightPwmInfo(size_t experiment_day,
@@ -816,6 +758,24 @@ void SleepAssayController::getVisibleBacklightPwmInfo(size_t experiment_day,
     periods.push_back(period_1);
   }
 
+}
+
+void SleepAssayController::getWhiteLightPwmInfo(uint32_t & channels,
+  long & period,
+  long & on_duration)
+{
+  const size_t white_light_channel = highVoltageToDigitalChannel(constants::white_light_high_voltage);
+  const uint32_t bit = 1;
+  channels = bit << white_light_channel;
+
+  const size_t white_light_indicator_channel = lowVoltageToDigitalChannel(constants::white_light_indicator_low_voltage);
+  channels |= bit << white_light_indicator_channel;
+
+  period = scaleDuration(modular_device_base::constants::milliseconds_per_day);
+
+  long on_duration_hours;
+  modular_server_.property(constants::white_light_on_duration_property_name).getValue(on_duration_hours);
+  on_duration = scaleDuration(on_duration_hours*modular_device_base::constants::milliseconds_per_hour);
 }
 
 void SleepAssayController::getBuzzerPwmInfo(size_t experiment_day,
@@ -868,6 +828,20 @@ void SleepAssayController::getBuzzerPwmInfo(size_t experiment_day,
 
 }
 
+void SleepAssayController::getCameraTriggerPwmInfo(uint32_t & channels,
+  long & period,
+  long & on_duration)
+{
+  const size_t camera_trigger_channel = lowVoltageToDigitalChannel(constants::camera_trigger_low_voltage);
+  const uint32_t bit = 1;
+  channels = bit << camera_trigger_channel;
+
+  double frequency;
+  modular_server_.property(constants::camera_trigger_frequency_property_name).getValue(frequency);
+  period = (1.0/frequency)*modular_device_base::constants::milliseconds_per_second;
+  on_duration = period*constants::camera_trigger_duty_cycle/constants::camera_trigger_power;
+}
+
 void SleepAssayController::initializeVariables()
 {
   assay_started_ = false;
@@ -882,7 +856,7 @@ void SleepAssayController::initializeVariables()
   buzzer_pwm_index_ = -1;
 
   camera_trigger_running_ = false;
-  camera_trigger_pwm_index_ = -1;
+  camera_trigger_pwm_id_.index = -1;
 }
 
 void SleepAssayController::initializeChannels()
@@ -912,7 +886,7 @@ void SleepAssayController::startCameraTrigger()
   getCameraTriggerPwmInfo(channels,period,on_duration);
 
   long delay = 0;
-  camera_trigger_pwm_index_ = startPwm(channels,delay,period,on_duration);
+  camera_trigger_pwm_id_ = startPwm(channels,constants::camera_trigger_power,delay,period,on_duration);
 
   camera_trigger_running_ = true;
 }
@@ -921,10 +895,10 @@ void SleepAssayController::stopCameraTrigger()
 {
   if (camera_trigger_running_)
   {
-    stopPwm(camera_trigger_pwm_index_);
+    stopPwm(camera_trigger_pwm_id_);
   }
   camera_trigger_running_ = false;
-  camera_trigger_pwm_index_ = -1;
+  camera_trigger_pwm_id_.index = -1;
 }
 
 void SleepAssayController::startAssay()
@@ -1210,11 +1184,11 @@ void SleepAssayController::writeExperimentDayInfoToResponse(size_t experiment_da
 
   constants::ExperimentDayInfo experiment_day_info = experiment_day_array_[experiment_day];
 
-  modular_server_.response().write(constants::white_light_parameter_name,experiment_day_info.white_light);
-  modular_server_.response().write(constants::visible_backlight_parameter_name,experiment_day_info.visible_backlight);
+  modular_server_.response().write(constants::visible_backlight_intensity_string,experiment_day_info.visible_backlight_intensity);
   modular_server_.response().write(constants::visible_backlight_delay_parameter_name,experiment_day_info.visible_backlight_delay_hours);
   modular_server_.response().write(constants::visible_backlight_duration_parameter_name,experiment_day_info.visible_backlight_duration_hours);
-  modular_server_.response().write(constants::buzzer_parameter_name,experiment_day_info.buzzer);
+  modular_server_.response().write(constants::white_light_intensity_string,experiment_day_info.white_light_intensity);
+  modular_server_.response().write(constants::buzzer_power_string,experiment_day_info.buzzer_power);
   modular_server_.response().write(constants::buzzer_delay_parameter_name,experiment_day_info.buzzer_delay_hours);
   modular_server_.response().write(constants::buzzer_duration_parameter_name,experiment_day_info.buzzer_duration_hours);
 
@@ -1239,22 +1213,46 @@ void SleepAssayController::writeExperimentDayInfoToResponse(size_t experiment_da
 // modular_server_.property(property_name).getElementValue(element_index,value) value type must match the property array element default type
 // modular_server_.property(property_name).setElementValue(element_index,value) value type must match the property array element default type
 
-void SleepAssayController::setIrBacklightOnAtPowerHandler()
+void SleepAssayController::setIrBacklightAndFanOnAtPowerHandler()
 {
-  long power;
+  double power;
   modular_server_.parameter(digital_controller::constants::power_parameter_name).getValue(power);
 
-  setIrBacklightOnAtPower(power);
+  setIrBacklightAndFanOnAtPower(power);
 }
 
-void SleepAssayController::setIrBacklightOnHandler(modular_server::Pin * pin_ptr)
+void SleepAssayController::setIrBacklightAndFanOnAtIntensityHandler()
 {
-  setIrBacklightOn();
+  double intensity;
+  modular_server_.parameter(backlight_controller::constants::intensity_parameter_name).getValue(intensity);
+
+  setIrBacklightAndFanOnAtIntensity(intensity);
 }
 
-void SleepAssayController::setIrBacklightOffHandler(modular_server::Pin * pin_ptr)
+void SleepAssayController::setIrBacklightAndFanOnHandler(modular_server::Pin * pin_ptr)
 {
-  setIrBacklightOff();
+  setIrBacklightAndFanOn();
+}
+
+void SleepAssayController::setIrBacklightAndFanOffHandler(modular_server::Pin * pin_ptr)
+{
+  setIrBacklightAndFanOff();
+}
+
+void SleepAssayController::setVisibleBacklightAndIndicatorOnAtPowerHandler()
+{
+  double power;
+  modular_server_.parameter(digital_controller::constants::power_parameter_name).getValue(power);
+
+  setVisibleBacklightAndIndicatorOnAtPower(power);
+}
+
+void SleepAssayController::setVisibleBacklightAndIndicatorOnAtIntensityHandler()
+{
+  double intensity;
+  modular_server_.parameter(backlight_controller::constants::intensity_parameter_name).getValue(intensity);
+
+  setVisibleBacklightAndIndicatorOnAtIntensity(intensity);
 }
 
 void SleepAssayController::updateCameraTriggerHandler()
@@ -1264,44 +1262,6 @@ void SleepAssayController::updateCameraTriggerHandler()
     stopCameraTrigger();
     startCameraTrigger();
   }
-}
-
-void SleepAssayController::updatePowersHandler()
-{
-  long channel;
-  long power;
-  modular_server::Property & power_max_property = modular_server_.property(digital_controller::constants::power_max_property_name);
-
-  modular_server_.property(constants::white_light_channel_property_name).getValue(channel);
-  modular_server_.property(constants::white_light_power_property_name).getValue(power);
-  power_max_property.setElementValue(channel,power);
-  setPowerWhenOn(channel,power);
-
-  modular_server_.property(constants::white_light_indicator_channel_property_name).getValue(channel);
-  power = constants::white_light_power_max;
-  power_max_property.setElementValue(channel,power);
-  setPowerWhenOn(channel,power);
-
-  modular_server_.property(constants::visible_backlight_channel_property_name).getValue(channel);
-  modular_server_.property(constants::visible_backlight_power_property_name).getValue(power);
-  power_max_property.setElementValue(channel,power);
-  setPowerWhenOn(channel,power);
-
-  modular_server_.property(constants::visible_backlight_indicator_channel_property_name).getValue(channel);
-  power = constants::visible_backlight_power_max;
-  power_max_property.setElementValue(channel,power);
-  setPowerWhenOn(channel,power);
-
-  modular_server_.property(constants::buzzer_channel_property_name).getValue(channel);
-  modular_server_.property(constants::buzzer_power_property_name).getValue(power);
-  power_max_property.setElementValue(channel,power);
-  setPowerWhenOn(channel,power);
-
-  modular_server_.property(constants::buzzer_indicator_channel_property_name).getValue(channel);
-  power = constants::buzzer_power_max;
-  power_max_property.setElementValue(channel,power);
-  setPowerWhenOn(channel,power);
-
 }
 
 void SleepAssayController::getAssayStartHandler()
@@ -1507,26 +1467,6 @@ void SleepAssayController::removeAllExperimentDaysHandler()
   removeAllExperimentDays();
 }
 
-void SleepAssayController::setExperimentDayWhiteLightHandler()
-{
-  long experiment_day;
-  modular_server_.parameter(constants::experiment_day_parameter_name).getValue(experiment_day);
-
-  if (!experimentDayExists(experiment_day))
-  {
-    modular_server_.response().returnError(constants::experiment_day_does_not_exist_error);
-    return;
-  }
-
-  bool white_light;
-  modular_server_.parameter(constants::white_light_parameter_name).getValue(white_light);
-
-  setExperimentDayWhiteLight(experiment_day,white_light);
-
-  modular_server_.response().writeResultKey();
-  writeExperimentDayInfoToResponse(experiment_day);
-}
-
 void SleepAssayController::setExperimentDayVisibleBacklightHandler()
 {
   long experiment_day;
@@ -1538,8 +1478,8 @@ void SleepAssayController::setExperimentDayVisibleBacklightHandler()
     return;
   }
 
-  bool visible_backlight;
-  modular_server_.parameter(constants::visible_backlight_parameter_name).getValue(visible_backlight);
+  double visible_backlight_intensity;
+  modular_server_.parameter(backlight_controller::constants::intensity_parameter_name).getValue(visible_backlight_intensity);
 
   double visible_backlight_delay;
   modular_server_.parameter(constants::visible_backlight_delay_parameter_name).getValue(visible_backlight_delay);
@@ -1547,7 +1487,27 @@ void SleepAssayController::setExperimentDayVisibleBacklightHandler()
   double visible_backlight_duration;
   modular_server_.parameter(constants::visible_backlight_duration_parameter_name).getValue(visible_backlight_duration);
 
-  setExperimentDayVisibleBacklight(experiment_day,visible_backlight,visible_backlight_delay,visible_backlight_duration);
+  setExperimentDayVisibleBacklight(experiment_day,visible_backlight_intensity,visible_backlight_delay,visible_backlight_duration);
+
+  modular_server_.response().writeResultKey();
+  writeExperimentDayInfoToResponse(experiment_day);
+}
+
+void SleepAssayController::setExperimentDayWhiteLightHandler()
+{
+  long experiment_day;
+  modular_server_.parameter(constants::experiment_day_parameter_name).getValue(experiment_day);
+
+  if (!experimentDayExists(experiment_day))
+  {
+    modular_server_.response().returnError(constants::experiment_day_does_not_exist_error);
+    return;
+  }
+
+  double white_light_intensity;
+  modular_server_.parameter(backlight_controller::constants::intensity_parameter_name).getValue(white_light_intensity);
+
+  setExperimentDayWhiteLight(experiment_day,white_light_intensity);
 
   modular_server_.response().writeResultKey();
   writeExperimentDayInfoToResponse(experiment_day);
@@ -1564,8 +1524,8 @@ void SleepAssayController::setExperimentDayBuzzerHandler()
     return;
   }
 
-  bool buzzer;
-  modular_server_.parameter(constants::buzzer_parameter_name).getValue(buzzer);
+  double buzzer_power;
+  modular_server_.parameter(digital_controlelr::constants::power_parameter_name).getValue(buzzer_power);
 
   double buzzer_delay;
   modular_server_.parameter(constants::buzzer_delay_parameter_name).getValue(buzzer_delay);
@@ -1573,7 +1533,7 @@ void SleepAssayController::setExperimentDayBuzzerHandler()
   double buzzer_duration;
   modular_server_.parameter(constants::buzzer_duration_parameter_name).getValue(buzzer_duration);
 
-  setExperimentDayBuzzer(experiment_day,buzzer,buzzer_delay,buzzer_duration);
+  setExperimentDayBuzzer(experiment_day,buzzer_power,buzzer_delay,buzzer_duration);
 
   modular_server_.response().writeResultKey();
   writeExperimentDayInfoToResponse(experiment_day);
@@ -1627,35 +1587,6 @@ void SleepAssayController::getAssayStatusHandler()
   modular_server_.response().write(constants::testing_string,assay_status.testing);
 
   modular_server_.response().endObject();
-}
-
-void SleepAssayController::testWhiteLightPowerHandler()
-{
-  size_t power;
-  modular_server_.parameter(digital_controller::constants::power_parameter_name).getValue(power);
-
-  testWhiteLightPower(power);
-}
-
-void SleepAssayController::testVisibleBacklightPowerHandler()
-{
-  size_t power;
-  modular_server_.parameter(digital_controller::constants::power_parameter_name).getValue(power);
-
-  testVisibleBacklightPower(power);
-}
-
-void SleepAssayController::testBuzzerPowerHandler()
-{
-  size_t power;
-  modular_server_.parameter(digital_controller::constants::power_parameter_name).getValue(power);
-
-  testBuzzerPower(power);
-}
-
-void SleepAssayController::stopAllPowerTestsHandler()
-{
-  stopAllPowerTests();
 }
 
 void SleepAssayController::runAssayHandler(modular_server::Pin * pin_ptr)
