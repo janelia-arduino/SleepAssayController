@@ -18,8 +18,8 @@ namespace constants
 //MAX values must be >= 1, >= created/copied count, < RAM limit
 enum{PROPERTY_COUNT_MAX=12};
 enum{PARAMETER_COUNT_MAX=6};
-enum{FUNCTION_COUNT_MAX=23};
-enum{CALLBACK_COUNT_MAX=9};
+enum{FUNCTION_COUNT_MAX=24};
+enum{CALLBACK_COUNT_MAX=12};
 
 extern ConstantString device_name;
 
@@ -173,6 +173,7 @@ extern ConstantString set_ir_backlight_and_fan_on_at_power_function_name;
 extern ConstantString set_ir_backlight_and_fan_on_at_intensity_function_name;
 extern ConstantString set_visible_backlight_and_indicator_on_at_power_function_name;
 extern ConstantString set_visible_backlight_and_indicator_on_at_intensity_function_name;
+extern ConstantString set_white_light_and_indicator_on_at_power_function_name;
 
 extern ConstantString get_assay_start_function_name;
 extern ConstantString get_assay_end_function_name;
@@ -201,6 +202,9 @@ extern ConstantString toggle_ir_backlight_and_fan_callback_name;
 extern ConstantString set_visible_backlight_and_indicator_on_callback_name;
 extern ConstantString set_visible_backlight_and_indicator_off_callback_name;
 extern ConstantString toggle_visible_backlight_and_indicator_callback_name;
+extern ConstantString set_white_light_and_indicator_on_callback_name;
+extern ConstantString set_white_light_and_indicator_off_callback_name;
+extern ConstantString toggle_white_light_and_indicator_callback_name;
 
 extern ConstantString run_assay_callback_name;
 extern ConstantString test_assay_callback_name;

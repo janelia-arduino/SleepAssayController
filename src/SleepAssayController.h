@@ -40,6 +40,11 @@ public:
   void setVisibleBacklightAndIndicatorOff();
   void toggleVisibleBacklightAndIndicator();
 
+  void setWhiteLightAndIndicatorOnAtPower(double power);
+  void setWhiteLightAndIndicatorOn();
+  void setWhiteLightAndIndicatorOff();
+  void toggleWhiteLightAndIndicator();
+
   void runAssay();
   void testAssay();
   void stopAssay();
@@ -166,6 +171,11 @@ private:
   void setVisibleBacklightAndIndicatorOnHandler(modular_server::Pin * pin_ptr);
   void setVisibleBacklightAndIndicatorOffHandler(modular_server::Pin * pin_ptr);
   void toggleVisibleBacklightAndIndicatorHandler(modular_server::Pin * pin_ptr);
+
+  void setWhiteLightAndIndicatorOnAtPowerHandler();
+  void setWhiteLightAndIndicatorOnHandler(modular_server::Pin * pin_ptr);
+  void setWhiteLightAndIndicatorOffHandler(modular_server::Pin * pin_ptr);
+  void toggleWhiteLightAndIndicatorHandler(modular_server::Pin * pin_ptr);
 
   void updateCameraTriggerHandler();
   void getAssayStartHandler();

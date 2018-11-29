@@ -135,6 +135,10 @@ void SleepAssayController::setup()
   set_visible_backlight_and_indicator_on_at_intensity_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setVisibleBacklightAndIndicatorOnAtIntensityHandler));
   set_visible_backlight_and_indicator_on_at_intensity_function.addParameter(intensity_parameter);
 
+  modular_server::Function & set_white_light_and_indicator_on_at_power_function = modular_server_.createFunction(constants::set_white_light_and_indicator_on_at_power_function_name);
+  set_white_light_and_indicator_on_at_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setWhiteLightAndIndicatorOnAtPowerHandler));
+  set_white_light_and_indicator_on_at_power_function.addParameter(power_parameter);
+
   modular_server::Function & get_assay_start_function = modular_server_.createFunction(constants::get_assay_start_function_name);
   get_assay_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getAssayStartHandler));
   get_assay_start_function.setResultTypeObject();
@@ -246,6 +250,15 @@ void SleepAssayController::setup()
   modular_server::Callback & toggle_visible_backlight_and_indicator_callback = modular_server_.createCallback(constants::toggle_visible_backlight_and_indicator_callback_name);
   toggle_visible_backlight_and_indicator_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::toggleVisibleBacklightAndIndicatorHandler));
   toggle_visible_backlight_and_indicator_callback.attachTo(btn_a_pin,modular_server::constants::pin_mode_interrupt_falling);
+
+  modular_server::Callback & set_white_light_and_indicator_on_callback = modular_server_.createCallback(constants::set_white_light_and_indicator_on_callback_name);
+  set_white_light_and_indicator_on_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::setWhiteLightAndIndicatorOnHandler));
+
+  modular_server::Callback & set_white_light_and_indicator_off_callback = modular_server_.createCallback(constants::set_white_light_and_indicator_off_callback_name);
+  set_white_light_and_indicator_off_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::setWhiteLightAndIndicatorOffHandler));
+
+  modular_server::Callback & toggle_white_light_and_indicator_callback = modular_server_.createCallback(constants::toggle_white_light_and_indicator_callback_name);
+  toggle_white_light_and_indicator_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::toggleWhiteLightAndIndicatorHandler));
 
   modular_server::Callback & run_assay_callback = modular_server_.createCallback(constants::run_assay_callback_name);
   run_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::runAssayHandler));
@@ -383,6 +396,66 @@ void SleepAssayController::toggleVisibleBacklightAndIndicator()
   else
   {
     setVisibleBacklightIndicatorOff();
+  }
+}
+
+void SleepAssayController::setWhiteLightAndIndicatorOnAtPower(double power)
+{
+  double power_lower_bound = getPowerLowerBound(highVoltageToDigitalChannel(constants::white_light_high_voltage));
+  if (power > power_lower_bound)
+  {
+    setWhiteLightIndicatorOn();
+  }
+  else
+  {
+    setWhiteLightIndicatorOff();
+  }
+  BacklightController::setHighVoltageOnAtPower(constants::white_light_high_voltage,power);
+}
+
+void SleepAssayController::setWhiteLightAndIndicatorOn()
+{
+  double power = getHighVoltagePowerWhenOn(constants::white_light_high_voltage);
+  double power_lower_bound = getPowerLowerBound(highVoltageToDigitalChannel(constants::white_light_high_voltage));
+  if (power > power_lower_bound)
+  {
+    setWhiteLightIndicatorOn();
+  }
+  else
+  {
+    setWhiteLightIndicatorOff();
+  }
+  BacklightController::setHighVoltageOn(constants::white_light_high_voltage);
+}
+
+void SleepAssayController::setWhiteLightAndIndicatorOff()
+{
+  if (assayStarted() && !assayFinished())
+  {
+    return;
+  }
+
+  BacklightController::setHighVoltageOff(constants::white_light_high_voltage);
+  setWhiteLightIndicatorOff();
+}
+
+void SleepAssayController::toggleWhiteLightAndIndicator()
+{
+  if (assayStarted() && !assayFinished())
+  {
+    return;
+  }
+
+  BacklightController::toggleHighVoltage(constants::white_light_high_voltage);
+  double power = getHighVoltagePower(constants::white_light_high_voltage);
+  double power_lower_bound = getPowerLowerBound(highVoltageToDigitalChannel(constants::white_light_high_voltage));
+  if (power > power_lower_bound)
+  {
+    setWhiteLightIndicatorOn();
+  }
+  else
+  {
+    setWhiteLightIndicatorOff();
   }
 }
 
@@ -1328,6 +1401,29 @@ void SleepAssayController::setVisibleBacklightAndIndicatorOffHandler(modular_ser
 void SleepAssayController::toggleVisibleBacklightAndIndicatorHandler(modular_server::Pin * pin_ptr)
 {
   toggleVisibleBacklightAndIndicator();
+}
+
+void SleepAssayController::setWhiteLightAndIndicatorOnAtPowerHandler()
+{
+  double power;
+  modular_server_.parameter(digital_controller::constants::power_parameter_name).getValue(power);
+
+  setWhiteLightAndIndicatorOnAtPower(power);
+}
+
+void SleepAssayController::setWhiteLightAndIndicatorOnHandler(modular_server::Pin * pin_ptr)
+{
+  setWhiteLightAndIndicatorOn();
+}
+
+void SleepAssayController::setWhiteLightAndIndicatorOffHandler(modular_server::Pin * pin_ptr)
+{
+  setWhiteLightAndIndicatorOff();
+}
+
+void SleepAssayController::toggleWhiteLightAndIndicatorHandler(modular_server::Pin * pin_ptr)
+{
+  toggleWhiteLightAndIndicator();
 }
 
 void SleepAssayController::updateCameraTriggerHandler()
