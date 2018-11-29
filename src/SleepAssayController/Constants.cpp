@@ -50,7 +50,7 @@ CONSTANT_STRING(buzzing_possible_string,"buzzing_possible");
 CONSTANT_STRING(buzzing_string,"buzzing");
 CONSTANT_STRING(testing_string,"testing");
 CONSTANT_STRING(visible_backlight_intensity_string,"visible_backlight_intensity");
-CONSTANT_STRING(white_light_intensity_string,"white_light_intensity");
+CONSTANT_STRING(white_light_power_string,"white_light_power");
 CONSTANT_STRING(buzzer_power_string,"buzzer_power");
 
 // Pins
@@ -170,6 +170,11 @@ CONSTANT_STRING(get_assay_status_function_name,"getAssayStatus");
 // Callbacks
 CONSTANT_STRING(set_ir_backlight_and_fan_on_callback_name,"setIrBacklightAndFanOn");
 CONSTANT_STRING(set_ir_backlight_and_fan_off_callback_name,"setIrBacklightAndFanOff");
+CONSTANT_STRING(toggle_ir_backlight_and_fan_callback_name,"toggleIrBacklightAndFan");
+CONSTANT_STRING(set_visible_backlight_and_indicator_on_callback_name,"setVisibleBacklightAndIndicatorOn");
+CONSTANT_STRING(set_visible_backlight_and_indicator_off_callback_name,"setVisibleBacklightAndIndicatorOff");
+CONSTANT_STRING(toggle_visible_backlight_and_indicator_callback_name,"toggleVisibleBacklightAndIndicator");
+
 CONSTANT_STRING(run_assay_callback_name,"runAssay");
 CONSTANT_STRING(test_assay_callback_name,"testAssay");
 CONSTANT_STRING(stop_assay_callback_name,"stopAssay");

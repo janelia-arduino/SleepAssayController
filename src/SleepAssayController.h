@@ -32,11 +32,13 @@ public:
   void setIrBacklightAndFanOnAtIntensity(double intensity);
   void setIrBacklightAndFanOn();
   void setIrBacklightAndFanOff();
+  void toggleIrBacklightAndFan();
 
   void setVisibleBacklightAndIndicatorOnAtPower(double power);
   void setVisibleBacklightAndIndicatorOnAtIntensity(double intensity);
   void setVisibleBacklightAndIndicatorOn();
   void setVisibleBacklightAndIndicatorOff();
+  void toggleVisibleBacklightAndIndicator();
 
   void runAssay();
   void testAssay();
@@ -76,7 +78,7 @@ public:
     double visible_backlight_delay_hours,
     double visible_backlight_duration_hours);
   void setExperimentDayWhiteLight(size_t experiment_day,
-    double white_light_intensity);
+    double white_light_power);
   void setExperimentDayBuzzer(size_t experiment_day,
     double buzzer_power,
     double buzzer_delay_hours,
@@ -157,9 +159,13 @@ private:
   void setIrBacklightAndFanOnAtIntensityHandler();
   void setIrBacklightAndFanOnHandler(modular_server::Pin * pin_ptr);
   void setIrBacklightAndFanOffHandler(modular_server::Pin * pin_ptr);
+  void toggleIrBacklightAndFanHandler(modular_server::Pin * pin_ptr);
 
   void setVisibleBacklightAndIndicatorOnAtPowerHandler();
   void setVisibleBacklightAndIndicatorOnAtIntensityHandler();
+  void setVisibleBacklightAndIndicatorOnHandler(modular_server::Pin * pin_ptr);
+  void setVisibleBacklightAndIndicatorOffHandler(modular_server::Pin * pin_ptr);
+  void toggleVisibleBacklightAndIndicatorHandler(modular_server::Pin * pin_ptr);
 
   void updateCameraTriggerHandler();
   void getAssayStartHandler();
