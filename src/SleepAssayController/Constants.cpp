@@ -182,6 +182,8 @@ CONSTANT_STRING(toggle_white_light_and_indicator_callback_name,"toggleWhiteLight
 CONSTANT_STRING(set_buzzer_and_indicator_on_callback_name,"setBuzzerAndIndicatorOn");
 CONSTANT_STRING(set_buzzer_and_indicator_off_callback_name,"setBuzzerAndIndicatorOff");
 CONSTANT_STRING(toggle_buzzer_and_indicator_callback_name,"toggleBuzzerAndIndicator");
+CONSTANT_STRING(start_camera_trigger_callback_name,"startCameraTrigger");
+CONSTANT_STRING(stop_camera_trigger_callback_name,"stopCameraTrigger");
 
 CONSTANT_STRING(run_assay_callback_name,"runAssay");
 CONSTANT_STRING(test_assay_callback_name,"testAssay");

@@ -273,6 +273,12 @@ void SleepAssayController::setup()
   modular_server::Callback & toggle_buzzer_and_indicator_callback = modular_server_.createCallback(constants::toggle_buzzer_and_indicator_callback_name);
   toggle_buzzer_and_indicator_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::toggleBuzzerAndIndicatorHandler));
 
+  modular_server::Callback & start_camera_trigger_callback = modular_server_.createCallback(constants::start_camera_trigger_callback_name);
+  start_camera_trigger_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::startCameraTriggerHandler));
+
+  modular_server::Callback & stop_camera_trigger_callback = modular_server_.createCallback(constants::stop_camera_trigger_callback_name);
+  stop_camera_trigger_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::stopCameraTriggerHandler));
+
   modular_server::Callback & run_assay_callback = modular_server_.createCallback(constants::run_assay_callback_name);
   run_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::runAssayHandler));
 
@@ -530,6 +536,34 @@ void SleepAssayController::toggleBuzzerAndIndicator()
   {
     setBuzzerIndicatorOff();
   }
+}
+
+void SleepAssayController::startCameraTrigger()
+{
+  if (camera_trigger_running_)
+  {
+    stopCameraTrigger();
+  }
+  uint32_t channels;
+  long period;
+  long on_duration;
+  getCameraTriggerPwmInfo(channels,period,on_duration);
+
+  long delay = 0;
+  Serial << "startCameraTrigger: channels = " << channels << ",power = " << constants::camera_trigger_power << ", period = " << period << ", on_duration = " << on_duration << "\n";
+  camera_trigger_pwm_id_ = startPwm(channels,constants::camera_trigger_power,delay,period,on_duration);
+
+  camera_trigger_running_ = true;
+}
+
+void SleepAssayController::stopCameraTrigger()
+{
+  if (camera_trigger_running_)
+  {
+    stopPwm(camera_trigger_pwm_id_);
+  }
+  camera_trigger_running_ = false;
+  camera_trigger_pwm_id_.index = -1;
 }
 
 void SleepAssayController::runAssay()
@@ -1075,33 +1109,6 @@ void SleepAssayController::stopAllAssayPwm()
   setAllChannelsOff();
 }
 
-void SleepAssayController::startCameraTrigger()
-{
-  if (camera_trigger_running_)
-  {
-    stopCameraTrigger();
-  }
-  uint32_t channels;
-  long period;
-  long on_duration;
-  getCameraTriggerPwmInfo(channels,period,on_duration);
-
-  long delay = 0;
-  camera_trigger_pwm_id_ = startPwm(channels,constants::camera_trigger_power,delay,period,on_duration);
-
-  camera_trigger_running_ = true;
-}
-
-void SleepAssayController::stopCameraTrigger()
-{
-  if (camera_trigger_running_)
-  {
-    stopPwm(camera_trigger_pwm_id_);
-  }
-  camera_trigger_running_ = false;
-  camera_trigger_pwm_id_.index = -1;
-}
-
 void SleepAssayController::startAssay()
 {
   // initializeChannels();
@@ -1520,6 +1527,16 @@ void SleepAssayController::setBuzzerAndIndicatorOffHandler(modular_server::Pin *
 void SleepAssayController::toggleBuzzerAndIndicatorHandler(modular_server::Pin * pin_ptr)
 {
   toggleBuzzerAndIndicator();
+}
+
+void SleepAssayController::startCameraTriggerHandler(modular_server::Pin * pin_ptr)
+{
+  startCameraTrigger();
+}
+
+void SleepAssayController::stopCameraTriggerHandler(modular_server::Pin * pin_ptr)
+{
+  stopCameraTrigger();
 }
 
 void SleepAssayController::updateCameraTriggerHandler()

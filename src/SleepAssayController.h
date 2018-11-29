@@ -50,6 +50,9 @@ public:
   void setBuzzerAndIndicatorOff();
   void toggleBuzzerAndIndicator();
 
+  void startCameraTrigger();
+  void stopCameraTrigger();
+
   void runAssay();
   void testAssay();
   void stopAssay();
@@ -152,8 +155,6 @@ private:
   void initializeVariables();
   void initializeChannels();
   void stopAllAssayPwm();
-  void startCameraTrigger();
-  void stopCameraTrigger();
   void startAssay();
   void startEntrainment(int entrainment_duration);
   void startExperimentDay(int experiment_day);
@@ -186,6 +187,9 @@ private:
   void setBuzzerAndIndicatorOnHandler(modular_server::Pin * pin_ptr);
   void setBuzzerAndIndicatorOffHandler(modular_server::Pin * pin_ptr);
   void toggleBuzzerAndIndicatorHandler(modular_server::Pin * pin_ptr);
+
+  void startCameraTriggerHandler(modular_server::Pin * pin_ptr);
+  void stopCameraTriggerHandler(modular_server::Pin * pin_ptr);
 
   void updateCameraTriggerHandler();
   void getAssayStartHandler();

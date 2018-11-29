@@ -19,7 +19,7 @@ namespace constants
 enum{PROPERTY_COUNT_MAX=12};
 enum{PARAMETER_COUNT_MAX=6};
 enum{FUNCTION_COUNT_MAX=25};
-enum{CALLBACK_COUNT_MAX=15};
+enum{CALLBACK_COUNT_MAX=17};
 
 extern ConstantString device_name;
 
@@ -209,6 +209,8 @@ extern ConstantString toggle_white_light_and_indicator_callback_name;
 extern ConstantString set_buzzer_and_indicator_on_callback_name;
 extern ConstantString set_buzzer_and_indicator_off_callback_name;
 extern ConstantString toggle_buzzer_and_indicator_callback_name;
+extern ConstantString start_camera_trigger_callback_name;
+extern ConstantString stop_camera_trigger_callback_name;
 
 extern ConstantString run_assay_callback_name;
 extern ConstantString test_assay_callback_name;
