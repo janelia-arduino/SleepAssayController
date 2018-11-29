@@ -139,6 +139,10 @@ void SleepAssayController::setup()
   set_white_light_and_indicator_on_at_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setWhiteLightAndIndicatorOnAtPowerHandler));
   set_white_light_and_indicator_on_at_power_function.addParameter(power_parameter);
 
+  modular_server::Function & set_buzzer_and_indicator_on_at_power_function = modular_server_.createFunction(constants::set_buzzer_and_indicator_on_at_power_function_name);
+  set_buzzer_and_indicator_on_at_power_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setBuzzerAndIndicatorOnAtPowerHandler));
+  set_buzzer_and_indicator_on_at_power_function.addParameter(power_parameter);
+
   modular_server::Function & get_assay_start_function = modular_server_.createFunction(constants::get_assay_start_function_name);
   get_assay_start_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::getAssayStartHandler));
   get_assay_start_function.setResultTypeObject();
@@ -259,6 +263,15 @@ void SleepAssayController::setup()
 
   modular_server::Callback & toggle_white_light_and_indicator_callback = modular_server_.createCallback(constants::toggle_white_light_and_indicator_callback_name);
   toggle_white_light_and_indicator_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::toggleWhiteLightAndIndicatorHandler));
+
+  modular_server::Callback & set_buzzer_and_indicator_on_callback = modular_server_.createCallback(constants::set_buzzer_and_indicator_on_callback_name);
+  set_buzzer_and_indicator_on_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::setBuzzerAndIndicatorOnHandler));
+
+  modular_server::Callback & set_buzzer_and_indicator_off_callback = modular_server_.createCallback(constants::set_buzzer_and_indicator_off_callback_name);
+  set_buzzer_and_indicator_off_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::setBuzzerAndIndicatorOffHandler));
+
+  modular_server::Callback & toggle_buzzer_and_indicator_callback = modular_server_.createCallback(constants::toggle_buzzer_and_indicator_callback_name);
+  toggle_buzzer_and_indicator_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::toggleBuzzerAndIndicatorHandler));
 
   modular_server::Callback & run_assay_callback = modular_server_.createCallback(constants::run_assay_callback_name);
   run_assay_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::runAssayHandler));
@@ -456,6 +469,66 @@ void SleepAssayController::toggleWhiteLightAndIndicator()
   else
   {
     setWhiteLightIndicatorOff();
+  }
+}
+
+void SleepAssayController::setBuzzerAndIndicatorOnAtPower(double power)
+{
+  double power_lower_bound = getPowerLowerBound(highVoltageToDigitalChannel(constants::buzzer_high_voltage));
+  if (power > power_lower_bound)
+  {
+    setBuzzerIndicatorOn();
+  }
+  else
+  {
+    setBuzzerIndicatorOff();
+  }
+  BacklightController::setHighVoltageOnAtPower(constants::buzzer_high_voltage,power);
+}
+
+void SleepAssayController::setBuzzerAndIndicatorOn()
+{
+  double power = getHighVoltagePowerWhenOn(constants::buzzer_high_voltage);
+  double power_lower_bound = getPowerLowerBound(highVoltageToDigitalChannel(constants::buzzer_high_voltage));
+  if (power > power_lower_bound)
+  {
+    setBuzzerIndicatorOn();
+  }
+  else
+  {
+    setBuzzerIndicatorOff();
+  }
+  BacklightController::setHighVoltageOn(constants::buzzer_high_voltage);
+}
+
+void SleepAssayController::setBuzzerAndIndicatorOff()
+{
+  if (assayStarted() && !assayFinished())
+  {
+    return;
+  }
+
+  BacklightController::setHighVoltageOff(constants::buzzer_high_voltage);
+  setBuzzerIndicatorOff();
+}
+
+void SleepAssayController::toggleBuzzerAndIndicator()
+{
+  if (assayStarted() && !assayFinished())
+  {
+    return;
+  }
+
+  BacklightController::toggleHighVoltage(constants::buzzer_high_voltage);
+  double power = getHighVoltagePower(constants::buzzer_high_voltage);
+  double power_lower_bound = getPowerLowerBound(highVoltageToDigitalChannel(constants::buzzer_high_voltage));
+  if (power > power_lower_bound)
+  {
+    setBuzzerIndicatorOn();
+  }
+  else
+  {
+    setBuzzerIndicatorOff();
   }
 }
 
@@ -1424,6 +1497,29 @@ void SleepAssayController::setWhiteLightAndIndicatorOffHandler(modular_server::P
 void SleepAssayController::toggleWhiteLightAndIndicatorHandler(modular_server::Pin * pin_ptr)
 {
   toggleWhiteLightAndIndicator();
+}
+
+void SleepAssayController::setBuzzerAndIndicatorOnAtPowerHandler()
+{
+  double power;
+  modular_server_.parameter(digital_controller::constants::power_parameter_name).getValue(power);
+
+  setBuzzerAndIndicatorOnAtPower(power);
+}
+
+void SleepAssayController::setBuzzerAndIndicatorOnHandler(modular_server::Pin * pin_ptr)
+{
+  setBuzzerAndIndicatorOn();
+}
+
+void SleepAssayController::setBuzzerAndIndicatorOffHandler(modular_server::Pin * pin_ptr)
+{
+  setBuzzerAndIndicatorOff();
+}
+
+void SleepAssayController::toggleBuzzerAndIndicatorHandler(modular_server::Pin * pin_ptr)
+{
+  toggleBuzzerAndIndicator();
 }
 
 void SleepAssayController::updateCameraTriggerHandler()

@@ -45,6 +45,11 @@ public:
   void setWhiteLightAndIndicatorOff();
   void toggleWhiteLightAndIndicator();
 
+  void setBuzzerAndIndicatorOnAtPower(double power);
+  void setBuzzerAndIndicatorOn();
+  void setBuzzerAndIndicatorOff();
+  void toggleBuzzerAndIndicator();
+
   void runAssay();
   void testAssay();
   void stopAssay();
@@ -176,6 +181,11 @@ private:
   void setWhiteLightAndIndicatorOnHandler(modular_server::Pin * pin_ptr);
   void setWhiteLightAndIndicatorOffHandler(modular_server::Pin * pin_ptr);
   void toggleWhiteLightAndIndicatorHandler(modular_server::Pin * pin_ptr);
+
+  void setBuzzerAndIndicatorOnAtPowerHandler();
+  void setBuzzerAndIndicatorOnHandler(modular_server::Pin * pin_ptr);
+  void setBuzzerAndIndicatorOffHandler(modular_server::Pin * pin_ptr);
+  void toggleBuzzerAndIndicatorHandler(modular_server::Pin * pin_ptr);
 
   void updateCameraTriggerHandler();
   void getAssayStartHandler();

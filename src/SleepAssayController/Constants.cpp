@@ -147,6 +147,7 @@ CONSTANT_STRING(set_ir_backlight_and_fan_on_at_intensity_function_name,"setIrBac
 CONSTANT_STRING(set_visible_backlight_and_indicator_on_at_power_function_name,"setVisibleBacklightAndIndicatorOnAtPower");
 CONSTANT_STRING(set_visible_backlight_and_indicator_on_at_intensity_function_name,"setVisibleBacklightAndIndicatorOnAtIntensity");
 CONSTANT_STRING(set_white_light_and_indicator_on_at_power_function_name,"setWhiteLightAndIndicatorOnAtPower");
+CONSTANT_STRING(set_buzzer_and_indicator_on_at_power_function_name,"setBuzzerAndIndicatorOnAtPower");
 
 CONSTANT_STRING(get_assay_start_function_name,"getAssayStart");
 CONSTANT_STRING(get_assay_end_function_name,"getAssayEnd");
@@ -178,6 +179,9 @@ CONSTANT_STRING(toggle_visible_backlight_and_indicator_callback_name,"toggleVisi
 CONSTANT_STRING(set_white_light_and_indicator_on_callback_name,"setWhiteLightAndIndicatorOn");
 CONSTANT_STRING(set_white_light_and_indicator_off_callback_name,"setWhiteLightAndIndicatorOff");
 CONSTANT_STRING(toggle_white_light_and_indicator_callback_name,"toggleWhiteLightAndIndicator");
+CONSTANT_STRING(set_buzzer_and_indicator_on_callback_name,"setBuzzerAndIndicatorOn");
+CONSTANT_STRING(set_buzzer_and_indicator_off_callback_name,"setBuzzerAndIndicatorOff");
+CONSTANT_STRING(toggle_buzzer_and_indicator_callback_name,"toggleBuzzerAndIndicator");
 
 CONSTANT_STRING(run_assay_callback_name,"runAssay");
 CONSTANT_STRING(test_assay_callback_name,"testAssay");
