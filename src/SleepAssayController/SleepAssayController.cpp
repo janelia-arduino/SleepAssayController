@@ -220,7 +220,7 @@ void SleepAssayController::setup()
   modular_server::Function & set_experiment_day_white_light_function = modular_server_.createFunction(constants::set_experiment_day_white_light_function_name);
   set_experiment_day_white_light_function.attachFunctor(makeFunctor((Functor0 *)0,*this,&SleepAssayController::setExperimentDayWhiteLightHandler));
   set_experiment_day_white_light_function.addParameter(experiment_day_parameter);
-  set_experiment_day_white_light_function.addParameter(intensity_parameter);
+  set_experiment_day_white_light_function.addParameter(power_parameter);
   set_experiment_day_white_light_function.setResultTypeObject();
 
   modular_server::Function & set_experiment_day_buzzer_function = modular_server_.createFunction(constants::set_experiment_day_buzzer_function_name);
@@ -253,7 +253,6 @@ void SleepAssayController::setup()
 
   modular_server::Callback & toggle_visible_backlight_and_indicator_callback = modular_server_.createCallback(constants::toggle_visible_backlight_and_indicator_callback_name);
   toggle_visible_backlight_and_indicator_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::toggleVisibleBacklightAndIndicatorHandler));
-  toggle_visible_backlight_and_indicator_callback.attachTo(btn_a_pin,modular_server::constants::pin_mode_interrupt_falling);
 
   modular_server::Callback & set_white_light_and_indicator_on_callback = modular_server_.createCallback(constants::set_white_light_and_indicator_on_callback_name);
   set_white_light_and_indicator_on_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::setWhiteLightAndIndicatorOnHandler));
@@ -272,6 +271,10 @@ void SleepAssayController::setup()
 
   modular_server::Callback & toggle_buzzer_and_indicator_callback = modular_server_.createCallback(constants::toggle_buzzer_and_indicator_callback_name);
   toggle_buzzer_and_indicator_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::toggleBuzzerAndIndicatorHandler));
+
+  modular_server::Callback & toggle_all_callback = modular_server_.createCallback(constants::toggle_all_callback_name);
+  toggle_all_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::toggleAllHandler));
+  toggle_all_callback.attachTo(btn_a_pin,modular_server::constants::pin_mode_interrupt_falling);
 
   modular_server::Callback & start_camera_trigger_callback = modular_server_.createCallback(constants::start_camera_trigger_callback_name);
   start_camera_trigger_callback.attachFunctor(makeFunctor((Functor1<modular_server::Pin *> *)0,*this,&SleepAssayController::startCameraTriggerHandler));
@@ -538,6 +541,18 @@ void SleepAssayController::toggleBuzzerAndIndicator()
   }
 }
 
+void SleepAssayController::toggleAll()
+{
+  if (assayStarted() && !assayFinished())
+  {
+    return;
+  }
+  toggleIrBacklightAndFan();
+  toggleVisibleBacklightAndIndicator();
+  toggleWhiteLightAndIndicator();
+  toggleBuzzerAndIndicator();
+}
+
 void SleepAssayController::startCameraTrigger()
 {
   if (camera_trigger_running_)
@@ -550,7 +565,6 @@ void SleepAssayController::startCameraTrigger()
   getCameraTriggerPwmInfo(channels,period,on_duration);
 
   long delay = 0;
-  Serial << "startCameraTrigger: channels = " << channels << ",power = " << constants::camera_trigger_power << ", period = " << period << ", on_duration = " << on_duration << "\n";
   camera_trigger_pwm_id_ = startPwm(channels,constants::camera_trigger_power,delay,period,on_duration);
 
   camera_trigger_running_ = true;
@@ -1527,6 +1541,11 @@ void SleepAssayController::setBuzzerAndIndicatorOffHandler(modular_server::Pin *
 void SleepAssayController::toggleBuzzerAndIndicatorHandler(modular_server::Pin * pin_ptr)
 {
   toggleBuzzerAndIndicator();
+}
+
+void SleepAssayController::toggleAllHandler(modular_server::Pin * pin_ptr)
+{
+  toggleAll();
 }
 
 void SleepAssayController::startCameraTriggerHandler(modular_server::Pin * pin_ptr)

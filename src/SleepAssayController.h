@@ -50,6 +50,8 @@ public:
   void setBuzzerAndIndicatorOff();
   void toggleBuzzerAndIndicator();
 
+  void toggleAll();
+
   void startCameraTrigger();
   void stopCameraTrigger();
 
@@ -187,6 +189,8 @@ private:
   void setBuzzerAndIndicatorOnHandler(modular_server::Pin * pin_ptr);
   void setBuzzerAndIndicatorOffHandler(modular_server::Pin * pin_ptr);
   void toggleBuzzerAndIndicatorHandler(modular_server::Pin * pin_ptr);
+
+  void toggleAllHandler(modular_server::Pin * pin_ptr);
 
   void startCameraTriggerHandler(modular_server::Pin * pin_ptr);
   void stopCameraTriggerHandler(modular_server::Pin * pin_ptr);
