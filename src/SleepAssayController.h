@@ -78,7 +78,7 @@ public:
     sleep_assay_controller::constants::EXPERIMENT_DAY_COUNT_MAX> experiment_day_array_t;
 
   experiment_day_info_array_t getExperimentInfo();
-  bool experimentDayExists(size_t experiment_day);
+  bool experimentDayExists(int experiment_day);
 
   size_t addExperimentDay();
   experiment_day_array_t addExperimentDays(size_t experiment_day_count);
@@ -121,7 +121,7 @@ private:
 
   bool buzzer_enabled_;
   bool buzzing_possible_;
-  int buzzer_pwm_index_;
+  digital_controller::constants::PwmId buzzer_pwm_id_;
 
   bool camera_trigger_running_;
   digital_controller::constants::PwmId camera_trigger_pwm_id_;
@@ -139,14 +139,18 @@ private:
 
   void getVisibleBacklightPwmInfo(size_t experiment_day,
     uint32_t & channels,
+    double & power,
     long & delay,
     DigitalController::RecursivePwmValues & periods,
     DigitalController::RecursivePwmValues & on_durations);
-  void getWhiteLightPwmInfo(uint32_t & channels,
+  void getWhiteLightPwmInfo(int experiment_day,
+    uint32_t & channels,
+    double & power,
     long & period,
     long & on_duration);
   void getBuzzerPwmInfo(size_t experiment_day,
     uint32_t & channels,
+    double & power,
     long & delay,
     DigitalController::RecursivePwmValues & periods,
     DigitalController::RecursivePwmValues & on_durations);

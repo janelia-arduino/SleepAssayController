@@ -16,7 +16,7 @@ namespace sleep_assay_controller
 namespace constants
 {
 //MAX values must be >= 1, >= created/copied count, < RAM limit
-enum{PROPERTY_COUNT_MAX=12};
+enum{PROPERTY_COUNT_MAX=14};
 enum{PARAMETER_COUNT_MAX=6};
 enum{FUNCTION_COUNT_MAX=25};
 enum{CALLBACK_COUNT_MAX=18};
@@ -98,6 +98,16 @@ extern ConstantString visible_backlight_duty_cycle_property_name;
 extern const long visible_backlight_duty_cycle_min;
 extern const long visible_backlight_duty_cycle_max;
 extern const long visible_backlight_duty_cycle_default;
+
+extern ConstantString white_light_entrainment_power_property_name;
+extern const long white_light_entrainment_power_min;
+extern const long white_light_entrainment_power_max;
+extern const long white_light_entrainment_power_default;
+
+extern ConstantString white_light_recovery_power_property_name;
+extern const long white_light_recovery_power_min;
+extern const long white_light_recovery_power_max;
+extern const long white_light_recovery_power_default;
 
 extern ConstantString white_light_start_time_property_name;
 extern const long white_light_start_time_min;

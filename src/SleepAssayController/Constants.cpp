@@ -77,6 +77,16 @@ const long white_light_start_time_min = 4;
 const long white_light_start_time_max = 12;
 const long white_light_start_time_default = 9;
 
+CONSTANT_STRING(white_light_entrainment_power_property_name,"whiteLightEntrainmentPower");
+const long white_light_entrainment_power_min = 10;
+const long white_light_entrainment_power_max = 100;
+const long white_light_entrainment_power_default = 50;
+
+CONSTANT_STRING(white_light_recovery_power_property_name,"whiteLightRecoveryPower");
+const long white_light_recovery_power_min = 10;
+const long white_light_recovery_power_max = 100;
+const long white_light_recovery_power_default = 50;
+
 CONSTANT_STRING(white_light_on_duration_property_name,"whiteLightOnDuration");
 const long white_light_on_duration_min = 1;
 const long white_light_on_duration_max = 23;

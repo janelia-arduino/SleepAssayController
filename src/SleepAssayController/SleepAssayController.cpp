@@ -49,6 +49,14 @@ void SleepAssayController::setup()
   visible_backlight_duty_cycle_property.setRange(constants::visible_backlight_duty_cycle_min,constants::visible_backlight_duty_cycle_max);
   visible_backlight_duty_cycle_property.setUnits(digital_controller::constants::percent_units);
 
+  modular_server::Property & white_light_entrainment_power_property = modular_server_.createProperty(constants::white_light_entrainment_power_property_name,constants::white_light_entrainment_power_default);
+  white_light_entrainment_power_property.setRange(constants::white_light_entrainment_power_min,constants::white_light_entrainment_power_max);
+  white_light_entrainment_power_property.setUnits(digital_controller::constants::percent_units);
+
+  modular_server::Property & white_light_recovery_power_property = modular_server_.createProperty(constants::white_light_recovery_power_property_name,constants::white_light_recovery_power_default);
+  white_light_recovery_power_property.setRange(constants::white_light_recovery_power_min,constants::white_light_recovery_power_max);
+  white_light_recovery_power_property.setUnits(digital_controller::constants::percent_units);
+
   modular_server::Property & white_light_start_time_property = modular_server_.createProperty(constants::white_light_start_time_property_name,constants::white_light_start_time_default);
   white_light_start_time_property.setRange(constants::white_light_start_time_min,constants::white_light_start_time_max);
   white_light_start_time_property.setUnits(constants::military_time_hours_units);
@@ -559,13 +567,13 @@ void SleepAssayController::startCameraTrigger()
   {
     stopCameraTrigger();
   }
-  uint32_t channels;
-  long period;
-  long on_duration;
-  getCameraTriggerPwmInfo(channels,period,on_duration);
+  uint32_t camera_trigger_channels;
+  long camera_trigger_period;
+  long camera_trigger_on_duration;
+  getCameraTriggerPwmInfo(camera_trigger_channels,camera_trigger_period,camera_trigger_on_duration);
 
-  long delay = 0;
-  camera_trigger_pwm_id_ = startPwm(channels,constants::camera_trigger_power,delay,period,on_duration);
+  const long camera_trigger_delay = 0;
+  camera_trigger_pwm_id_ = startPwm(camera_trigger_channels,constants::camera_trigger_power,camera_trigger_delay,camera_trigger_period,camera_trigger_on_duration);
 
   camera_trigger_running_ = true;
 }
@@ -928,9 +936,13 @@ bool SleepAssayController::buzzing()
   return buzzing;
 }
 
-bool SleepAssayController::experimentDayExists(size_t experiment_day)
+bool SleepAssayController::experimentDayExists(int experiment_day)
 {
-  return (experiment_day < experiment_day_array_.size());
+  if (experiment_day < 0)
+  {
+    return false;
+  }
+  return (experiment_day < (int)experiment_day_array_.size());
 }
 
 void SleepAssayController::setFanOn()
@@ -975,6 +987,7 @@ void SleepAssayController::setBuzzerIndicatorOff()
 
 void SleepAssayController::getVisibleBacklightPwmInfo(size_t experiment_day,
   uint32_t & channels,
+  double & power,
   long & delay,
   DigitalController::RecursivePwmValues & periods,
   DigitalController::RecursivePwmValues & on_durations)
@@ -996,6 +1009,10 @@ void SleepAssayController::getVisibleBacklightPwmInfo(size_t experiment_day,
   if (experimentDayExists(experiment_day))
   {
     constants::ExperimentDayInfo & experiment_day_info = experiment_day_array_[experiment_day];
+
+    double visible_backlight_intensity = experiment_day_info.visible_backlight_intensity;
+    power = visibleBacklightIntensityToPower(constants::visible_backlight,visible_backlight_intensity);
+
     double visible_backlight_delay_hours = experiment_day_info.visible_backlight_delay_hours;
     delay = scaleDuration(visible_backlight_delay_hours*modular_device_base::constants::milliseconds_per_hour);
 
@@ -1009,7 +1026,9 @@ void SleepAssayController::getVisibleBacklightPwmInfo(size_t experiment_day,
 
 }
 
-void SleepAssayController::getWhiteLightPwmInfo(uint32_t & channels,
+void SleepAssayController::getWhiteLightPwmInfo(int experiment_day,
+  uint32_t & channels,
+  double & power,
   long & period,
   long & on_duration)
 {
@@ -1020,6 +1039,13 @@ void SleepAssayController::getWhiteLightPwmInfo(uint32_t & channels,
   const size_t white_light_indicator_channel = lowVoltageToDigitalChannel(constants::white_light_indicator_low_voltage);
   channels |= bit << white_light_indicator_channel;
 
+  if (experimentDayExists(experiment_day))
+  {
+    constants::ExperimentDayInfo & experiment_day_info = experiment_day_array_[experiment_day];
+
+    power = experiment_day_info.white_light_power;
+  }
+
   period = scaleDuration(modular_device_base::constants::milliseconds_per_day);
 
   long on_duration_hours;
@@ -1029,6 +1055,7 @@ void SleepAssayController::getWhiteLightPwmInfo(uint32_t & channels,
 
 void SleepAssayController::getBuzzerPwmInfo(size_t experiment_day,
   uint32_t & channels,
+  double & power,
   long & delay,
   DigitalController::RecursivePwmValues & periods,
   DigitalController::RecursivePwmValues & on_durations)
@@ -1064,6 +1091,9 @@ void SleepAssayController::getBuzzerPwmInfo(size_t experiment_day,
   if (experimentDayExists(experiment_day))
   {
     constants::ExperimentDayInfo & experiment_day_info = experiment_day_array_[experiment_day];
+
+    power = experiment_day_info.buzzer_power;
+
     double buzzer_delay_hours = experiment_day_info.buzzer_delay_hours;
     delay = scaleDuration(buzzer_delay_hours*modular_device_base::constants::milliseconds_per_hour);
 
@@ -1102,7 +1132,7 @@ void SleepAssayController::initializeVariables()
 
   buzzer_enabled_ = false;
   buzzing_possible_ = false;
-  buzzer_pwm_index_ = -1;
+  buzzer_pwm_id_.index = -1;
 
   camera_trigger_running_ = false;
   camera_trigger_pwm_id_.index = -1;
@@ -1125,162 +1155,181 @@ void SleepAssayController::stopAllAssayPwm()
 
 void SleepAssayController::startAssay()
 {
-  // initializeChannels();
+  initializeChannels();
 
-  // assay_started_ = true;
-  // assay_finished_ = false;
+  assay_started_ = true;
+  assay_finished_ = false;
 
-  // buzzer_enabled_ = false;
-  // buzzing_possible_ = false;
+  buzzer_enabled_ = false;
+  buzzing_possible_ = false;
 
-  // time_t time_now = SleepAssayController::now();
-  // time_assay_start_ = time_now;
-  // time_experiment_start_ = time_assay_start_;
+  time_t time_now = SleepAssayController::now();
+  time_assay_start_ = time_now;
+  time_experiment_start_ = time_assay_start_;
 
-  // long entrainment_duration;
-  // modular_server_.property(constants::entrainment_duration_property_name).getValue(entrainment_duration);
+  long entrainment_duration;
+  modular_server_.property(constants::entrainment_duration_property_name).getValue(entrainment_duration);
 
-  // if (entrainment_duration > 0)
-  // {
-  //   uint32_t channels;
-  //   long period;
-  //   long on_duration;
-  //   getWhiteLightPwmInfo(channels,period,on_duration);
+  if (entrainment_duration > 0)
+  {
+    const int experiment_day = -1;
+    uint32_t white_light_channels;
+    double white_light_power;
+    long white_light_period;
+    long white_light_on_duration;
+    getWhiteLightPwmInfo(experiment_day,white_light_channels,white_light_power,white_light_period,white_light_on_duration);
 
-  //   long start_time;
-  //   modular_server_.property(constants::white_light_start_time_property_name).getValue(start_time);
+    modular_server_.property(constants::white_light_entrainment_power_property_name).getValue(white_light_power);
 
-  //   long time_zone_offset;
-  //   modular_server_.property(modular_device_base::constants::time_zone_offset_property_name).getValue(time_zone_offset);
+    long start_time;
+    modular_server_.property(constants::white_light_start_time_property_name).getValue(start_time);
 
-  //   start_time -= time_zone_offset;
+    long time_zone_offset;
+    modular_server_.property(modular_device_base::constants::time_zone_offset_property_name).getValue(time_zone_offset);
 
-  //   long offset = (hour(time_now) - start_time)*modular_device_base::constants::milliseconds_per_hour;
-  //   offset += minute(time_now)*modular_device_base::constants::milliseconds_per_minute;
-  //   offset += second(time_now)*modular_device_base::constants::milliseconds_per_second;
-  //   offset = scaleDuration(offset);
+    start_time -= time_zone_offset;
 
-  //   if ((offset > 0) && (offset < on_duration))
-  //   {
-  //     period -= offset;
-  //     on_duration -= offset;
-  //     long delay = 0;
-  //     long count = 1;
-  //     int pwm_index = addPwm(channels,power,delay,period,on_duration,count);
-  //     const int entrainment_duration2 = entrainment_duration - 1;
-  //     addCountCompletedFunctor(pwm_index,
-  //       makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
-  //       entrainment_duration2);
-  //     time_experiment_start_ += scaleDuration(entrainment_duration2*modular_device_base::constants::seconds_per_day);
-  //     time_experiment_start_ += period/modular_device_base::constants::milliseconds_per_second;
-  //   }
-  //   else if (offset >= on_duration)
-  //   {
-  //     long delay = period - offset;
-  //     const int entrainment_duration2 = entrainment_duration - 1;
-  //     addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
-  //       delay,
-  //       entrainment_duration2);
-  //     time_experiment_start_ += scaleDuration(entrainment_duration2*modular_device_base::constants::seconds_per_day);
-  //     time_experiment_start_ += delay/modular_device_base::constants::milliseconds_per_second;
-  //   }
-  //   else if (offset <= 0)
-  //   {
-  //     long delay = abs(offset);
-  //     const int entrainment_duration2 = entrainment_duration;
-  //     addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
-  //       delay,
-  //       entrainment_duration2);
-  //     time_experiment_start_ += scaleDuration(entrainment_duration2*modular_device_base::constants::seconds_per_day);
-  //     time_experiment_start_ += delay/modular_device_base::constants::milliseconds_per_second;
-  //   }
-  // }
-  // else
-  // {
-  //   // not necessary if minimum entrainment_duration is 1, not 0
-  // }
+    long offset = (hour(time_now) - start_time)*modular_device_base::constants::milliseconds_per_hour;
+    offset += minute(time_now)*modular_device_base::constants::milliseconds_per_minute;
+    offset += second(time_now)*modular_device_base::constants::milliseconds_per_second;
+    offset = scaleDuration(offset);
+
+    if ((offset > 0) && (offset < white_light_on_duration))
+    {
+      white_light_period -= offset;
+      white_light_on_duration -= offset;
+      const long white_light_delay = 0;
+      long count = 1;
+      digital_controller::constants::PwmId white_light_pwm_id = addPwm(white_light_channels,white_light_power,white_light_delay,white_light_period,white_light_on_duration,count);
+      const int entrainment_duration2 = entrainment_duration - 1;
+      addCountCompletedFunctor(white_light_pwm_id,
+        makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
+        entrainment_duration2);
+      time_experiment_start_ += scaleDuration(entrainment_duration2*modular_device_base::constants::seconds_per_day);
+      time_experiment_start_ += white_light_period/modular_device_base::constants::milliseconds_per_second;
+    }
+    else if (offset >= white_light_on_duration)
+    {
+      const long white_light_delay = white_light_period - offset;
+      const int entrainment_duration2 = entrainment_duration - 1;
+      addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
+        white_light_delay,
+        entrainment_duration2);
+      time_experiment_start_ += scaleDuration(entrainment_duration2*modular_device_base::constants::seconds_per_day);
+      time_experiment_start_ += white_light_delay/modular_device_base::constants::milliseconds_per_second;
+    }
+    else if (offset <= 0)
+    {
+      const long white_light_delay = abs(offset);
+      const int entrainment_duration2 = entrainment_duration;
+      addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
+        white_light_delay,
+        entrainment_duration2);
+      time_experiment_start_ += scaleDuration(entrainment_duration2*modular_device_base::constants::seconds_per_day);
+      time_experiment_start_ += white_light_delay/modular_device_base::constants::milliseconds_per_second;
+    }
+  }
+  else
+  {
+    // not necessary if minimum entrainment_duration is 1, not 0
+  }
 }
 
 void SleepAssayController::startEntrainment(int entrainment_duration)
 {
-  // if (entrainment_duration > 0)
-  // {
-  //   uint32_t channels;
-  //   long period;
-  //   long on_duration;
-  //   getWhiteLightPwmInfo(channels,period,on_duration);
+  if (entrainment_duration > 0)
+  {
+    const int experiment_day = -1;
+    uint32_t white_light_channels;
+    double white_light_power;
+    long white_light_period;
+    long white_light_on_duration;
+    getWhiteLightPwmInfo(experiment_day,white_light_channels,white_light_power,white_light_period,white_light_on_duration);
 
-  //   int pwm_index = addPwm(channels,0,period,on_duration,entrainment_duration);
-  //   addCountCompletedFunctor(pwm_index,
-  //     makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
-  //     0);
-  // }
-  // else
-  // {
-  //   startExperimentDay(0);
-  // }
+    modular_server_.property(constants::white_light_entrainment_power_property_name).getValue(white_light_power);
+
+    const long white_light_delay = 0;
+    const long white_light_count = entrainment_duration;
+    digital_controller::constants::PwmId white_light_pwm_id = addPwm(white_light_channels,white_light_power,white_light_delay,white_light_period,white_light_on_duration,white_light_count);
+    addCountCompletedFunctor(white_light_pwm_id,
+      makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
+      0);
+  }
+  else
+  {
+    startExperimentDay(0);
+  }
 }
 
 void SleepAssayController::startExperimentDay(int experiment_day)
 {
-  // if (experiment_day < (int)experiment_day_array_.size())
-  // {
-  //   uint32_t white_light_channels;
-  //   long white_light_period;
-  //   long white_light_on_duration;
-  //   getWhiteLightPwmInfo(white_light_channels,white_light_period,white_light_on_duration);
+  if (experiment_day < (int)experiment_day_array_.size())
+  {
+    // white light
+    uint32_t white_light_channels;
+    double white_light_power;
+    long white_light_period;
+    long white_light_on_duration;
+    getWhiteLightPwmInfo(experiment_day,white_light_channels,white_light_power,white_light_period,white_light_on_duration);
 
-  //   constants::ExperimentDayInfo & experiment_day_info = experiment_day_array_[experiment_day];
+    const int next_experiment_day = experiment_day + 1;
 
-  //   const int next_experiment_day = experiment_day + 1;
+    const double white_light_power_lower_bound = getPowerLowerBound(highVoltageToDigitalChannel(constants::white_light_high_voltage));
 
-  //   bool white_light = experiment_day_info.white_light;
-  //   if (white_light)
-  //   {
-  //     int white_light_pwm_index = addPwm(white_light_channels,0,white_light_period,white_light_on_duration,1);
-  //     addCountCompletedFunctor(white_light_pwm_index,
-  //       makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
-  //       next_experiment_day);
-  //   }
-  //   else
-  //   {
-  //     addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
-  //       white_light_period,
-  //       next_experiment_day);
-  //   }
+    if (white_light_power >= white_light_power_lower_bound)
+    {
+      const long white_light_delay = 0;
+      const long white_light_count = 1;
+      digital_controller::constants::PwmId white_light_pwm_id = addPwm(white_light_channels,white_light_power,white_light_delay,white_light_period,white_light_on_duration,white_light_count);
+      addCountCompletedFunctor(white_light_pwm_id,
+        makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
+        next_experiment_day);
+    }
+    else
+    {
+      addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
+        white_light_period,
+        next_experiment_day);
+    }
 
-  //   bool visible_backlight = experiment_day_info.visible_backlight;
-  //   if (visible_backlight)
-  //   {
-  //     uint32_t visible_backlight_channels;
-  //     long visible_backlight_delay;
-  //     DigitalController::RecursivePwmValues visible_backlight_periods;
-  //     DigitalController::RecursivePwmValues visible_backlight_on_durations;
-  //     getVisibleBacklightPwmInfo(experiment_day,
-  //       visible_backlight_channels,
-  //       visible_backlight_delay,
-  //       visible_backlight_periods,
-  //       visible_backlight_on_durations);
+    // visible backlight
+    uint32_t visible_backlight_channels;
+    double visible_backlight_power;
+    long visible_backlight_delay;
+    DigitalController::RecursivePwmValues visible_backlight_periods;
+    DigitalController::RecursivePwmValues visible_backlight_on_durations;
+    getVisibleBacklightPwmInfo(experiment_day,
+      visible_backlight_channels,
+      visible_backlight_power,
+      visible_backlight_delay,
+      visible_backlight_periods,
+      visible_backlight_on_durations);
 
-  //     int visible_backlight_pwm_index = addRecursivePwm(visible_backlight_channels,
-  //       visible_backlight_delay,
-  //       visible_backlight_periods,
-  //       visible_backlight_on_durations,
-  //       1);
-  //     long visible_backlight_indicator_channel;
-  //     modular_server_.property(constants::visible_backlight_indicator_channel_property_name).getValue(visible_backlight_indicator_channel);
-  //     uint32_t bit = 1;
-  //     uint32_t visible_backlight_indicator_channels = bit << visible_backlight_indicator_channel;
-  //     long visible_backlight_indicator_delay = visible_backlight_delay;
-  //     long visible_backlight_indicator_period = visible_backlight_on_durations.back();
-  //     long visible_backlight_indicator_on_duration = visible_backlight_on_durations.back();
-  //     int visible_backlight_indicator_pwm_index = addPwm(visible_backlight_indicator_channels,
-  //       visible_backlight_indicator_delay,
-  //       visible_backlight_indicator_period,
-  //       visible_backlight_indicator_on_duration,
-  //       1);
-  //   }
+    const double visible_backlight_power_lower_bound = getPowerLowerBound(visibleBacklightToDigitalChannel(constants::visible_backlight));
 
+    if (visible_backlight_power >= visible_backlight_power_lower_bound)
+    {
+      int visible_backlight_pwm_index = addRecursivePwm(visible_backlight_channels,
+        visible_backlight_power,
+        visible_backlight_delay,
+        visible_backlight_periods,
+        visible_backlight_on_durations,
+        1);
+      long visible_backlight_indicator_channel;
+      modular_server_.property(constants::visible_backlight_indicator_channel_property_name).getValue(visible_backlight_indicator_channel);
+      uint32_t bit = 1;
+      uint32_t visible_backlight_indicator_channels = bit << visible_backlight_indicator_channel;
+      long visible_backlight_indicator_delay = visible_backlight_delay;
+      long visible_backlight_indicator_period = visible_backlight_on_durations.back();
+      long visible_backlight_indicator_on_duration = visible_backlight_on_durations.back();
+      int visible_backlight_indicator_pwm_index = addPwm(visible_backlight_indicator_channels,
+        visible_backlight_indicator_delay,
+        visible_backlight_indicator_period,
+        visible_backlight_indicator_on_duration,
+        1);
+    }
+
+    // buzzer
   //   bool buzzer = experiment_day_info.buzzer;
   //   if (buzzer)
   //   {
@@ -1318,34 +1367,41 @@ void SleepAssayController::startExperimentDay(int experiment_day)
   //       buzzer_indicator_on_duration,
   //       1);
   //   }
-  // }
-  // else
-  // {
-  //   startRecovery();
-  // }
+  }
+  else
+  {
+    startRecovery();
+  }
 }
 
 void SleepAssayController::startRecovery()
 {
-  // long recovery_duration;
-  // modular_server_.property(constants::recovery_duration_property_name).getValue(recovery_duration);
+  long recovery_duration;
+  modular_server_.property(constants::recovery_duration_property_name).getValue(recovery_duration);
 
-  // if (recovery_duration > 0)
-  // {
-  //   uint32_t channels;
-  //   long period;
-  //   long on_duration;
-  //   getWhiteLightPwmInfo(channels,period,on_duration);
+  if (recovery_duration > 0)
+  {
+    const int experiment_day = -1;
+    uint32_t white_light_channels;
+    double white_light_power;
+    long white_light_period;
+    long white_light_on_duration;
+    getWhiteLightPwmInfo(experiment_day,white_light_channels,white_light_power,white_light_period,white_light_on_duration);
 
-  //   int pwm_index = addPwm(channels,0,period,on_duration,recovery_duration);
-  //   addCountCompletedFunctor(pwm_index,
-  //     makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::endAssay),
-  //     -1);
-  // }
-  // else
-  // {
-  //   endAssay(-1);
-  // }
+    modular_server_.property(constants::white_light_entrainment_power_property_name).getValue(white_light_power);
+
+    const long white_light_delay = 0;
+    const long white_light_count = recovery_duration;
+    digital_controller::constants::PwmId white_light_pwm_id = addPwm(white_light_channels,white_light_power,white_light_delay,white_light_period,white_light_on_duration,white_light_count);
+
+    addCountCompletedFunctor(white_light_pwm_id,
+      makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::endAssay),
+      -1);
+  }
+  else
+  {
+    endAssay(-1);
+  }
 }
 
 void SleepAssayController::endAssay(int arg)
@@ -1357,41 +1413,45 @@ void SleepAssayController::endAssay(int arg)
 
 void SleepAssayController::buzz(int experiment_day)
 {
-  // if (buzzer_enabled_)
-  // {
-  //   buzzing_possible_ = true;
-  //   uint32_t buzzer_channels;
-  //   long buzzer_delay;
-  //   DigitalController::RecursivePwmValues buzzer_periods;
-  //   DigitalController::RecursivePwmValues buzzer_on_durations;
-  //   getBuzzerPwmInfo(experiment_day,
-  //     buzzer_channels,
-  //     buzzer_delay,
-  //     buzzer_periods,
-  //     buzzer_on_durations);
+  if (buzzer_enabled_)
+  {
+    buzzing_possible_ = true;
+    uint32_t buzzer_channels;
+    double buzzer_power;
+    long buzzer_delay;
+    DigitalController::RecursivePwmValues buzzer_periods;
+    DigitalController::RecursivePwmValues buzzer_on_durations;
+    getBuzzerPwmInfo(experiment_day,
+      buzzer_channels,
+      buzzer_power,
+      buzzer_delay,
+      buzzer_periods,
+      buzzer_on_durations);
 
-  //   buzzer_pwm_index_ = addPwm(buzzer_channels,
-  //     0,
-  //     buzzer_periods.front(),
-  //     buzzer_on_durations.front(),
-  //     1);
-  //   addCountCompletedFunctor(buzzer_pwm_index_,
-  //     makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::buzz),
-  //     experiment_day);
-  // }
-  // else
-  // {
-  //   buzzing_possible_ = false;
-  //   buzzer_pwm_index_ = -1;
-  // }
+    buzzer_delay = 0;
+    buzzer_pwm_id_ = addPwm(buzzer_channels,
+      buzzer_power,
+      buzzer_delay,
+      buzzer_periods.front(),
+      buzzer_on_durations.front(),
+      1);
+    addCountCompletedFunctor(buzzer_pwm_id_,
+      makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::buzz),
+      experiment_day);
+  }
+  else
+  {
+    buzzing_possible_ = false;
+    buzzer_pwm_id_.index = -1;
+  }
 }
 
 void SleepAssayController::disableBuzzer(int arg)
 {
-  // buzzer_enabled_ = false;
-  // buzzing_possible_ = false;
-  // stopPwm(buzzer_pwm_index_);
-  // buzzer_pwm_index_ = -1;
+  buzzer_enabled_ = false;
+  buzzing_possible_ = false;
+  stopPwm(buzzer_pwm_id_);
+  buzzer_pwm_id_.index = -1;
 }
 
 void SleepAssayController::writeExperimentDayInfoToResponse(size_t experiment_day)
