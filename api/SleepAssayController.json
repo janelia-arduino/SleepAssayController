@@ -1,0 +1,1321 @@
+{
+  "id": "getApi",
+  "result": {
+    "firmware": [
+      "SleepAssayController"
+    ],
+    "verbosity": "GENERAL",
+    "functions": [
+      {
+        "name": "setIrBacklightAndFanOnAtPower",
+        "parameters": [
+          "power"
+        ]
+      },
+      {
+        "name": "setIrBacklightAndFanOnAtIntensity",
+        "parameters": [
+          "intensity"
+        ]
+      },
+      {
+        "name": "setVisibleBacklightAndIndicatorOnAtPower",
+        "parameters": [
+          "power"
+        ]
+      },
+      {
+        "name": "setVisibleBacklightAndIndicatorOnAtIntensity",
+        "parameters": [
+          "intensity"
+        ]
+      },
+      {
+        "name": "setWhiteLightAndIndicatorOnAtPower",
+        "parameters": [
+          "power"
+        ]
+      },
+      {
+        "name": "setBuzzerAndIndicatorOnAtPower",
+        "parameters": [
+          "power"
+        ]
+      },
+      {
+        "name": "getAssayStart",
+        "result_info": {
+          "type": "object"
+        }
+      },
+      {
+        "name": "getAssayEnd",
+        "result_info": {
+          "type": "object"
+        }
+      },
+      {
+        "name": "getAssayDuration",
+        "result_info": {
+          "type": "long"
+        }
+      },
+      {
+        "name": "getExperimentStart",
+        "result_info": {
+          "type": "object"
+        }
+      },
+      {
+        "name": "getExperimentEnd",
+        "result_info": {
+          "type": "object"
+        }
+      },
+      {
+        "name": "getExperimentDuration",
+        "result_info": {
+          "type": "long"
+        }
+      },
+      {
+        "name": "getEntrainmentStart",
+        "result_info": {
+          "type": "object"
+        }
+      },
+      {
+        "name": "getExperimentInfo",
+        "result_info": {
+          "type": "array",
+          "array_element_type": "object"
+        }
+      },
+      {
+        "name": "getExperimentDayInfo",
+        "parameters": [
+          "experiment_day"
+        ],
+        "result_info": {
+          "type": "object"
+        }
+      },
+      {
+        "name": "addExperimentDay",
+        "result_info": {
+          "type": "long"
+        }
+      },
+      {
+        "name": "addExperimentDays",
+        "parameters": [
+          "day_count"
+        ],
+        "result_info": {
+          "type": "array",
+          "array_element_type": "long"
+        }
+      },
+      {
+        "name": "addExperimentDayCopy",
+        "parameters": [
+          "experiment_day"
+        ],
+        "result_info": {
+          "type": "long"
+        }
+      },
+      {
+        "name": "addExperimentDayCopies",
+        "parameters": [
+          "experiment_day",
+          "day_count"
+        ],
+        "result_info": {
+          "type": "array",
+          "array_element_type": "long"
+        }
+      },
+      {
+        "name": "removeLastExperimentDay"
+      },
+      {
+        "name": "removeAllExperimentDays"
+      },
+      {
+        "name": "setExperimentDayVisibleBacklight",
+        "parameters": [
+          "experiment_day",
+          "intensity",
+          "visible_backlight_delay",
+          "visible_backlight_duration"
+        ],
+        "result_info": {
+          "type": "object"
+        }
+      },
+      {
+        "name": "setExperimentDayWhiteLight",
+        "parameters": [
+          "experiment_day",
+          "power"
+        ],
+        "result_info": {
+          "type": "object"
+        }
+      },
+      {
+        "name": "setExperimentDayBuzzer",
+        "parameters": [
+          "experiment_day",
+          "power",
+          "buzzer_delay",
+          "buzzer_duration"
+        ],
+        "result_info": {
+          "type": "object"
+        }
+      },
+      {
+        "name": "getAssayStatus",
+        "result_info": {
+          "type": "object"
+        }
+      }
+    ],
+    "parameters": [
+      {
+        "name": "experiment_day",
+        "type": "long"
+      },
+      {
+        "name": "visible_backlight_delay",
+        "type": "double"
+      },
+      {
+        "name": "visible_backlight_duration",
+        "type": "double"
+      },
+      {
+        "name": "buzzer_delay",
+        "type": "double"
+      },
+      {
+        "name": "buzzer_duration",
+        "type": "double"
+      },
+      {
+        "name": "day_count",
+        "type": "long"
+      }
+    ],
+    "properties": [
+      {
+        "name": "visibleBacklightFrequency",
+        "type": "double",
+        "functions": [
+          {
+            "name": "getValue",
+            "result_info": {
+              "type": "double"
+            }
+          },
+          {
+            "name": "setValue",
+            "parameters": [
+              "value"
+            ],
+            "result_info": {
+              "type": "double"
+            }
+          },
+          {
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "double"
+            }
+          },
+          {
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "double"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "type": "double"
+          }
+        ]
+      },
+      {
+        "name": "visibleBacklightDutyCycle",
+        "type": "long",
+        "functions": [
+          {
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValue",
+            "parameters": [
+              "value"
+            ],
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "type": "long"
+          }
+        ]
+      },
+      {
+        "name": "whiteLightEntrainmentPower",
+        "type": "double",
+        "functions": [
+          {
+            "name": "getValue",
+            "result_info": {
+              "type": "double"
+            }
+          },
+          {
+            "name": "setValue",
+            "parameters": [
+              "value"
+            ],
+            "result_info": {
+              "type": "double"
+            }
+          },
+          {
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "double"
+            }
+          },
+          {
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "double"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "type": "double"
+          }
+        ]
+      },
+      {
+        "name": "whiteLightRecoveryPower",
+        "type": "double",
+        "functions": [
+          {
+            "name": "getValue",
+            "result_info": {
+              "type": "double"
+            }
+          },
+          {
+            "name": "setValue",
+            "parameters": [
+              "value"
+            ],
+            "result_info": {
+              "type": "double"
+            }
+          },
+          {
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "double"
+            }
+          },
+          {
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "double"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "type": "double"
+          }
+        ]
+      },
+      {
+        "name": "whiteLightStartTime",
+        "type": "long",
+        "functions": [
+          {
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValue",
+            "parameters": [
+              "value"
+            ],
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "type": "long"
+          }
+        ]
+      },
+      {
+        "name": "whiteLightOnDuration",
+        "type": "long",
+        "functions": [
+          {
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValue",
+            "parameters": [
+              "value"
+            ],
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "type": "long"
+          }
+        ]
+      },
+      {
+        "name": "buzzerOnDurationMin",
+        "type": "long",
+        "functions": [
+          {
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValue",
+            "parameters": [
+              "value"
+            ],
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "type": "long"
+          }
+        ]
+      },
+      {
+        "name": "buzzerOnDurationMax",
+        "type": "long",
+        "functions": [
+          {
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValue",
+            "parameters": [
+              "value"
+            ],
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "type": "long"
+          }
+        ]
+      },
+      {
+        "name": "buzzerWaitMin",
+        "type": "long",
+        "functions": [
+          {
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValue",
+            "parameters": [
+              "value"
+            ],
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "type": "long"
+          }
+        ]
+      },
+      {
+        "name": "buzzerWaitMax",
+        "type": "long",
+        "functions": [
+          {
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValue",
+            "parameters": [
+              "value"
+            ],
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "type": "long"
+          }
+        ]
+      },
+      {
+        "name": "cameraTriggerFrequency",
+        "type": "double",
+        "functions": [
+          {
+            "name": "getValue",
+            "result_info": {
+              "type": "double"
+            }
+          },
+          {
+            "name": "setValue",
+            "parameters": [
+              "value"
+            ],
+            "result_info": {
+              "type": "double"
+            }
+          },
+          {
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "double"
+            }
+          },
+          {
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "double"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "type": "double"
+          }
+        ]
+      },
+      {
+        "name": "entrainmentDuration",
+        "type": "long",
+        "functions": [
+          {
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValue",
+            "parameters": [
+              "value"
+            ],
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "type": "long"
+          }
+        ]
+      },
+      {
+        "name": "recoveryDuration",
+        "type": "long",
+        "functions": [
+          {
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValue",
+            "parameters": [
+              "value"
+            ],
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "type": "long"
+          }
+        ]
+      },
+      {
+        "name": "testingDayDuration",
+        "type": "long",
+        "functions": [
+          {
+            "name": "getValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValue",
+            "parameters": [
+              "value"
+            ],
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "getDefaultValue",
+            "result_info": {
+              "type": "long"
+            }
+          },
+          {
+            "name": "setValueToDefault",
+            "result_info": {
+              "type": "long"
+            }
+          }
+        ],
+        "parameters": [
+          {
+            "name": "value",
+            "type": "long"
+          }
+        ]
+      }
+    ],
+    "callbacks": [
+      {
+        "name": "setIrBacklightAndFanOn",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "setIrBacklightAndFanOff",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "toggleIrBacklightAndFan",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "setVisibleBacklightAndIndicatorOn",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "setVisibleBacklightAndIndicatorOff",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "toggleVisibleBacklightAndIndicator",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "setWhiteLightAndIndicatorOn",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "setWhiteLightAndIndicatorOff",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "toggleWhiteLightAndIndicator",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "setBuzzerAndIndicatorOn",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "setBuzzerAndIndicatorOff",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "toggleBuzzerAndIndicator",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "toggleAll",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "startCameraTrigger",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "stopCameraTrigger",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "runAssay",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "testAssay",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "stopAssay",
+        "functions": [
+          {
+            "name": "trigger"
+          },
+          {
+            "name": "attachTo",
+            "parameters": [
+              "pin_name",
+              "pin_mode"
+            ]
+          },
+          {
+            "name": "detachFrom",
+            "parameters": [
+              "pin_name"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pin_name",
+            "type": "string"
+          },
+          {
+            "name": "pin_mode",
+            "type": "string"
+          }
+        ]
+      }
+    ]
+  }
+}

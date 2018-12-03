@@ -17,7 +17,86 @@
 * API NAMES
 
   #+BEGIN_SRC js
-
+    {
+      "id": "getApi",
+      "result": {
+        "firmware": [
+          "SleepAssayController"
+        ],
+        "verbosity": "NAMES",
+        "functions": [
+          "setIrBacklightAndFanOnAtPower",
+          "setIrBacklightAndFanOnAtIntensity",
+          "setVisibleBacklightAndIndicatorOnAtPower",
+          "setVisibleBacklightAndIndicatorOnAtIntensity",
+          "setWhiteLightAndIndicatorOnAtPower",
+          "setBuzzerAndIndicatorOnAtPower",
+          "getAssayStart",
+          "getAssayEnd",
+          "getAssayDuration",
+          "getExperimentStart",
+          "getExperimentEnd",
+          "getExperimentDuration",
+          "getEntrainmentStart",
+          "getExperimentInfo",
+          "getExperimentDayInfo",
+          "addExperimentDay",
+          "addExperimentDays",
+          "addExperimentDayCopy",
+          "addExperimentDayCopies",
+          "removeLastExperimentDay",
+          "removeAllExperimentDays",
+          "setExperimentDayVisibleBacklight",
+          "setExperimentDayWhiteLight",
+          "setExperimentDayBuzzer",
+          "getAssayStatus"
+        ],
+        "parameters": [
+          "experiment_day",
+          "visible_backlight_delay",
+          "visible_backlight_duration",
+          "buzzer_delay",
+          "buzzer_duration",
+          "day_count"
+        ],
+        "properties": [
+          "visibleBacklightFrequency",
+          "visibleBacklightDutyCycle",
+          "whiteLightEntrainmentPower",
+          "whiteLightRecoveryPower",
+          "whiteLightStartTime",
+          "whiteLightOnDuration",
+          "buzzerOnDurationMin",
+          "buzzerOnDurationMax",
+          "buzzerWaitMin",
+          "buzzerWaitMax",
+          "cameraTriggerFrequency",
+          "entrainmentDuration",
+          "recoveryDuration",
+          "testingDayDuration"
+        ],
+        "callbacks": [
+          "setIrBacklightAndFanOn",
+          "setIrBacklightAndFanOff",
+          "toggleIrBacklightAndFan",
+          "setVisibleBacklightAndIndicatorOn",
+          "setVisibleBacklightAndIndicatorOff",
+          "toggleVisibleBacklightAndIndicator",
+          "setWhiteLightAndIndicatorOn",
+          "setWhiteLightAndIndicatorOff",
+          "toggleWhiteLightAndIndicator",
+          "setBuzzerAndIndicatorOn",
+          "setBuzzerAndIndicatorOff",
+          "toggleBuzzerAndIndicator",
+          "toggleAll",
+          "startCameraTrigger",
+          "stopCameraTrigger",
+          "runAssay",
+          "testAssay",
+          "stopAssay"
+        ]
+      }
+    }
   #+END_SRC
 
 * API GENERAL
