@@ -856,7 +856,6 @@ sleep_assay_controller::constants::AssayStatus SleepAssayController::getAssaySta
   if (assayStarted())
   {
     time_t time_entrainment_start = getEntrainmentStart();
-    // time_t time_assay_start = getAssayStart();
     time_t time_experiment_start = getExperimentStart();
     time_t time_experiment_end = getExperimentEnd();
     time_t time_assay_end = getAssayEnd();
@@ -873,13 +872,20 @@ sleep_assay_controller::constants::AssayStatus SleepAssayController::getAssaySta
     {
       assay_status.phase_ptr = &constants::phase_experiment_string;
       assay_status.phase_day = (double)(time_now - time_experiment_start)/seconds_per_day_scaled;
+      size_t experiment_day = assay_status.phase_day;
+      if (experiment_day >= experiment_day_array_.size())
+      {
+        experiment_day = 0;
+      }
+      constants::ExperimentDayInfo & experiment_day_info = experiment_day_array_[experiment_day];
+
       if (visibleBacklightPulsing())
       {
-        assay_status.visible_backlight_intensity = getVisibleBacklightIntensityWhenOn(constants::visible_backlight);
+        assay_status.visible_backlight_intensity = experiment_day_info.visible_backlight_intensity;
       }
       if (buzzingPossible())
       {
-        assay_status.buzzer_power = getHighVoltagePowerWhenOn(constants::buzzer_high_voltage);
+        assay_status.buzzer_power = experiment_day_info.buzzer_power;
       }
       assay_status.buzzing = buzzing();
     }
@@ -1292,41 +1298,41 @@ void SleepAssayController::startExperimentDay(int experiment_day)
     }
 
     // visible backlight
-    // uint32_t visible_backlight_channels;
-    // double visible_backlight_power;
-    // long visible_backlight_delay;
-    // DigitalController::RecursivePwmValues visible_backlight_periods;
-    // DigitalController::RecursivePwmValues visible_backlight_on_durations;
-    // getVisibleBacklightPwmInfo(experiment_day,
-    //   visible_backlight_channels,
-    //   visible_backlight_power,
-    //   visible_backlight_delay,
-    //   visible_backlight_periods,
-    //   visible_backlight_on_durations);
+    uint32_t visible_backlight_channels;
+    double visible_backlight_power;
+    long visible_backlight_delay;
+    DigitalController::RecursivePwmValues visible_backlight_periods;
+    DigitalController::RecursivePwmValues visible_backlight_on_durations;
+    getVisibleBacklightPwmInfo(experiment_day,
+      visible_backlight_channels,
+      visible_backlight_power,
+      visible_backlight_delay,
+      visible_backlight_periods,
+      visible_backlight_on_durations);
 
-    // const double visible_backlight_power_lower_bound = getPowerLowerBound(visibleBacklightToDigitalChannel(constants::visible_backlight));
+    const double visible_backlight_power_lower_bound = getPowerLowerBound(visibleBacklightToDigitalChannel(constants::visible_backlight));
 
-    // if (visible_backlight_power >= visible_backlight_power_lower_bound)
-    // {
-    //   int visible_backlight_pwm_index = addRecursivePwm(visible_backlight_channels,
-    //     visible_backlight_power,
-    //     visible_backlight_delay,
-    //     visible_backlight_periods,
-    //     visible_backlight_on_durations,
-    //     1);
-    //   long visible_backlight_indicator_channel;
-    //   modular_server_.property(constants::visible_backlight_indicator_channel_property_name).getValue(visible_backlight_indicator_channel);
-    //   uint32_t bit = 1;
-    //   uint32_t visible_backlight_indicator_channels = bit << visible_backlight_indicator_channel;
-    //   long visible_backlight_indicator_delay = visible_backlight_delay;
-    //   long visible_backlight_indicator_period = visible_backlight_on_durations.back();
-    //   long visible_backlight_indicator_on_duration = visible_backlight_on_durations.back();
-    //   int visible_backlight_indicator_pwm_index = addPwm(visible_backlight_indicator_channels,
-    //     visible_backlight_indicator_delay,
-    //     visible_backlight_indicator_period,
-    //     visible_backlight_indicator_on_duration,
-    //     1);
-    // }
+    if (visible_backlight_power >= visible_backlight_power_lower_bound)
+    {
+      addRecursivePwm(visible_backlight_channels,
+        visible_backlight_power,
+        visible_backlight_delay,
+        visible_backlight_periods,
+        visible_backlight_on_durations,
+        1);
+      long visible_backlight_indicator_channel = lowVoltageToDigitalChannel(constants::white_light_indicator_low_voltage);
+      uint32_t bit = 1;
+      uint32_t visible_backlight_indicator_channels = bit << visible_backlight_indicator_channel;
+      long visible_backlight_indicator_delay = visible_backlight_delay;
+      long visible_backlight_indicator_period = visible_backlight_on_durations.back();
+      long visible_backlight_indicator_on_duration = visible_backlight_on_durations.back();
+      addPwm(visible_backlight_indicator_channels,
+        constants::indicator_power,
+        visible_backlight_indicator_delay,
+        visible_backlight_indicator_period,
+        visible_backlight_indicator_on_duration,
+        1);
+    }
 
     // buzzer
   //   bool buzzer = experiment_day_info.buzzer;
