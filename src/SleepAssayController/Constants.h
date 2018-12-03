@@ -48,9 +48,9 @@ struct AssayStatus
   double assay_day;
   const ConstantString * phase_ptr;
   double phase_day;
-  bool white_light_on;
-  bool visible_backlight_pulsing;
-  bool buzzing_possible;
+  double visible_backlight_intensity;
+  double white_light_power;
+  double buzzer_power;
   bool buzzing;
   bool testing;
 };
@@ -70,14 +70,11 @@ extern ConstantString phase_entrainment_string;
 extern ConstantString phase_experiment_string;
 extern ConstantString phase_recovery_string;
 extern ConstantString phase_assay_finished_string;
-extern ConstantString white_light_on_string;
-extern ConstantString visible_backlight_pulsing_string;
-extern ConstantString buzzing_possible_string;
-extern ConstantString buzzing_string;
-extern ConstantString testing_string;
 extern ConstantString visible_backlight_intensity_string;
 extern ConstantString white_light_power_string;
 extern ConstantString buzzer_power_string;
+extern ConstantString buzzing_string;
+extern ConstantString testing_string;
 
 // Pins
 
@@ -100,14 +97,14 @@ extern const long visible_backlight_duty_cycle_max;
 extern const long visible_backlight_duty_cycle_default;
 
 extern ConstantString white_light_entrainment_power_property_name;
-extern const long white_light_entrainment_power_min;
-extern const long white_light_entrainment_power_max;
-extern const long white_light_entrainment_power_default;
+extern const double white_light_entrainment_power_min;
+extern const double white_light_entrainment_power_max;
+extern const double white_light_entrainment_power_default;
 
 extern ConstantString white_light_recovery_power_property_name;
-extern const long white_light_recovery_power_min;
-extern const long white_light_recovery_power_max;
-extern const long white_light_recovery_power_default;
+extern const double white_light_recovery_power_min;
+extern const double white_light_recovery_power_max;
+extern const double white_light_recovery_power_default;
 
 extern ConstantString white_light_start_time_property_name;
 extern const long white_light_start_time_min;

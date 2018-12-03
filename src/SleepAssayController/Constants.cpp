@@ -44,14 +44,11 @@ CONSTANT_STRING(phase_entrainment_string,"ENTRAINMENT");
 CONSTANT_STRING(phase_experiment_string,"EXPERIMENT");
 CONSTANT_STRING(phase_recovery_string,"RECOVERY");
 CONSTANT_STRING(phase_assay_finished_string,"ASSAY_FINISHED");
-CONSTANT_STRING(white_light_on_string,"white_light_on");
-CONSTANT_STRING(visible_backlight_pulsing_string,"visible_backlight_pulsing");
-CONSTANT_STRING(buzzing_possible_string,"buzzing_possible");
-CONSTANT_STRING(buzzing_string,"buzzing");
-CONSTANT_STRING(testing_string,"testing");
 CONSTANT_STRING(visible_backlight_intensity_string,"visible_backlight_intensity");
 CONSTANT_STRING(white_light_power_string,"white_light_power");
 CONSTANT_STRING(buzzer_power_string,"buzzer_power");
+CONSTANT_STRING(buzzing_string,"buzzing");
+CONSTANT_STRING(testing_string,"testing");
 
 // Pins
 
@@ -78,14 +75,14 @@ const long white_light_start_time_max = 12;
 const long white_light_start_time_default = 9;
 
 CONSTANT_STRING(white_light_entrainment_power_property_name,"whiteLightEntrainmentPower");
-const long white_light_entrainment_power_min = 10;
-const long white_light_entrainment_power_max = 100;
-const long white_light_entrainment_power_default = 50;
+const double white_light_entrainment_power_min = 10;
+const double white_light_entrainment_power_max = 100;
+const double white_light_entrainment_power_default = 50;
 
 CONSTANT_STRING(white_light_recovery_power_property_name,"whiteLightRecoveryPower");
-const long white_light_recovery_power_min = 10;
-const long white_light_recovery_power_max = 100;
-const long white_light_recovery_power_default = 50;
+const double white_light_recovery_power_min = 10;
+const double white_light_recovery_power_max = 100;
+const double white_light_recovery_power_default = 50;
 
 CONSTANT_STRING(white_light_on_duration_property_name,"whiteLightOnDuration");
 const long white_light_on_duration_min = 1;

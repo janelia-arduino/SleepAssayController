@@ -847,9 +847,9 @@ sleep_assay_controller::constants::AssayStatus SleepAssayController::getAssaySta
   assay_status.assay_day = -1;
   assay_status.phase_ptr = &constants::phase_assay_not_started_string;
   assay_status.phase_day = -1;
-  assay_status.white_light_on = false;
-  assay_status.visible_backlight_pulsing = false;
-  assay_status.buzzing_possible = false;
+  assay_status.visible_backlight_intensity = 0.0;
+  assay_status.white_light_power = 0.0;
+  assay_status.buzzer_power = 0.0;
   assay_status.buzzing = false;
   assay_status.testing = testing();
 
@@ -873,8 +873,14 @@ sleep_assay_controller::constants::AssayStatus SleepAssayController::getAssaySta
     {
       assay_status.phase_ptr = &constants::phase_experiment_string;
       assay_status.phase_day = (double)(time_now - time_experiment_start)/seconds_per_day_scaled;
-      assay_status.visible_backlight_pulsing = visibleBacklightPulsing();
-      assay_status.buzzing_possible = buzzingPossible();
+      if (visibleBacklightPulsing())
+      {
+        assay_status.visible_backlight_intensity = getVisibleBacklightIntensityWhenOn(constants::visible_backlight);
+      }
+      if (buzzingPossible())
+      {
+        assay_status.buzzer_power = getHighVoltagePowerWhenOn(constants::buzzer_high_voltage);
+      }
       assay_status.buzzing = buzzing();
     }
     else if (time_now < time_assay_end)
@@ -888,18 +894,10 @@ sleep_assay_controller::constants::AssayStatus SleepAssayController::getAssaySta
       assay_status.phase_ptr = &constants::phase_assay_finished_string;
       assay_status.phase_day = (double)(time_assay_end - time_experiment_end)/seconds_per_day_scaled;
     }
-
-    assay_status.white_light_on = whiteLightOn();
+    assay_status.white_light_power = getHighVoltagePower(constants::white_light_high_voltage);
   }
 
   return assay_status;
-}
-
-bool SleepAssayController::whiteLightOn()
-{
-  const size_t white_light_channel = highVoltageToDigitalChannel(constants::white_light_high_voltage);
-
-  return channelIsOn(white_light_channel);
 }
 
 bool SleepAssayController::visibleBacklightPulsing()
@@ -1143,6 +1141,7 @@ void SleepAssayController::initializeChannels()
   stopAllAssayPwm();
   enableAll();
   startCameraTrigger();
+  setIrBacklightAndFanOn();
 }
 
 void SleepAssayController::stopAllAssayPwm()
@@ -1199,8 +1198,8 @@ void SleepAssayController::startAssay()
       white_light_period -= offset;
       white_light_on_duration -= offset;
       const long white_light_delay = 0;
-      long count = 1;
-      digital_controller::constants::PwmId white_light_pwm_id = addPwm(white_light_channels,white_light_power,white_light_delay,white_light_period,white_light_on_duration,count);
+      long white_light_count = 1;
+      digital_controller::constants::PwmId white_light_pwm_id = addPwm(white_light_channels,white_light_power,white_light_delay,white_light_period,white_light_on_duration,white_light_count);
       const int entrainment_duration2 = entrainment_duration - 1;
       addCountCompletedFunctor(white_light_pwm_id,
         makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
@@ -1293,41 +1292,41 @@ void SleepAssayController::startExperimentDay(int experiment_day)
     }
 
     // visible backlight
-    uint32_t visible_backlight_channels;
-    double visible_backlight_power;
-    long visible_backlight_delay;
-    DigitalController::RecursivePwmValues visible_backlight_periods;
-    DigitalController::RecursivePwmValues visible_backlight_on_durations;
-    getVisibleBacklightPwmInfo(experiment_day,
-      visible_backlight_channels,
-      visible_backlight_power,
-      visible_backlight_delay,
-      visible_backlight_periods,
-      visible_backlight_on_durations);
+    // uint32_t visible_backlight_channels;
+    // double visible_backlight_power;
+    // long visible_backlight_delay;
+    // DigitalController::RecursivePwmValues visible_backlight_periods;
+    // DigitalController::RecursivePwmValues visible_backlight_on_durations;
+    // getVisibleBacklightPwmInfo(experiment_day,
+    //   visible_backlight_channels,
+    //   visible_backlight_power,
+    //   visible_backlight_delay,
+    //   visible_backlight_periods,
+    //   visible_backlight_on_durations);
 
-    const double visible_backlight_power_lower_bound = getPowerLowerBound(visibleBacklightToDigitalChannel(constants::visible_backlight));
+    // const double visible_backlight_power_lower_bound = getPowerLowerBound(visibleBacklightToDigitalChannel(constants::visible_backlight));
 
-    if (visible_backlight_power >= visible_backlight_power_lower_bound)
-    {
-      int visible_backlight_pwm_index = addRecursivePwm(visible_backlight_channels,
-        visible_backlight_power,
-        visible_backlight_delay,
-        visible_backlight_periods,
-        visible_backlight_on_durations,
-        1);
-      long visible_backlight_indicator_channel;
-      modular_server_.property(constants::visible_backlight_indicator_channel_property_name).getValue(visible_backlight_indicator_channel);
-      uint32_t bit = 1;
-      uint32_t visible_backlight_indicator_channels = bit << visible_backlight_indicator_channel;
-      long visible_backlight_indicator_delay = visible_backlight_delay;
-      long visible_backlight_indicator_period = visible_backlight_on_durations.back();
-      long visible_backlight_indicator_on_duration = visible_backlight_on_durations.back();
-      int visible_backlight_indicator_pwm_index = addPwm(visible_backlight_indicator_channels,
-        visible_backlight_indicator_delay,
-        visible_backlight_indicator_period,
-        visible_backlight_indicator_on_duration,
-        1);
-    }
+    // if (visible_backlight_power >= visible_backlight_power_lower_bound)
+    // {
+    //   int visible_backlight_pwm_index = addRecursivePwm(visible_backlight_channels,
+    //     visible_backlight_power,
+    //     visible_backlight_delay,
+    //     visible_backlight_periods,
+    //     visible_backlight_on_durations,
+    //     1);
+    //   long visible_backlight_indicator_channel;
+    //   modular_server_.property(constants::visible_backlight_indicator_channel_property_name).getValue(visible_backlight_indicator_channel);
+    //   uint32_t bit = 1;
+    //   uint32_t visible_backlight_indicator_channels = bit << visible_backlight_indicator_channel;
+    //   long visible_backlight_indicator_delay = visible_backlight_delay;
+    //   long visible_backlight_indicator_period = visible_backlight_on_durations.back();
+    //   long visible_backlight_indicator_on_duration = visible_backlight_on_durations.back();
+    //   int visible_backlight_indicator_pwm_index = addPwm(visible_backlight_indicator_channels,
+    //     visible_backlight_indicator_delay,
+    //     visible_backlight_indicator_period,
+    //     visible_backlight_indicator_on_duration,
+    //     1);
+    // }
 
     // buzzer
   //   bool buzzer = experiment_day_info.buzzer;
@@ -1388,7 +1387,7 @@ void SleepAssayController::startRecovery()
     long white_light_on_duration;
     getWhiteLightPwmInfo(experiment_day,white_light_channels,white_light_power,white_light_period,white_light_on_duration);
 
-    modular_server_.property(constants::white_light_entrainment_power_property_name).getValue(white_light_power);
+    modular_server_.property(constants::white_light_recovery_power_property_name).getValue(white_light_power);
 
     const long white_light_delay = 0;
     const long white_light_count = recovery_duration;
@@ -1910,16 +1909,6 @@ void SleepAssayController::getAssayStatusHandler()
 
   modular_server_.response().beginObject();
 
-  // modular_server_.response().write(constants::time_entrainment_start_string,getEntrainmentStart());
-
-  // modular_server_.response().write(constants::time_assay_start_string,getAssayStart());
-
-  // modular_server_.response().write(constants::time_experiment_start_string,getExperimentStart());
-
-  // modular_server_.response().write(constants::time_experiment_end_string,getExperimentEnd());
-
-  // modular_server_.response().write(constants::time_assay_end_string,getAssayEnd());
-
   modular_server_.response().write(constants::time_now_string,assay_status.time);
 
   modular_server_.response().writeKey(constants::date_time_now_string);
@@ -1939,11 +1928,11 @@ void SleepAssayController::getAssayStatusHandler()
 
   modular_server_.response().write(constants::phase_day_string,assay_status.phase_day);
 
-  modular_server_.response().write(constants::white_light_on_string,assay_status.white_light_on);
+  modular_server_.response().write(constants::visible_backlight_intensity_string,assay_status.visible_backlight_intensity);
 
-  modular_server_.response().write(constants::visible_backlight_pulsing_string,assay_status.visible_backlight_pulsing);
+  modular_server_.response().write(constants::white_light_power_string,assay_status.white_light_power);
 
-  modular_server_.response().write(constants::buzzing_possible_string,assay_status.buzzing_possible);
+  modular_server_.response().write(constants::buzzer_power_string,assay_status.buzzer_power);
 
   modular_server_.response().write(constants::buzzing_string,assay_status.buzzing);
 

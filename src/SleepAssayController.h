@@ -101,7 +101,6 @@ public:
 
   sleep_assay_controller::constants::AssayStatus getAssayStatus();
 
-  bool whiteLightOn();
   bool visibleBacklightPulsing();
   bool buzzingPossible();
   bool buzzing();
