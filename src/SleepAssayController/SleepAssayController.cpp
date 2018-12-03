@@ -1320,7 +1320,7 @@ void SleepAssayController::startExperimentDay(int experiment_day)
         visible_backlight_periods,
         visible_backlight_on_durations,
         1);
-      long visible_backlight_indicator_channel = lowVoltageToDigitalChannel(constants::white_light_indicator_low_voltage);
+      size_t visible_backlight_indicator_channel = lowVoltageToDigitalChannel(constants::white_light_indicator_low_voltage);
       uint32_t bit = 1;
       uint32_t visible_backlight_indicator_channels = bit << visible_backlight_indicator_channel;
       long visible_backlight_indicator_delay = visible_backlight_delay;
@@ -1335,43 +1335,46 @@ void SleepAssayController::startExperimentDay(int experiment_day)
     }
 
     // buzzer
-  //   bool buzzer = experiment_day_info.buzzer;
-  //   if (buzzer)
-  //   {
-  //     uint32_t buzzer_channels;
-  //     long buzzer_delay;
-  //     DigitalController::RecursivePwmValues buzzer_periods;
-  //     DigitalController::RecursivePwmValues buzzer_on_durations;
-  //     getBuzzerPwmInfo(experiment_day,
-  //       buzzer_channels,
-  //       buzzer_delay,
-  //       buzzer_periods,
-  //       buzzer_on_durations);
+    uint32_t buzzer_channels;
+    double buzzer_power;
+    long buzzer_delay;
+    DigitalController::RecursivePwmValues buzzer_periods;
+    DigitalController::RecursivePwmValues buzzer_on_durations;
+    getBuzzerPwmInfo(experiment_day,
+      buzzer_channels,
+      buzzer_power,
+      buzzer_delay,
+      buzzer_periods,
+      buzzer_on_durations);
 
-  //     buzzer_enabled_ = true;
-  //     long buzzer_start_delay = buzzer_delay;
-  //     addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::buzz),
-  //       buzzer_start_delay,
-  //       experiment_day);
+    const double buzzer_power_lower_bound = getPowerLowerBound(highVoltageToDigitalChannel(constants::buzzer_high_voltage));
 
-  //     long buzzer_end_delay = buzzer_start_delay + buzzer_on_durations.back();
-  //     addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::disableBuzzer),
-  //       buzzer_end_delay,
-  //       -1);
+    if (buzzer_power >= buzzer_power_lower_bound)
+    {
+      buzzer_enabled_ = true;
+      long buzzer_start_delay = buzzer_delay;
+      addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::buzz),
+        buzzer_start_delay,
+        experiment_day);
 
-  //     long buzzer_indicator_channel;
-  //     modular_server_.property(constants::buzzer_indicator_channel_property_name).getValue(buzzer_indicator_channel);
-  //     uint32_t bit = 1;
-  //     uint32_t buzzer_indicator_channels = bit << buzzer_indicator_channel;
-  //     long buzzer_indicator_delay = buzzer_delay;
-  //     long buzzer_indicator_period = buzzer_on_durations.back();
-  //     long buzzer_indicator_on_duration = buzzer_on_durations.back();
-  //     int buzzer_indicator_pwm_index = addPwm(buzzer_indicator_channels,
-  //       buzzer_indicator_delay,
-  //       buzzer_indicator_period,
-  //       buzzer_indicator_on_duration,
-  //       1);
-  //   }
+      long buzzer_end_delay = buzzer_start_delay + buzzer_on_durations.back();
+      addEventUsingDelay(makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::disableBuzzer),
+        buzzer_end_delay,
+        -1);
+
+      size_t buzzer_indicator_channel = lowVoltageToDigitalChannel(constants::buzzer_indicator_low_voltage);
+      uint32_t bit = 1;
+      uint32_t buzzer_indicator_channels = bit << buzzer_indicator_channel;
+      long buzzer_indicator_delay = buzzer_delay;
+      long buzzer_indicator_period = buzzer_on_durations.back();
+      long buzzer_indicator_on_duration = buzzer_on_durations.back();
+      addPwm(buzzer_indicator_channels,
+        constants::indicator_power,
+        buzzer_indicator_delay,
+        buzzer_indicator_period,
+        buzzer_indicator_on_duration,
+        1);
+    }
   }
   else
   {
