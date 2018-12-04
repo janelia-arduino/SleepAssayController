@@ -13,6 +13,7 @@
 #include <Vector.h>
 #include <ConstantVariable.h>
 #include <Functor.h>
+#include <Time.h>
 
 #include <ModularServer.h>
 #include <ModularDeviceBase.h>
