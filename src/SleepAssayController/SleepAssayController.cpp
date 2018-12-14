@@ -1320,7 +1320,7 @@ void SleepAssayController::startExperimentDay(int experiment_day)
         visible_backlight_periods,
         visible_backlight_on_durations,
         1);
-      size_t visible_backlight_indicator_channel = lowVoltageToDigitalChannel(constants::white_light_indicator_low_voltage);
+      size_t visible_backlight_indicator_channel = lowVoltageToDigitalChannel(constants::visible_backlight_indicator_low_voltage);
       uint32_t bit = 1;
       uint32_t visible_backlight_indicator_channels = bit << visible_backlight_indicator_channel;
       long visible_backlight_indicator_delay = visible_backlight_delay;
