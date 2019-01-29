@@ -1147,7 +1147,6 @@ void SleepAssayController::initializeChannels()
   stopAllAssayPwm();
   enableAll();
   startCameraTrigger();
-  setIrBacklightAndFanOn();
 }
 
 void SleepAssayController::stopAllAssayPwm()
@@ -1161,6 +1160,7 @@ void SleepAssayController::stopAllAssayPwm()
 void SleepAssayController::startAssay()
 {
   initializeChannels();
+  setIrBacklightAndFanOn();
 
   assay_started_ = true;
   assay_finished_ = false;
