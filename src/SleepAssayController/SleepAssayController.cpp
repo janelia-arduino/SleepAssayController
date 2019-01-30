@@ -41,6 +41,15 @@ void SleepAssayController::setup()
     callbacks_);
 
   // Properties
+  modular_server::Property & ir_backlight_power_to_intensity_ratio_property = modular_server_.property(backlight_controller::constants::ir_backlight_power_to_intensity_ratio_property_name);
+  ir_backlight_power_to_intensity_ratio_property.setDefaultValue(constants::ir_backlight_power_to_intensity_ratio_default);
+
+  modular_server::Property & ir_backlight_intensity_max_property = modular_server_.property(backlight_controller::constants::ir_backlight_intensity_max_property_name);
+  ir_backlight_intensity_max_property.setDefaultValue(constants::ir_backlight_intensity_max_default);
+
+  modular_server::Property & visible_backlight_power_to_intensity_ratio_property = modular_server_.property(backlight_controller::constants::visible_backlight_power_to_intensity_ratio_property_name);
+  visible_backlight_power_to_intensity_ratio_property.setDefaultValue(constants::visible_backlight_power_to_intensity_ratio_default);
+
   modular_server::Property & visible_backlight_frequency_property = modular_server_.createProperty(constants::visible_backlight_frequency_property_name,constants::visible_backlight_frequency_default);
   visible_backlight_frequency_property.setRange(constants::visible_backlight_frequency_min,constants::visible_backlight_frequency_max);
   visible_backlight_frequency_property.setUnits(constants::hz_units);
@@ -1147,6 +1156,7 @@ void SleepAssayController::initializeChannels()
   stopAllAssayPwm();
   enableAll();
   startCameraTrigger();
+  setIrBacklightAndFanOn();
 }
 
 void SleepAssayController::stopAllAssayPwm()
@@ -1160,7 +1170,6 @@ void SleepAssayController::stopAllAssayPwm()
 void SleepAssayController::startAssay()
 {
   initializeChannels();
-  setIrBacklightAndFanOn();
 
   assay_started_ = true;
   assay_finished_ = false;

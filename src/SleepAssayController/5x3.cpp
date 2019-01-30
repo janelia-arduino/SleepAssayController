@@ -38,6 +38,29 @@ const size_t buzzer_indicator_low_voltage = 3;
 // Units
 
 // Properties
+const double ir_backlight_power_to_intensity_ratio_default[backlight_controller::constants::IR_BACKLIGHT_COUNT] =
+{
+  ir_backlight_power_to_intensity_ratio_element_default,
+  ir_backlight_power_to_intensity_ratio_element_default,
+  ir_backlight_power_to_intensity_ratio_element_default,
+  ir_backlight_power_to_intensity_ratio_element_default,
+};
+
+const double ir_backlight_intensity_max_default[backlight_controller::constants::IR_BACKLIGHT_COUNT] =
+{
+  ir_backlight_intensity_max_element_default,
+  ir_backlight_intensity_max_element_default,
+  ir_backlight_intensity_max_element_default,
+  ir_backlight_intensity_max_element_default,
+};
+
+const double visible_backlight_power_to_intensity_ratio_default[backlight_controller::constants::VISIBLE_BACKLIGHT_COUNT] =
+{
+  visible_backlight_power_to_intensity_ratio_element_default,
+  visible_backlight_power_to_intensity_ratio_element_default,
+  visible_backlight_power_to_intensity_ratio_element_default,
+  visible_backlight_power_to_intensity_ratio_element_default,
+};
 
 // Parameters
 

@@ -86,6 +86,12 @@ extern ConstantString military_time_hours_units;
 
 // Properties
 // Property values must be long, double, bool, long[], double[], bool[], char[], ConstantString *, (ConstantString *)[]
+extern const double ir_backlight_power_to_intensity_ratio_element_default;
+
+extern const double ir_backlight_intensity_max_element_default;
+
+extern const double visible_backlight_power_to_intensity_ratio_element_default;
+
 extern ConstantString visible_backlight_frequency_property_name;
 extern const double visible_backlight_frequency_min;
 extern const double visible_backlight_frequency_max;

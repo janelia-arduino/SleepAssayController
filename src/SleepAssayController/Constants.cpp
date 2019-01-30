@@ -21,7 +21,7 @@ const modular_server::FirmwareInfo firmware_info =
   .name_ptr=&firmware_name,
   .version_major=2,
   .version_minor=0,
-  .version_patch=2,
+  .version_patch=3,
 };
 
 const double fan_power = 100.0;
@@ -59,6 +59,12 @@ CONSTANT_STRING(days_units,"days");
 CONSTANT_STRING(military_time_hours_units,"military_time_hours");
 
 // Properties
+const double ir_backlight_power_to_intensity_ratio_element_default = 6.0;
+
+const double ir_backlight_intensity_max_element_default = 1.6;
+
+const double visible_backlight_power_to_intensity_ratio_element_default = 9.25;
+
 CONSTANT_STRING(visible_backlight_frequency_property_name,"visibleBacklightFrequency");
 const double visible_backlight_frequency_min = 0.01;
 const double visible_backlight_frequency_max = 100;
