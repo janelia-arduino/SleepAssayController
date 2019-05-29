@@ -322,7 +322,7 @@ void SleepAssayController::setIrBacklightAndFanOnAtPower(double power)
   {
     setFanOff();
   }
-  BacklightController::setIrBacklightOnAtPower(constants::ir_backlight,power);
+  setAllIrBacklightsOnAtPower(power);
 }
 
 void SleepAssayController::setIrBacklightAndFanOnAtIntensity(double intensity)
@@ -343,7 +343,7 @@ void SleepAssayController::setIrBacklightAndFanOn()
   {
     setFanOff();
   }
-  BacklightController::setIrBacklightOn(constants::ir_backlight);
+  setAllIrBacklightsOn();
 }
 
 void SleepAssayController::setIrBacklightAndFanOff()
@@ -353,13 +353,13 @@ void SleepAssayController::setIrBacklightAndFanOff()
     return;
   }
 
-  BacklightController::setIrBacklightOff(constants::ir_backlight);
+  setAllIrBacklightsOff();
   setFanOff();
 }
 
 void SleepAssayController::toggleIrBacklightAndFan()
 {
-  BacklightController::toggleIrBacklight(constants::ir_backlight);
+  toggleAllIrBacklights();
   double power = getIrBacklightPower(constants::ir_backlight);
   double power_lower_bound = getPowerLowerBound(irBacklightToDigitalChannel(constants::ir_backlight));
   if (power > power_lower_bound)
@@ -383,7 +383,7 @@ void SleepAssayController::setVisibleBacklightAndIndicatorOnAtPower(double power
   {
     setVisibleBacklightIndicatorOff();
   }
-  BacklightController::setVisibleBacklightOnAtPower(constants::visible_backlight,power);
+  setAllVisibleBacklightsOnAtPower(power);
 }
 
 void SleepAssayController::setVisibleBacklightAndIndicatorOnAtIntensity(double intensity)
@@ -404,7 +404,7 @@ void SleepAssayController::setVisibleBacklightAndIndicatorOn()
   {
     setVisibleBacklightIndicatorOff();
   }
-  BacklightController::setVisibleBacklightOn(constants::visible_backlight);
+  setAllVisibleBacklightsOn();
 }
 
 void SleepAssayController::setVisibleBacklightAndIndicatorOff()
@@ -414,7 +414,7 @@ void SleepAssayController::setVisibleBacklightAndIndicatorOff()
     return;
   }
 
-  BacklightController::setVisibleBacklightOff(constants::visible_backlight);
+  setAllVisibleBacklightsOff();
   setVisibleBacklightIndicatorOff();
 }
 
@@ -425,7 +425,7 @@ void SleepAssayController::toggleVisibleBacklightAndIndicator()
     return;
   }
 
-  BacklightController::toggleVisibleBacklight(constants::visible_backlight);
+  toggleAllVisibleBacklights();
   double power = getVisibleBacklightPower(constants::visible_backlight);
   double power_lower_bound = getPowerLowerBound(visibleBacklightToDigitalChannel(constants::visible_backlight));
   if (power > power_lower_bound)
