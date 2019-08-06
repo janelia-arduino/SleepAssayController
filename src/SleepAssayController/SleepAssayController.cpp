@@ -348,11 +348,6 @@ void SleepAssayController::setIrBacklightAndFanOn()
 
 void SleepAssayController::setIrBacklightAndFanOff()
 {
-  if (assayStarted() && !assayFinished())
-  {
-    return;
-  }
-
   setAllIrBacklightsOff();
   setFanOff();
 }
@@ -409,22 +404,12 @@ void SleepAssayController::setVisibleBacklightAndIndicatorOn()
 
 void SleepAssayController::setVisibleBacklightAndIndicatorOff()
 {
-  if (assayStarted() && !assayFinished())
-  {
-    return;
-  }
-
   setAllVisibleBacklightsOff();
   setVisibleBacklightIndicatorOff();
 }
 
 void SleepAssayController::toggleVisibleBacklightAndIndicator()
 {
-  if (assayStarted() && !assayFinished())
-  {
-    return;
-  }
-
   toggleAllVisibleBacklights();
   double power = getVisibleBacklightPower(constants::visible_backlight);
   double power_lower_bound = getPowerLowerBound(visibleBacklightToDigitalChannel(constants::visible_backlight));
@@ -469,22 +454,12 @@ void SleepAssayController::setWhiteLightAndIndicatorOn()
 
 void SleepAssayController::setWhiteLightAndIndicatorOff()
 {
-  if (assayStarted() && !assayFinished())
-  {
-    return;
-  }
-
   BacklightController::setHighVoltageOff(constants::white_light_high_voltage);
   setWhiteLightIndicatorOff();
 }
 
 void SleepAssayController::toggleWhiteLightAndIndicator()
 {
-  if (assayStarted() && !assayFinished())
-  {
-    return;
-  }
-
   BacklightController::toggleHighVoltage(constants::white_light_high_voltage);
   double power = getHighVoltagePower(constants::white_light_high_voltage);
   double power_lower_bound = getPowerLowerBound(highVoltageToDigitalChannel(constants::white_light_high_voltage));
@@ -529,22 +504,12 @@ void SleepAssayController::setBuzzerAndIndicatorOn()
 
 void SleepAssayController::setBuzzerAndIndicatorOff()
 {
-  if (assayStarted() && !assayFinished())
-  {
-    return;
-  }
-
   BacklightController::setHighVoltageOff(constants::buzzer_high_voltage);
   setBuzzerIndicatorOff();
 }
 
 void SleepAssayController::toggleBuzzerAndIndicator()
 {
-  if (assayStarted() && !assayFinished())
-  {
-    return;
-  }
-
   BacklightController::toggleHighVoltage(constants::buzzer_high_voltage);
   double power = getHighVoltagePower(constants::buzzer_high_voltage);
   double power_lower_bound = getPowerLowerBound(highVoltageToDigitalChannel(constants::buzzer_high_voltage));
@@ -560,10 +525,6 @@ void SleepAssayController::toggleBuzzerAndIndicator()
 
 void SleepAssayController::toggleAll()
 {
-  if (assayStarted() && !assayFinished())
-  {
-    return;
-  }
   toggleIrBacklightAndFan();
   toggleVisibleBacklightAndIndicator();
   toggleWhiteLightAndIndicator();
@@ -806,13 +767,14 @@ void SleepAssayController::setExperimentDayVisibleBacklight(size_t experiment_da
   }
   experiment_day_array_[experiment_day].visible_backlight_intensity = visible_backlight_intensity;
   experiment_day_array_[experiment_day].visible_backlight_delay_hours = visible_backlight_delay_hours;
-  if ((visible_backlight_duration_hours + visible_backlight_delay_hours) < constants::visible_backlight_duration_max)
+  double visible_backlight_duration_max_adjusted = constants::visible_backlight_duration_max - constants::duration_adjustment;
+  if ((visible_backlight_duration_hours + visible_backlight_delay_hours) < visible_backlight_duration_max_adjusted)
   {
     experiment_day_array_[experiment_day].visible_backlight_duration_hours = visible_backlight_duration_hours;
   }
   else
   {
-    experiment_day_array_[experiment_day].visible_backlight_duration_hours = constants::visible_backlight_duration_max - visible_backlight_delay_hours;
+    experiment_day_array_[experiment_day].visible_backlight_duration_hours = visible_backlight_duration_max_adjusted - visible_backlight_delay_hours;
   }
 }
 
@@ -837,13 +799,14 @@ void SleepAssayController::setExperimentDayBuzzer(size_t experiment_day,
   }
   experiment_day_array_[experiment_day].buzzer_power = buzzer_power;
   experiment_day_array_[experiment_day].buzzer_delay_hours = buzzer_delay_hours;
-  if ((buzzer_duration_hours + buzzer_delay_hours) < constants::buzzer_duration_max)
+  double buzzer_duration_max_adjusted = constants::buzzer_duration_max - constants::duration_adjustment;
+  if ((buzzer_duration_hours + buzzer_delay_hours) < buzzer_duration_max_adjusted)
   {
     experiment_day_array_[experiment_day].buzzer_duration_hours = buzzer_duration_hours;
   }
   else
   {
-    experiment_day_array_[experiment_day].buzzer_duration_hours = constants::buzzer_duration_max - buzzer_delay_hours;
+    experiment_day_array_[experiment_day].buzzer_duration_hours = buzzer_duration_max_adjusted - buzzer_delay_hours;
   }
 }
 
@@ -1214,7 +1177,16 @@ void SleepAssayController::startAssay()
       white_light_on_duration -= offset;
       const long white_light_delay = 0;
       long white_light_count = 1;
-      digital_controller::constants::PwmId white_light_pwm_id = addPwm(white_light_channels,white_light_power,white_light_delay,white_light_period,white_light_on_duration,white_light_count);
+      digital_controller::constants::PwmId white_light_pwm_id = addPwm(white_light_channels,
+        white_light_power,
+        white_light_delay,
+        white_light_period,
+        white_light_on_duration,
+        white_light_count,
+        makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::whiteLightStartPulseHandler),
+        makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::whiteLightStopPulseHandler),
+        makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::whiteLightStartPwmHandler),
+        makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::whiteLightStopPwmHandler));
       const int entrainment_duration2 = entrainment_duration - 1;
       addCountCompletedFunctor(white_light_pwm_id,
         makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startEntrainment),
@@ -1264,7 +1236,16 @@ void SleepAssayController::startEntrainment(int entrainment_duration)
 
     const long white_light_delay = 0;
     const long white_light_count = entrainment_duration;
-    digital_controller::constants::PwmId white_light_pwm_id = addPwm(white_light_channels,white_light_power,white_light_delay,white_light_period,white_light_on_duration,white_light_count);
+    digital_controller::constants::PwmId white_light_pwm_id = addPwm(white_light_channels,
+      white_light_power,
+      white_light_delay,
+      white_light_period,
+      white_light_on_duration,
+      white_light_count,
+      makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::whiteLightStartPulseHandler),
+      makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::whiteLightStopPulseHandler),
+      makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::whiteLightStartPwmHandler),
+      makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::whiteLightStopPwmHandler));
     addCountCompletedFunctor(white_light_pwm_id,
       makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
       0);
@@ -1294,7 +1275,15 @@ void SleepAssayController::startExperimentDay(int experiment_day)
     {
       const long white_light_delay = 0;
       const long white_light_count = 1;
-      digital_controller::constants::PwmId white_light_pwm_id = addPwm(white_light_channels,white_light_power,white_light_delay,white_light_period,white_light_on_duration,white_light_count);
+      digital_controller::constants::PwmId white_light_pwm_id = addPwm(white_light_channels,
+        white_light_power,
+        white_light_delay,
+        white_light_period,white_light_on_duration,
+        white_light_count,
+        makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::whiteLightStartPulseHandler),
+        makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::whiteLightStopPulseHandler),
+        makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::whiteLightStartPwmHandler),
+        makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::whiteLightStopPwmHandler));
       addCountCompletedFunctor(white_light_pwm_id,
         makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::startExperimentDay),
         next_experiment_day);
@@ -1409,7 +1398,16 @@ void SleepAssayController::startRecovery()
 
     const long white_light_delay = 0;
     const long white_light_count = recovery_duration;
-    digital_controller::constants::PwmId white_light_pwm_id = addPwm(white_light_channels,white_light_power,white_light_delay,white_light_period,white_light_on_duration,white_light_count);
+    digital_controller::constants::PwmId white_light_pwm_id = addPwm(white_light_channels,
+      white_light_power,
+      white_light_delay,
+      white_light_period,
+      white_light_on_duration,
+      white_light_count,
+      makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::whiteLightStartPulseHandler),
+      makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::whiteLightStopPulseHandler),
+      makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::whiteLightStartPwmHandler),
+      makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::whiteLightStopPwmHandler));
 
     addCountCompletedFunctor(white_light_pwm_id,
       makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::endAssay),
@@ -1982,4 +1980,24 @@ void SleepAssayController::testAssayHandler(modular_server::Pin * pin_ptr)
 void SleepAssayController::stopAssayHandler(modular_server::Pin * pin_ptr)
 {
   stopAssay();
+}
+
+void SleepAssayController::whiteLightStartPulseHandler(int pwm_index)
+{
+  double power = getPwmPower(pwm_index);
+  setWhiteLightAndIndicatorOnAtPower(power);
+}
+
+void SleepAssayController::whiteLightStopPulseHandler(int pwm_index)
+{
+  setWhiteLightAndIndicatorOff();
+}
+
+void SleepAssayController::whiteLightStartPwmHandler(int pwm_index)
+{
+}
+
+void SleepAssayController::whiteLightStopPwmHandler(int pwm_index)
+{
+  setWhiteLightAndIndicatorOff();
 }

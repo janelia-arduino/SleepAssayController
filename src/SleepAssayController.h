@@ -222,6 +222,10 @@ private:
   void testAssayHandler(modular_server::Pin * pin_ptr);
   void stopAssayHandler(modular_server::Pin * pin_ptr);
 
+  void whiteLightStartPulseHandler(int pwm_index);
+  void whiteLightStopPulseHandler(int pwm_index);
+  void whiteLightStartPwmHandler(int pwm_index);
+  void whiteLightStopPwmHandler(int pwm_index);
 };
 
 #endif

@@ -76,6 +76,8 @@ extern ConstantString buzzer_power_string;
 extern ConstantString buzzing_string;
 extern ConstantString testing_string;
 
+extern const double duration_adjustment;
+
 // Pins
 
 // Units

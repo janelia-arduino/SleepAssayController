@@ -21,7 +21,7 @@ const modular_server::FirmwareInfo firmware_info =
   .name_ptr=&firmware_name,
   .version_major=2,
   .version_minor=0,
-  .version_patch=5,
+  .version_patch=6,
 };
 
 const double fan_power = 100.0;
@@ -49,6 +49,8 @@ CONSTANT_STRING(white_light_power_string,"white_light_power");
 CONSTANT_STRING(buzzer_power_string,"buzzer_power");
 CONSTANT_STRING(buzzing_string,"buzzing");
 CONSTANT_STRING(testing_string,"testing");
+
+const double duration_adjustment = 0.001;
 
 // Pins
 
