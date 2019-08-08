@@ -322,7 +322,7 @@ void SleepAssayController::setIrBacklightAndFanOnAtPower(double power)
   {
     setFanOff();
   }
-  setAllIrBacklightsOnAtPower(power);
+  setIrBacklightOnAtPower(constants::ir_backlight,power);
 }
 
 void SleepAssayController::setIrBacklightAndFanOnAtIntensity(double intensity)
@@ -343,12 +343,12 @@ void SleepAssayController::setIrBacklightAndFanOn()
   {
     setFanOff();
   }
-  setAllIrBacklightsOn();
+  setIrBacklightOn(constants::ir_backlight);
 }
 
 void SleepAssayController::setIrBacklightAndFanOff()
 {
-  setAllIrBacklightsOff();
+  setIrBacklightOff(constants::ir_backlight);
   setFanOff();
 }
 
@@ -378,7 +378,7 @@ void SleepAssayController::setVisibleBacklightAndIndicatorOnAtPower(double power
   {
     setVisibleBacklightIndicatorOff();
   }
-  setAllVisibleBacklightsOnAtPower(power);
+  setVisibleBacklightOnAtPower(constants::visible_backlight,power);
 }
 
 void SleepAssayController::setVisibleBacklightAndIndicatorOnAtIntensity(double intensity)
@@ -399,12 +399,12 @@ void SleepAssayController::setVisibleBacklightAndIndicatorOn()
   {
     setVisibleBacklightIndicatorOff();
   }
-  setAllVisibleBacklightsOn();
+  setVisibleBacklightOn(constants::visible_backlight);
 }
 
 void SleepAssayController::setVisibleBacklightAndIndicatorOff()
 {
-  setAllVisibleBacklightsOff();
+  setVisibleBacklightOff(constants::visible_backlight);
   setVisibleBacklightIndicatorOff();
 }
 
@@ -426,13 +426,15 @@ void SleepAssayController::toggleVisibleBacklightAndIndicator()
 void SleepAssayController::setWhiteLightAndIndicatorOnAtPower(double power)
 {
   double power_lower_bound = getPowerLowerBound(highVoltageToDigitalChannel(constants::white_light_high_voltage));
-  if (power > power_lower_bound)
+  if (power >= power_lower_bound)
   {
     setWhiteLightIndicatorOn();
+    white_light_power_ = power;
   }
   else
   {
     setWhiteLightIndicatorOff();
+    white_light_power_ = digital_controller::constants::power_min;
   }
   BacklightController::setHighVoltageOnAtPower(constants::white_light_high_voltage,power);
 }
@@ -441,13 +443,15 @@ void SleepAssayController::setWhiteLightAndIndicatorOn()
 {
   double power = getHighVoltagePowerWhenOn(constants::white_light_high_voltage);
   double power_lower_bound = getPowerLowerBound(highVoltageToDigitalChannel(constants::white_light_high_voltage));
-  if (power > power_lower_bound)
+  if (power >= power_lower_bound)
   {
     setWhiteLightIndicatorOn();
+    white_light_power_ = power;
   }
   else
   {
     setWhiteLightIndicatorOff();
+    white_light_power_ = digital_controller::constants::power_min;
   }
   BacklightController::setHighVoltageOn(constants::white_light_high_voltage);
 }
@@ -456,21 +460,24 @@ void SleepAssayController::setWhiteLightAndIndicatorOff()
 {
   BacklightController::setHighVoltageOff(constants::white_light_high_voltage);
   setWhiteLightIndicatorOff();
+  white_light_power_ = digital_controller::constants::power_min;
 }
 
 void SleepAssayController::toggleWhiteLightAndIndicator()
 {
-  BacklightController::toggleHighVoltage(constants::white_light_high_voltage);
   double power = getHighVoltagePower(constants::white_light_high_voltage);
   double power_lower_bound = getPowerLowerBound(highVoltageToDigitalChannel(constants::white_light_high_voltage));
-  if (power > power_lower_bound)
+  if (power >= power_lower_bound)
   {
     setWhiteLightIndicatorOn();
+    white_light_power_ = power;
   }
   else
   {
     setWhiteLightIndicatorOff();
+    white_light_power_ = digital_controller::constants::power_min;
   }
+  BacklightController::toggleHighVoltage(constants::white_light_high_voltage);
 }
 
 void SleepAssayController::setBuzzerAndIndicatorOnAtPower(double power)
@@ -510,7 +517,6 @@ void SleepAssayController::setBuzzerAndIndicatorOff()
 
 void SleepAssayController::toggleBuzzerAndIndicator()
 {
-  BacklightController::toggleHighVoltage(constants::buzzer_high_voltage);
   double power = getHighVoltagePower(constants::buzzer_high_voltage);
   double power_lower_bound = getPowerLowerBound(highVoltageToDigitalChannel(constants::buzzer_high_voltage));
   if (power > power_lower_bound)
@@ -521,6 +527,7 @@ void SleepAssayController::toggleBuzzerAndIndicator()
   {
     setBuzzerIndicatorOff();
   }
+  BacklightController::toggleHighVoltage(constants::buzzer_high_voltage);
 }
 
 void SleepAssayController::toggleAll()
@@ -820,8 +827,8 @@ sleep_assay_controller::constants::AssayStatus SleepAssayController::getAssaySta
   assay_status.phase_ptr = &constants::phase_assay_not_started_string;
   assay_status.phase_day = -1;
   assay_status.visible_backlight_intensity = 0.0;
-  assay_status.white_light_power = 0.0;
-  assay_status.buzzer_power = 0.0;
+  assay_status.white_light_power = digital_controller::constants::power_min;
+  assay_status.buzzer_power = digital_controller::constants::power_min;
   assay_status.buzzing = false;
   assay_status.testing = testing();
 
@@ -872,10 +879,15 @@ sleep_assay_controller::constants::AssayStatus SleepAssayController::getAssaySta
       assay_status.phase_ptr = &constants::phase_assay_finished_string;
       assay_status.phase_day = (double)(time_assay_end - time_experiment_end)/seconds_per_day_scaled;
     }
-    assay_status.white_light_power = getHighVoltagePower(constants::white_light_high_voltage);
+    assay_status.white_light_power = getWhiteLightPower();
   }
 
   return assay_status;
+}
+
+double SleepAssayController::getWhiteLightPower()
+{
+  return white_light_power_;
 }
 
 bool SleepAssayController::visibleBacklightPulsing()
@@ -1105,6 +1117,8 @@ void SleepAssayController::initializeVariables()
 
   time_assay_start_ = 0;
   time_experiment_start_ = 0;
+
+  white_light_power_ = digital_controller::constants::power_min;
 
   buzzer_enabled_ = false;
   buzzing_possible_ = false;

@@ -101,6 +101,7 @@ public:
 
   sleep_assay_controller::constants::AssayStatus getAssayStatus();
 
+  double getWhiteLightPower();
   bool visibleBacklightPulsing();
   bool buzzingPossible();
   bool buzzing();
@@ -117,6 +118,8 @@ private:
 
   time_t time_assay_start_;
   time_t time_experiment_start_;
+
+  double white_light_power_;
 
   bool buzzer_enabled_;
   bool buzzing_possible_;
