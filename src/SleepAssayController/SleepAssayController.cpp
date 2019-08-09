@@ -892,22 +892,22 @@ double SleepAssayController::getWhiteLightPower()
 
 bool SleepAssayController::visibleBacklightPulsing()
 {
-  const size_t visible_backlight_channel = visibleBacklightToDigitalChannel(constants::visible_backlight);
+  // const size_t visible_backlight_channel = visibleBacklightToDigitalChannel(constants::visible_backlight);
 
-  ChannelsPwmIndexes channels_pwm_indexes = getChannelsPwmIndexes();
-  RecursivePwmValues channel_pwm_indexes = channels_pwm_indexes[visible_backlight_channel];
+  // ChannelsPwmIndexes channels_pwm_indexes = getChannelsPwmIndexes();
+  // RecursivePwmValues channel_pwm_indexes = channels_pwm_indexes[visible_backlight_channel];
 
-  bool visible_backlight_pulsing = false;
+  // bool visible_backlight_pulsing = false;
 
-  for (size_t i=0; i<channel_pwm_indexes.size(); ++i)
-  {
-    if (channel_pwm_indexes[i] >= 0)
-    {
-      visible_backlight_pulsing = true;
-      break;
-    }
-  }
-  return visible_backlight_pulsing;
+  // for (size_t i=0; i<channel_pwm_indexes.size(); ++i)
+  // {
+  //   if (channel_pwm_indexes[i] >= 0)
+  //   {
+  //     visible_backlight_pulsing = true;
+  //     break;
+  //   }
+  // }
+  return visible_backlight_pulsing_;
 }
 
 bool SleepAssayController::buzzingPossible()
@@ -946,11 +946,13 @@ void SleepAssayController::setFanOff()
 void SleepAssayController::setVisibleBacklightIndicatorOn()
 {
   setLowVoltageOnAtPower(constants::visible_backlight_indicator_low_voltage,constants::indicator_power);
+  visible_backlight_pulsing_ = true;
 }
 
 void SleepAssayController::setVisibleBacklightIndicatorOff()
 {
   setLowVoltageOff(constants::visible_backlight_indicator_low_voltage);
+  visible_backlight_pulsing_ = false;
 }
 
 void SleepAssayController::setWhiteLightIndicatorOn()
@@ -1119,6 +1121,7 @@ void SleepAssayController::initializeVariables()
   time_experiment_start_ = 0;
 
   white_light_power_ = digital_controller::constants::power_min;
+  visible_backlight_pulsing_ = false;
 
   buzzer_enabled_ = false;
   buzzing_possible_ = false;
@@ -1150,6 +1153,9 @@ void SleepAssayController::startAssay()
 
   assay_started_ = true;
   assay_finished_ = false;
+
+  white_light_power_ = digital_controller::constants::power_min;
+  visible_backlight_pulsing_ = false;
 
   buzzer_enabled_ = false;
   buzzing_possible_ = false;
@@ -1343,7 +1349,11 @@ void SleepAssayController::startExperimentDay(int experiment_day)
         visible_backlight_indicator_delay,
         visible_backlight_indicator_period,
         visible_backlight_indicator_on_duration,
-        1);
+        1,
+        makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::visibleBacklightIndicatorStartPulseHandler),
+        makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::visibleBacklightIndicatorStopPulseHandler),
+        makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::visibleBacklightIndicatorStartPwmHandler),
+        makeFunctor((Functor1<int> *)0,*this,&SleepAssayController::visibleBacklightIndicatorStopPwmHandler));
     }
 
     // buzzer
@@ -2014,4 +2024,23 @@ void SleepAssayController::whiteLightStartPwmHandler(int pwm_index)
 void SleepAssayController::whiteLightStopPwmHandler(int pwm_index)
 {
   setWhiteLightAndIndicatorOff();
+}
+
+void SleepAssayController::visibleBacklightIndicatorStartPulseHandler(int pwm_index)
+{
+  setVisibleBacklightIndicatorOn();
+}
+
+void SleepAssayController::visibleBacklightIndicatorStopPulseHandler(int pwm_index)
+{
+  setVisibleBacklightIndicatorOff();
+}
+
+void SleepAssayController::visibleBacklightIndicatorStartPwmHandler(int pwm_index)
+{
+}
+
+void SleepAssayController::visibleBacklightIndicatorStopPwmHandler(int pwm_index)
+{
+  setVisibleBacklightIndicatorOff();
 }

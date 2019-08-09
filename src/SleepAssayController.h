@@ -120,6 +120,7 @@ private:
   time_t time_experiment_start_;
 
   double white_light_power_;
+  bool visible_backlight_pulsing_;
 
   bool buzzer_enabled_;
   bool buzzing_possible_;
@@ -229,6 +230,11 @@ private:
   void whiteLightStopPulseHandler(int pwm_index);
   void whiteLightStartPwmHandler(int pwm_index);
   void whiteLightStopPwmHandler(int pwm_index);
+
+  void visibleBacklightIndicatorStartPulseHandler(int pwm_index);
+  void visibleBacklightIndicatorStopPulseHandler(int pwm_index);
+  void visibleBacklightIndicatorStartPwmHandler(int pwm_index);
+  void visibleBacklightIndicatorStopPwmHandler(int pwm_index);
 };
 
 #endif
