@@ -174,6 +174,9 @@ private:
 
   void writeExperimentDayInfoToResponse(size_t experiment_day);
 
+  sleep_assay_controller::constants::PropertyValuesCache property_values_cache_;
+  void updatePropertyValuesCache();
+
   // Handlers
   void setIrBacklightAndFanOnAtPowerHandler();
   void setIrBacklightAndFanOnAtIntensityHandler();

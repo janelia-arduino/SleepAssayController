@@ -55,6 +55,25 @@ struct AssayStatus
   bool testing;
 };
 
+struct PropertyValuesCache
+{
+  long time_zone_offset;
+  double visible_backlight_frequency;
+  long visible_backlight_duty_cycle;
+  long white_light_start_time;
+  double white_light_entrainment_power;
+  double white_light_recovery_power;
+  long white_light_on_duration;
+  long buzzer_on_duration_min;
+  long buzzer_on_duration_max;
+  long buzzer_wait_min;
+  long buzzer_wait_max;
+  double camera_trigger_frequency;
+  long entrainment_duration;
+  long recovery_duration;
+  long testing_day_duration;
+};
+
 extern ConstantString time_now_string;
 extern ConstantString time_entrainment_start_string;
 extern ConstantString time_assay_start_string;

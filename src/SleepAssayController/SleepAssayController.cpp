@@ -610,8 +610,7 @@ long SleepAssayController::scaleDuration(long duration)
 {
   if (testing())
   {
-    long testing_day_duration;
-    modular_server_.property(constants::testing_day_duration_property_name).getValue(testing_day_duration);
+    long testing_day_duration = property_values_cache_.testing_day_duration;
     double scale_factor = (double)testing_day_duration/(double)modular_device_base::constants::seconds_per_day;
     return (double)duration*scale_factor;
   }
@@ -629,8 +628,7 @@ time_t SleepAssayController::getAssayEnd()
   {
     return 0;
   }
-  long recovery_duration;
-  modular_server_.property(constants::recovery_duration_property_name).getValue(recovery_duration);
+  long recovery_duration = property_values_cache_.recovery_duration;
 
   time_t time_assay_end = getExperimentEnd();
   time_assay_end += scaleDuration(recovery_duration*modular_device_base::constants::seconds_per_day);
@@ -639,11 +637,9 @@ time_t SleepAssayController::getAssayEnd()
 
 uint8_t SleepAssayController::getAssayDuration()
 {
-  long entrainment_duration;
-  modular_server_.property(constants::entrainment_duration_property_name).getValue(entrainment_duration);
+  long entrainment_duration = property_values_cache_.entrainment_duration;
 
-  long recovery_duration;
-  modular_server_.property(constants::recovery_duration_property_name).getValue(recovery_duration);
+  long recovery_duration = property_values_cache_.recovery_duration;
 
   uint8_t experiment_duration = getExperimentDuration();
 
@@ -678,8 +674,7 @@ time_t SleepAssayController::getEntrainmentStart()
     return 0;
   }
 
-  long entrainment_duration;
-  modular_server_.property(constants::entrainment_duration_property_name).getValue(entrainment_duration);
+  long entrainment_duration = property_values_cache_.entrainment_duration;
 
   time_t time_entrainment_start = getExperimentStart();
   time_entrainment_start -= scaleDuration(entrainment_duration*modular_device_base::constants::seconds_per_day);
@@ -986,13 +981,11 @@ void SleepAssayController::getVisibleBacklightPwmInfo(size_t experiment_day,
   const uint32_t bit = 1;
   channels = bit << visible_backlight_channel;
 
-  double frequency;
-  modular_server_.property(constants::visible_backlight_frequency_property_name).getValue(frequency);
+  double frequency = property_values_cache_.visible_backlight_frequency;
   long period_0 = (1.0/frequency)*modular_device_base::constants::milliseconds_per_second;
   periods.push_back(period_0);
 
-  long duty_cycle;
-  modular_server_.property(constants::visible_backlight_duty_cycle_property_name).getValue(duty_cycle);
+  long duty_cycle = property_values_cache_.visible_backlight_duty_cycle;
   long on_duration_0 = period_0*(double)duty_cycle/(double)constants::visible_backlight_duty_cycle_max;
   on_durations.push_back(on_duration_0);
 
@@ -1038,8 +1031,7 @@ void SleepAssayController::getWhiteLightPwmInfo(int experiment_day,
 
   period = scaleDuration(modular_device_base::constants::milliseconds_per_day);
 
-  long on_duration_hours;
-  modular_server_.property(constants::white_light_on_duration_property_name).getValue(on_duration_hours);
+  long on_duration_hours = property_values_cache_.white_light_on_duration;
   on_duration = scaleDuration(on_duration_hours*modular_device_base::constants::milliseconds_per_hour);
 }
 
@@ -1054,23 +1046,19 @@ void SleepAssayController::getBuzzerPwmInfo(size_t experiment_day,
   const uint32_t bit = 1;
   channels = bit << buzzer_channel;
 
-  long on_duration_0_min;
-  modular_server_.property(constants::buzzer_on_duration_min_property_name).getValue(on_duration_0_min);
+  long on_duration_0_min = property_values_cache_.buzzer_on_duration_min;
   on_duration_0_min *= modular_device_base::constants::milliseconds_per_second;
 
-  long on_duration_0_max;
-  modular_server_.property(constants::buzzer_on_duration_max_property_name).getValue(on_duration_0_max);
+  long on_duration_0_max = property_values_cache_.buzzer_on_duration_max;
   on_duration_0_max *= modular_device_base::constants::milliseconds_per_second;
 
   long on_duration_0 = random(on_duration_0_min,on_duration_0_max);
   on_durations.push_back(on_duration_0);
 
-  long buzzer_wait_min;
-  modular_server_.property(constants::buzzer_wait_min_property_name).getValue(buzzer_wait_min);
+  long buzzer_wait_min = property_values_cache_.buzzer_wait_min;
   buzzer_wait_min *= modular_device_base::constants::milliseconds_per_second;
 
-  long buzzer_wait_max;
-  modular_server_.property(constants::buzzer_wait_max_property_name).getValue(buzzer_wait_max);
+  long buzzer_wait_max = property_values_cache_.buzzer_wait_max;
   buzzer_wait_max *= modular_device_base::constants::milliseconds_per_second;
 
   long off_duration_0 = random(buzzer_wait_min,buzzer_wait_max);
@@ -1105,8 +1093,7 @@ void SleepAssayController::getCameraTriggerPwmInfo(uint32_t & channels,
   const uint32_t bit = 1;
   channels = bit << camera_trigger_channel;
 
-  double frequency;
-  modular_server_.property(constants::camera_trigger_frequency_property_name).getValue(frequency);
+  double frequency = property_values_cache_.camera_trigger_frequency;
   period = (1.0/frequency)*modular_device_base::constants::milliseconds_per_second;
   on_duration = period*constants::camera_trigger_duty_cycle/constants::camera_trigger_power;
 }
@@ -1135,6 +1122,7 @@ void SleepAssayController::initializeChannels()
 {
   stopAllAssayPwm();
   enableAll();
+  updatePropertyValuesCache();
   startCameraTrigger();
   setIrBacklightAndFanOn();
 }
@@ -1164,8 +1152,7 @@ void SleepAssayController::startAssay()
   time_assay_start_ = time_now;
   time_experiment_start_ = time_assay_start_;
 
-  long entrainment_duration;
-  modular_server_.property(constants::entrainment_duration_property_name).getValue(entrainment_duration);
+  long entrainment_duration = property_values_cache_.entrainment_duration;
 
   if (entrainment_duration > 0)
   {
@@ -1176,13 +1163,11 @@ void SleepAssayController::startAssay()
     long white_light_on_duration;
     getWhiteLightPwmInfo(experiment_day,white_light_channels,white_light_power,white_light_period,white_light_on_duration);
 
-    modular_server_.property(constants::white_light_entrainment_power_property_name).getValue(white_light_power);
+    white_light_power = property_values_cache_.white_light_entrainment_power;
 
-    long start_time;
-    modular_server_.property(constants::white_light_start_time_property_name).getValue(start_time);
+    long start_time = property_values_cache_.white_light_start_time;
 
-    long time_zone_offset;
-    modular_server_.property(modular_device_base::constants::time_zone_offset_property_name).getValue(time_zone_offset);
+    long time_zone_offset = property_values_cache_.time_zone_offset;
 
     start_time -= time_zone_offset;
 
@@ -1252,7 +1237,7 @@ void SleepAssayController::startEntrainment(int entrainment_duration)
     long white_light_on_duration;
     getWhiteLightPwmInfo(experiment_day,white_light_channels,white_light_power,white_light_period,white_light_on_duration);
 
-    modular_server_.property(constants::white_light_entrainment_power_property_name).getValue(white_light_power);
+    white_light_power = property_values_cache_.white_light_entrainment_power;
 
     const long white_light_delay = 0;
     const long white_light_count = entrainment_duration;
@@ -1406,8 +1391,7 @@ void SleepAssayController::startExperimentDay(int experiment_day)
 
 void SleepAssayController::startRecovery()
 {
-  long recovery_duration;
-  modular_server_.property(constants::recovery_duration_property_name).getValue(recovery_duration);
+  long recovery_duration = property_values_cache_.recovery_duration;
 
   if (recovery_duration > 0)
   {
@@ -1418,7 +1402,7 @@ void SleepAssayController::startRecovery()
     long white_light_on_duration;
     getWhiteLightPwmInfo(experiment_day,white_light_channels,white_light_power,white_light_period,white_light_on_duration);
 
-    modular_server_.property(constants::white_light_recovery_power_property_name).getValue(white_light_power);
+    white_light_power = property_values_cache_.white_light_recovery_power;
 
     const long white_light_delay = 0;
     const long white_light_count = recovery_duration;
@@ -1514,6 +1498,25 @@ void SleepAssayController::writeExperimentDayInfoToResponse(size_t experiment_da
   modular_server_.response().write(constants::buzzer_duration_parameter_name,experiment_day_info.buzzer_duration_hours);
 
   modular_server_.response().endObject();
+}
+
+void SleepAssayController::updatePropertyValuesCache()
+{
+  modular_server_.property(modular_device_base::constants::time_zone_offset_property_name).getValue(property_values_cache_.time_zone_offset);
+  modular_server_.property(constants::visible_backlight_frequency_property_name).getValue(property_values_cache_.visible_backlight_frequency);
+  modular_server_.property(constants::visible_backlight_duty_cycle_property_name).getValue(property_values_cache_.visible_backlight_duty_cycle);
+  modular_server_.property(constants::white_light_start_time_property_name).getValue(property_values_cache_.white_light_start_time);
+  modular_server_.property(constants::white_light_entrainment_power_property_name).getValue(property_values_cache_.white_light_entrainment_power);
+  modular_server_.property(constants::white_light_recovery_power_property_name).getValue(property_values_cache_.white_light_recovery_power);
+  modular_server_.property(constants::white_light_on_duration_property_name).getValue(property_values_cache_.white_light_on_duration);
+  modular_server_.property(constants::buzzer_on_duration_min_property_name).getValue(property_values_cache_.buzzer_on_duration_min);
+  modular_server_.property(constants::buzzer_on_duration_max_property_name).getValue(property_values_cache_.buzzer_on_duration_max);
+  modular_server_.property(constants::buzzer_wait_min_property_name).getValue(property_values_cache_.buzzer_wait_min);
+  modular_server_.property(constants::buzzer_wait_max_property_name).getValue(property_values_cache_.buzzer_wait_max);
+  modular_server_.property(constants::camera_trigger_frequency_property_name).getValue(property_values_cache_.camera_trigger_frequency);
+  modular_server_.property(constants::entrainment_duration_property_name).getValue(property_values_cache_.entrainment_duration);
+  modular_server_.property(constants::recovery_duration_property_name).getValue(property_values_cache_.recovery_duration);
+  modular_server_.property(constants::testing_day_duration_property_name).getValue(property_values_cache_.testing_day_duration);
 }
 
 // Handlers must be non-blocking (avoid 'delay')
