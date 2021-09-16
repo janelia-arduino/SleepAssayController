@@ -3,7 +3,7 @@
 //
 //
 // Authors:
-// Peter Polidoro peterpolidoro@gmail.com
+// Peter Polidoro peter@polidoro.io
 // ----------------------------------------------------------------------------
 #ifndef SLEEP_ASSAY_CONTROLLER_H
 #define SLEEP_ASSAY_CONTROLLER_H
